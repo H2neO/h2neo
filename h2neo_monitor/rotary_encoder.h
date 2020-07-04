@@ -10,7 +10,10 @@
  *******************************************************************************/
 void RotEnc_Init(void);
 void get_direction(void);
-void display_value(signed int value);
+void display_value(double value);
+void ftoa(float n, char* str, int afterP);
+void reverse(char* str, int len);
+int intToStr(int x, char str[], int d);
 
 #define CH_A						BIT4  // P1.4
 #define CH_B						BIT5  // P1.5
