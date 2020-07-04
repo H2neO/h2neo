@@ -1,0 +1,37 @@
+
+**** Build of configuration Debug for project h2neo_monitor ****
+
+"C:\\ti\\ccsv6\\utils\\bin\\gmake" -k all 
+'Building file: ../rotary_encoder_w_button.c'
+'Invoking: MSP430 Compiler'
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/bin/cl430" -vmspx --data_model=restricted --use_hw_mpy=F5 --include_path="C:/ti/ccsv6/ccs_base/msp430/include" --include_path="C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include" --advice:power=all --define=__MSP430F5529__ -g --printf_support=minimal --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi --silicon_errata=CPU21 --silicon_errata=CPU22 --silicon_errata=CPU23 --silicon_errata=CPU40 --preproc_with_compile --preproc_dependency="rotary_encoder_w_button.pp"  "../rotary_encoder_w_button.c"
+"../rotary_encoder_w_button.c", line 47: remark #1527-D: (ULP 2.1) Detected SW delay loop using __delay_cycles. Recommend using a timer module instead
+"../rotary_encoder_w_button.c", line 55: remark #1527-D: (ULP 2.1) Detected SW delay loop using __delay_cycles. Recommend using a timer module instead
+"../rotary_encoder_w_button.c", line 64: warning #225-D: function "gcvt" declared implicitly
+"../rotary_encoder_w_button.c", line 64: warning #169-D: argument of type "int" is incompatible with parameter of type "const char *"
+"../rotary_encoder_w_button.c", line 78: remark #1538-D: (ULP 10.1) ISR Port_1 calls function prints. Recommend moving function call away from ISR, or inlining the function, or using pragmas
+"../rotary_encoder_w_button.c", line 79: remark #1527-D: (ULP 2.1) Detected SW delay loop using __delay_cycles. Recommend using a timer module instead
+"../rotary_encoder_w_button.c", line 84: remark #1538-D: (ULP 10.1) ISR Port_1 calls function prints. Recommend moving function call away from ISR, or inlining the function, or using pragmas
+"../rotary_encoder_w_button.c", line 85: remark #1538-D: (ULP 10.1) ISR Port_1 calls function get_direction. Recommend moving function call away from ISR, or inlining the function, or using pragmas
+"../rotary_encoder_w_button.c", line 95: remark #1538-D: (ULP 10.1) ISR Port_2 calls function prints. Recommend moving function call away from ISR, or inlining the function, or using pragmas
+"../rotary_encoder_w_button.c", line 96: remark #1527-D: (ULP 2.1) Detected SW delay loop using __delay_cycles. Recommend using a timer module instead
+"../rotary_encoder_w_button.c", line 56 (col. 8): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+'Finished building: ../rotary_encoder_w_button.c'
+' '
+'Building target: h2neo_monitor.out'
+'Invoking: MSP430 Linker'
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/bin/cl430" -vmspx --data_model=restricted --use_hw_mpy=F5 --advice:power=all --define=__MSP430F5529__ -g --printf_support=minimal --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi --silicon_errata=CPU21 --silicon_errata=CPU22 --silicon_errata=CPU23 --silicon_errata=CPU40 -z -m"h2neo_monitor.map" --heap_size=160 --stack_size=160 --cinit_hold_wdt=on -i"C:/ti/ccsv6/ccs_base/msp430/include" -i"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/lib" -i"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include" -i"C:/ti/ccsv6/ccs_base/msp430/lib/5xx_6xx_FRxx" --reread_libs --diag_wrap=off --display_error_number --warn_sections --xml_link_info="h2neo_monitor_linkInfo.xml" --use_hw_mpy=F5 --rom_model -o "h2neo_monitor.out" "./lcd_screen.obj" "./main.obj" "./rotary_encoder_w_button.obj" "../lnk_msp430f5529.cmd"  -l"libmath.a" -l"libc.a" 
+<Linking>
+remark #10372-D: (ULP 4.1) Detected uninitialized Port B in this project. Recommend initializing all unused ports to eliminate wasted current consumption on unused pins.
+remark #10372-D: (ULP 4.1) Detected uninitialized Port C in this project. Recommend initializing all unused ports to eliminate wasted current consumption on unused pins.
+'Finished building target: h2neo_monitor.out'
+' '
+
+**** Build Finished ****
+
+**** Build of configuration Debug for project h2neo_monitor ****
+
+"C:\\ti\\ccsv6\\utils\\bin\\gmake" -k all 
+gmake: Nothing to be done for `all'.
+
+**** Build Finished ****
