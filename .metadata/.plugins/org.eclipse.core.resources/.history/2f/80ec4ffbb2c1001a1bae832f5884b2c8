@@ -7,7 +7,7 @@
 
 extern unsigned short ps;		// Grab BIT4 and BIT5
 extern unsigned short ns;
-extern float value;
+extern double value;
 
 
 /********************************************************************************
@@ -60,12 +60,12 @@ void get_direction(void)
 		prints("left. ");
 	}
 	_delay_cycles(20000);
-	value += (float)temp;
+	value += temp;
 	ps = ns;
 	display_value(&value);
 }
 
-void display_value(float *value)
+void display_value(double *value)
 {
 	// TODO: display the current value on the display screen
 	char buf[80];
@@ -78,7 +78,6 @@ void display_value(float *value)
 //	value = 233.1;
 	ftoa(value, buf, 2);
 	prints(buf);
-	prints(" ");
 }
 
 // Converts a floating point number to string

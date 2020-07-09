@@ -10,8 +10,8 @@
  *******************************************************************************/
 void RotEnc_Init(void);
 void get_direction(void);
-void display_value(float *value);
-void ftoa(float *value, char* str, int afterP);
+void display_value(double value);
+void ftoa(float n, char* str, int afterP);
 void reverse(char* str, int len);
 int intToStr(int x, char str[], int d);
 

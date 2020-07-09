@@ -78,7 +78,6 @@ void display_value(float *value)
 //	value = 233.1;
 	ftoa(value, buf, 2);
 	prints(buf);
-	prints(" ");
 }
 
 // Converts a floating point number to string

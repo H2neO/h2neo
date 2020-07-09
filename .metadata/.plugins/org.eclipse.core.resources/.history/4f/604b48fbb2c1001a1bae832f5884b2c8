@@ -16,7 +16,7 @@
 
 unsigned short ps;		// Grab BIT4 and BIT5
 unsigned short ns;
-float value = 0;
+double value = 0;
 
 /********************************************************************************
  * main.c

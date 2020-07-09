@@ -14,22 +14,22 @@
 "C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/bin/cl430" -vmspx --data_model=restricted --use_hw_mpy=F5 --include_path="C:/ti/ccsv6/ccs_base/msp430/include" --include_path="C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include" --advice:power=all --define=__MSP430F5529__ -g --printf_support=minimal --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi --silicon_errata=CPU21 --silicon_errata=CPU22 --silicon_errata=CPU23 --silicon_errata=CPU40 --preproc_with_compile --preproc_dependency="rotary_encoder_w_button.pp"  "../rotary_encoder_w_button.c"
 "../rotary_encoder_w_button.c", line 54: remark #1527-D: (ULP 2.1) Detected SW delay loop using __delay_cycles. Recommend using a timer module instead
 "../rotary_encoder_w_button.c", line 62: remark #1527-D: (ULP 2.1) Detected SW delay loop using __delay_cycles. Recommend using a timer module instead
-"../rotary_encoder_w_button.c", line 100: remark #2553-D: (ULP 14.1) Array index (involving "i") of type "int". Recommend using "unsigned int"
-"../rotary_encoder_w_button.c", line 114: remark #2553-D: (ULP 14.1) Array index (involving "i") of type "int". Recommend using "unsigned int"
+"../rotary_encoder_w_button.c", line 101: remark #2553-D: (ULP 14.1) Array index (involving "i") of type "int". Recommend using "unsigned int"
 "../rotary_encoder_w_button.c", line 115: remark #2553-D: (ULP 14.1) Array index (involving "i") of type "int". Recommend using "unsigned int"
-"../rotary_encoder_w_button.c", line 115: remark #2553-D: (ULP 14.1) Array index (involving "j") of type "int". Recommend using "unsigned int"
+"../rotary_encoder_w_button.c", line 116: remark #2553-D: (ULP 14.1) Array index (involving "i") of type "int". Recommend using "unsigned int"
 "../rotary_encoder_w_button.c", line 116: remark #2553-D: (ULP 14.1) Array index (involving "j") of type "int". Recommend using "unsigned int"
-"../rotary_encoder_w_button.c", line 128: remark #2553-D: (ULP 14.1) Array index (involving "i") of type "int". Recommend using "unsigned int"
-"../rotary_encoder_w_button.c", line 128: remark #1530-D: (ULP 5.1) Detected modulo operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
-"../rotary_encoder_w_button.c", line 129: remark #1530-D: (ULP 5.1) Detected divide operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
-"../rotary_encoder_w_button.c", line 133: remark #2553-D: (ULP 14.1) Array index (involving "i") of type "int". Recommend using "unsigned int"
-"../rotary_encoder_w_button.c", line 136: remark #2553-D: (ULP 14.1) Array index (involving "i") of type "int". Recommend using "unsigned int"
-"../rotary_encoder_w_button.c", line 150: remark #1538-D: (ULP 10.1) ISR Port_1 calls function prints. Recommend moving function call away from ISR, or inlining the function, or using pragmas
-"../rotary_encoder_w_button.c", line 151: remark #1527-D: (ULP 2.1) Detected SW delay loop using __delay_cycles. Recommend using a timer module instead
-"../rotary_encoder_w_button.c", line 156: remark #1538-D: (ULP 10.1) ISR Port_1 calls function prints. Recommend moving function call away from ISR, or inlining the function, or using pragmas
-"../rotary_encoder_w_button.c", line 157: remark #1538-D: (ULP 10.1) ISR Port_1 calls function get_direction. Recommend moving function call away from ISR, or inlining the function, or using pragmas
-"../rotary_encoder_w_button.c", line 167: remark #1538-D: (ULP 10.1) ISR Port_2 calls function prints. Recommend moving function call away from ISR, or inlining the function, or using pragmas
-"../rotary_encoder_w_button.c", line 168: remark #1527-D: (ULP 2.1) Detected SW delay loop using __delay_cycles. Recommend using a timer module instead
+"../rotary_encoder_w_button.c", line 117: remark #2553-D: (ULP 14.1) Array index (involving "j") of type "int". Recommend using "unsigned int"
+"../rotary_encoder_w_button.c", line 129: remark #2553-D: (ULP 14.1) Array index (involving "i") of type "int". Recommend using "unsigned int"
+"../rotary_encoder_w_button.c", line 129: remark #1530-D: (ULP 5.1) Detected modulo operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"../rotary_encoder_w_button.c", line 130: remark #1530-D: (ULP 5.1) Detected divide operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"../rotary_encoder_w_button.c", line 134: remark #2553-D: (ULP 14.1) Array index (involving "i") of type "int". Recommend using "unsigned int"
+"../rotary_encoder_w_button.c", line 137: remark #2553-D: (ULP 14.1) Array index (involving "i") of type "int". Recommend using "unsigned int"
+"../rotary_encoder_w_button.c", line 151: remark #1538-D: (ULP 10.1) ISR Port_1 calls function prints. Recommend moving function call away from ISR, or inlining the function, or using pragmas
+"../rotary_encoder_w_button.c", line 152: remark #1527-D: (ULP 2.1) Detected SW delay loop using __delay_cycles. Recommend using a timer module instead
+"../rotary_encoder_w_button.c", line 157: remark #1538-D: (ULP 10.1) ISR Port_1 calls function prints. Recommend moving function call away from ISR, or inlining the function, or using pragmas
+"../rotary_encoder_w_button.c", line 158: remark #1538-D: (ULP 10.1) ISR Port_1 calls function get_direction. Recommend moving function call away from ISR, or inlining the function, or using pragmas
+"../rotary_encoder_w_button.c", line 168: remark #1538-D: (ULP 10.1) ISR Port_2 calls function prints. Recommend moving function call away from ISR, or inlining the function, or using pragmas
+"../rotary_encoder_w_button.c", line 169: remark #1527-D: (ULP 2.1) Detected SW delay loop using __delay_cycles. Recommend using a timer module instead
 "C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 333 (col. 37): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
 "C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 334 (col. 10): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
 "C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 335 (col. 37): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
@@ -82,14 +82,9 @@
 "C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 437 (col. 9): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
 "C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 439 (col. 13): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
 "../rotary_encoder_w_button.c", line 63 (col. 8): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
-"../rotary_encoder_w_button.c", line 65 (col. 15): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
-"../rotary_encoder_w_button.c", line 68 (col. 6): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
-"../rotary_encoder_w_button.c", line 78 (col. 8): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
-"../rotary_encoder_w_button.c", line 79 (col. 6): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
-"../rotary_encoder_w_button.c", line 87 (col. 6): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
-"../rotary_encoder_w_button.c", line 90 (col. 14): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
-"../rotary_encoder_w_button.c", line 93 (col. 18): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
-"../rotary_encoder_w_button.c", line 103 (col. 9): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"../rotary_encoder_w_button.c", line 91 (col. 14): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"../rotary_encoder_w_button.c", line 94 (col. 18): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"../rotary_encoder_w_button.c", line 104 (col. 9): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
 'Finished building: ../rotary_encoder_w_button.c'
 ' '
 'Building target: h2neo_monitor.out'
@@ -107,5 +102,222 @@ remark #10372-D: (ULP 4.1) Detected uninitialized Port C in this project. Recomm
 
 "C:\\ti\\ccsv6\\utils\\bin\\gmake" -k all 
 gmake: Nothing to be done for `all'.
+
+**** Build Finished ****
+
+**** Build of configuration Debug for project h2neo_monitor ****
+
+"C:\\ti\\ccsv6\\utils\\bin\\gmake" -k all 
+'Building file: ../rotary_encoder_w_button.c'
+'Invoking: MSP430 Compiler'
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/bin/cl430" -vmspx --data_model=restricted --use_hw_mpy=F5 --include_path="C:/ti/ccsv6/ccs_base/msp430/include" --include_path="C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include" --advice:power=all --define=__MSP430F5529__ -g --printf_support=minimal --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi --silicon_errata=CPU21 --silicon_errata=CPU22 --silicon_errata=CPU23 --silicon_errata=CPU40 --preproc_with_compile --preproc_dependency="rotary_encoder_w_button.pp"  "../rotary_encoder_w_button.c"
+"../rotary_encoder_w_button.c", line 54: remark #1527-D: (ULP 2.1) Detected SW delay loop using __delay_cycles. Recommend using a timer module instead
+"../rotary_encoder_w_button.c", line 62: remark #1527-D: (ULP 2.1) Detected SW delay loop using __delay_cycles. Recommend using a timer module instead
+"../rotary_encoder_w_button.c", line 101: remark #2553-D: (ULP 14.1) Array index (involving "i") of type "int". Recommend using "unsigned int"
+"../rotary_encoder_w_button.c", line 115: remark #2553-D: (ULP 14.1) Array index (involving "i") of type "int". Recommend using "unsigned int"
+"../rotary_encoder_w_button.c", line 116: remark #2553-D: (ULP 14.1) Array index (involving "i") of type "int". Recommend using "unsigned int"
+"../rotary_encoder_w_button.c", line 116: remark #2553-D: (ULP 14.1) Array index (involving "j") of type "int". Recommend using "unsigned int"
+"../rotary_encoder_w_button.c", line 117: remark #2553-D: (ULP 14.1) Array index (involving "j") of type "int". Recommend using "unsigned int"
+"../rotary_encoder_w_button.c", line 129: remark #2553-D: (ULP 14.1) Array index (involving "i") of type "int". Recommend using "unsigned int"
+"../rotary_encoder_w_button.c", line 129: remark #1530-D: (ULP 5.1) Detected modulo operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"../rotary_encoder_w_button.c", line 130: remark #1530-D: (ULP 5.1) Detected divide operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"../rotary_encoder_w_button.c", line 134: remark #2553-D: (ULP 14.1) Array index (involving "i") of type "int". Recommend using "unsigned int"
+"../rotary_encoder_w_button.c", line 137: remark #2553-D: (ULP 14.1) Array index (involving "i") of type "int". Recommend using "unsigned int"
+"../rotary_encoder_w_button.c", line 151: remark #1538-D: (ULP 10.1) ISR Port_1 calls function prints. Recommend moving function call away from ISR, or inlining the function, or using pragmas
+"../rotary_encoder_w_button.c", line 152: remark #1527-D: (ULP 2.1) Detected SW delay loop using __delay_cycles. Recommend using a timer module instead
+"../rotary_encoder_w_button.c", line 157: remark #1538-D: (ULP 10.1) ISR Port_1 calls function prints. Recommend moving function call away from ISR, or inlining the function, or using pragmas
+"../rotary_encoder_w_button.c", line 158: remark #1538-D: (ULP 10.1) ISR Port_1 calls function get_direction. Recommend moving function call away from ISR, or inlining the function, or using pragmas
+"../rotary_encoder_w_button.c", line 168: remark #1538-D: (ULP 10.1) ISR Port_2 calls function prints. Recommend moving function call away from ISR, or inlining the function, or using pragmas
+"../rotary_encoder_w_button.c", line 169: remark #1527-D: (ULP 2.1) Detected SW delay loop using __delay_cycles. Recommend using a timer module instead
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 333 (col. 37): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 334 (col. 10): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 335 (col. 37): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 336 (col. 10): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 337 (col. 37): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 338 (col. 10): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 340 (col. 37): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 341 (col. 10): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 342 (col. 10): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 343 (col. 37): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 344 (col. 10): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 345 (col. 10): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 346 (col. 37): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 347 (col. 10): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 348 (col. 10): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 350 (col. 37): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 351 (col. 11): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 352 (col. 11): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 354 (col. 37): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 355 (col. 11): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 356 (col. 11): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 358 (col. 37): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 359 (col. 11): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 360 (col. 11): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 362 (col. 37): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 363 (col. 10): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 364 (col. 37): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 365 (col. 10): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 366 (col. 37): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 367 (col. 10): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 373 (col. 37): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 374 (col. 10): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 375 (col. 37): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 376 (col. 10): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 377 (col. 37): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 378 (col. 10): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 395 (col. 37): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 397 (col. 9): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 399 (col. 13): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 403 (col. 9): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 405 (col. 13): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 412 (col. 37): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 414 (col. 9): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 416 (col. 13): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 420 (col. 9): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 422 (col. 13): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 429 (col. 37): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 431 (col. 9): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 433 (col. 13): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 437 (col. 9): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 439 (col. 13): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"../rotary_encoder_w_button.c", line 63 (col. 8): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"../rotary_encoder_w_button.c", line 91 (col. 14): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"../rotary_encoder_w_button.c", line 94 (col. 18): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"../rotary_encoder_w_button.c", line 104 (col. 9): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+'Finished building: ../rotary_encoder_w_button.c'
+' '
+'Building target: h2neo_monitor.out'
+'Invoking: MSP430 Linker'
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/bin/cl430" -vmspx --data_model=restricted --use_hw_mpy=F5 --advice:power=all --define=__MSP430F5529__ -g --printf_support=minimal --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi --silicon_errata=CPU21 --silicon_errata=CPU22 --silicon_errata=CPU23 --silicon_errata=CPU40 -z -m"h2neo_monitor.map" --heap_size=160 --stack_size=160 --cinit_hold_wdt=on -i"C:/ti/ccsv6/ccs_base/msp430/include" -i"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/lib" -i"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include" -i"C:/ti/ccsv6/ccs_base/msp430/lib/5xx_6xx_FRxx" --reread_libs --diag_wrap=off --display_error_number --warn_sections --xml_link_info="h2neo_monitor_linkInfo.xml" --use_hw_mpy=F5 --rom_model -o "h2neo_monitor.out" "./lcd_screen.obj" "./main.obj" "./rotary_encoder_w_button.obj" "../lnk_msp430f5529.cmd"  -l"libmath.a" -l"libc.a" 
+<Linking>
+remark #10372-D: (ULP 4.1) Detected uninitialized Port B in this project. Recommend initializing all unused ports to eliminate wasted current consumption on unused pins.
+remark #10372-D: (ULP 4.1) Detected uninitialized Port C in this project. Recommend initializing all unused ports to eliminate wasted current consumption on unused pins.
+'Finished building target: h2neo_monitor.out'
+' '
+
+**** Build Finished ****
+
+**** Build of configuration Debug for project h2neo_monitor ****
+
+"C:\\ti\\ccsv6\\utils\\bin\\gmake" -k all 
+'Building file: ../rotary_encoder_w_button.c'
+'Invoking: MSP430 Compiler'
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/bin/cl430" -vmspx --data_model=restricted --use_hw_mpy=F5 --include_path="C:/ti/ccsv6/ccs_base/msp430/include" --include_path="C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include" --advice:power=all --define=__MSP430F5529__ -g --printf_support=minimal --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi --silicon_errata=CPU21 --silicon_errata=CPU22 --silicon_errata=CPU23 --silicon_errata=CPU40 --preproc_with_compile --preproc_dependency="rotary_encoder_w_button.pp"  "../rotary_encoder_w_button.c"
+"../rotary_encoder_w_button.c", line 54: remark #1527-D: (ULP 2.1) Detected SW delay loop using __delay_cycles. Recommend using a timer module instead
+"../rotary_encoder_w_button.c", line 62: remark #1527-D: (ULP 2.1) Detected SW delay loop using __delay_cycles. Recommend using a timer module instead
+"../rotary_encoder_w_button.c", line 80: error #31: expression must have integral type
+"../rotary_encoder_w_button.c", line 101: remark #2553-D: (ULP 14.1) Array index (involving "i") of type "int". Recommend using "unsigned int"
+"../rotary_encoder_w_button.c", line 115: remark #2553-D: (ULP 14.1) Array index (involving "i") of type "int". Recommend using "unsigned int"
+"../rotary_encoder_w_button.c", line 116: remark #2553-D: (ULP 14.1) Array index (involving "i") of type "int". Recommend using "unsigned int"
+"../rotary_encoder_w_button.c", line 116: remark #2553-D: (ULP 14.1) Array index (involving "j") of type "int". Recommend using "unsigned int"
+"../rotary_encoder_w_button.c", line 117: remark #2553-D: (ULP 14.1) Array index (involving "j") of type "int". Recommend using "unsigned int"
+"../rotary_encoder_w_button.c", line 129: remark #2553-D: (ULP 14.1) Array index (involving "i") of type "int". Recommend using "unsigned int"
+"../rotary_encoder_w_button.c", line 129: remark #1530-D: (ULP 5.1) Detected modulo operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"../rotary_encoder_w_button.c", line 130: remark #1530-D: (ULP 5.1) Detected divide operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"../rotary_encoder_w_button.c", line 134: remark #2553-D: (ULP 14.1) Array index (involving "i") of type "int". Recommend using "unsigned int"
+"../rotary_encoder_w_button.c", line 137: remark #2553-D: (ULP 14.1) Array index (involving "i") of type "int". Recommend using "unsigned int"
+"../rotary_encoder_w_button.c", line 151: remark #1538-D: (ULP 10.1) ISR Port_1 calls function prints. Recommend moving function call away from ISR, or inlining the function, or using pragmas
+"../rotary_encoder_w_button.c", line 152: remark #1527-D: (ULP 2.1) Detected SW delay loop using __delay_cycles. Recommend using a timer module instead
+"../rotary_encoder_w_button.c", line 157: remark #1538-D: (ULP 10.1) ISR Port_1 calls function prints. Recommend moving function call away from ISR, or inlining the function, or using pragmas
+"../rotary_encoder_w_button.c", line 158: remark #1538-D: (ULP 10.1) ISR Port_1 calls function get_direction. Recommend moving function call away from ISR, or inlining the function, or using pragmas
+"../rotary_encoder_w_button.c", line 168: remark #1538-D: (ULP 10.1) ISR Port_2 calls function prints. Recommend moving function call away from ISR, or inlining the function, or using pragmas
+"../rotary_encoder_w_button.c", line 169: remark #1527-D: (ULP 2.1) Detected SW delay loop using __delay_cycles. Recommend using a timer module instead
+1 error detected in the compilation of "../rotary_encoder_w_button.c".
+
+>> Compilation failure
+gmake: *** [rotary_encoder_w_button.obj] Error 1
+gmake: Target `all' not remade because of errors.
+
+**** Build Finished ****
+
+**** Build of configuration Debug for project h2neo_monitor ****
+
+"C:\\ti\\ccsv6\\utils\\bin\\gmake" -k all 
+'Building file: ../rotary_encoder_w_button.c'
+'Invoking: MSP430 Compiler'
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/bin/cl430" -vmspx --data_model=restricted --use_hw_mpy=F5 --include_path="C:/ti/ccsv6/ccs_base/msp430/include" --include_path="C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include" --advice:power=all --define=__MSP430F5529__ -g --printf_support=minimal --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi --silicon_errata=CPU21 --silicon_errata=CPU22 --silicon_errata=CPU23 --silicon_errata=CPU40 --preproc_with_compile --preproc_dependency="rotary_encoder_w_button.pp"  "../rotary_encoder_w_button.c"
+"../rotary_encoder_w_button.c", line 54: remark #1527-D: (ULP 2.1) Detected SW delay loop using __delay_cycles. Recommend using a timer module instead
+"../rotary_encoder_w_button.c", line 62: remark #1527-D: (ULP 2.1) Detected SW delay loop using __delay_cycles. Recommend using a timer module instead
+"../rotary_encoder_w_button.c", line 102: remark #2553-D: (ULP 14.1) Array index (involving "i") of type "int". Recommend using "unsigned int"
+"../rotary_encoder_w_button.c", line 116: remark #2553-D: (ULP 14.1) Array index (involving "i") of type "int". Recommend using "unsigned int"
+"../rotary_encoder_w_button.c", line 117: remark #2553-D: (ULP 14.1) Array index (involving "i") of type "int". Recommend using "unsigned int"
+"../rotary_encoder_w_button.c", line 117: remark #2553-D: (ULP 14.1) Array index (involving "j") of type "int". Recommend using "unsigned int"
+"../rotary_encoder_w_button.c", line 118: remark #2553-D: (ULP 14.1) Array index (involving "j") of type "int". Recommend using "unsigned int"
+"../rotary_encoder_w_button.c", line 130: remark #2553-D: (ULP 14.1) Array index (involving "i") of type "int". Recommend using "unsigned int"
+"../rotary_encoder_w_button.c", line 130: remark #1530-D: (ULP 5.1) Detected modulo operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"../rotary_encoder_w_button.c", line 131: remark #1530-D: (ULP 5.1) Detected divide operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"../rotary_encoder_w_button.c", line 135: remark #2553-D: (ULP 14.1) Array index (involving "i") of type "int". Recommend using "unsigned int"
+"../rotary_encoder_w_button.c", line 138: remark #2553-D: (ULP 14.1) Array index (involving "i") of type "int". Recommend using "unsigned int"
+"../rotary_encoder_w_button.c", line 152: remark #1538-D: (ULP 10.1) ISR Port_1 calls function prints. Recommend moving function call away from ISR, or inlining the function, or using pragmas
+"../rotary_encoder_w_button.c", line 153: remark #1527-D: (ULP 2.1) Detected SW delay loop using __delay_cycles. Recommend using a timer module instead
+"../rotary_encoder_w_button.c", line 158: remark #1538-D: (ULP 10.1) ISR Port_1 calls function prints. Recommend moving function call away from ISR, or inlining the function, or using pragmas
+"../rotary_encoder_w_button.c", line 159: remark #1538-D: (ULP 10.1) ISR Port_1 calls function get_direction. Recommend moving function call away from ISR, or inlining the function, or using pragmas
+"../rotary_encoder_w_button.c", line 169: remark #1538-D: (ULP 10.1) ISR Port_2 calls function prints. Recommend moving function call away from ISR, or inlining the function, or using pragmas
+"../rotary_encoder_w_button.c", line 170: remark #1527-D: (ULP 2.1) Detected SW delay loop using __delay_cycles. Recommend using a timer module instead
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 333 (col. 37): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 334 (col. 10): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 335 (col. 37): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 336 (col. 10): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 337 (col. 37): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 338 (col. 10): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 340 (col. 37): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 341 (col. 10): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 342 (col. 10): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 343 (col. 37): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 344 (col. 10): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 345 (col. 10): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 346 (col. 37): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 347 (col. 10): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 348 (col. 10): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 350 (col. 37): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 351 (col. 11): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 352 (col. 11): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 354 (col. 37): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 355 (col. 11): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 356 (col. 11): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 358 (col. 37): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 359 (col. 11): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 360 (col. 11): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 362 (col. 37): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 363 (col. 10): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 364 (col. 37): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 365 (col. 10): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 366 (col. 37): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 367 (col. 10): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 373 (col. 37): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 374 (col. 10): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 375 (col. 37): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 376 (col. 10): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 377 (col. 37): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 378 (col. 10): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 395 (col. 37): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 397 (col. 9): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 399 (col. 13): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 403 (col. 9): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 405 (col. 13): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 412 (col. 37): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 414 (col. 9): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 416 (col. 13): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 420 (col. 9): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 422 (col. 13): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 429 (col. 37): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 431 (col. 9): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 433 (col. 13): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 437 (col. 9): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h", line 439 (col. 13): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"../rotary_encoder_w_button.c", line 63 (col. 8): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"../rotary_encoder_w_button.c", line 92 (col. 14): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"../rotary_encoder_w_button.c", line 95 (col. 18): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"../rotary_encoder_w_button.c", line 105 (col. 9): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+'Finished building: ../rotary_encoder_w_button.c'
+' '
+'Building target: h2neo_monitor.out'
+'Invoking: MSP430 Linker'
+"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/bin/cl430" -vmspx --data_model=restricted --use_hw_mpy=F5 --advice:power=all --define=__MSP430F5529__ -g --printf_support=minimal --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi --silicon_errata=CPU21 --silicon_errata=CPU22 --silicon_errata=CPU23 --silicon_errata=CPU40 -z -m"h2neo_monitor.map" --heap_size=160 --stack_size=160 --cinit_hold_wdt=on -i"C:/ti/ccsv6/ccs_base/msp430/include" -i"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/lib" -i"C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include" -i"C:/ti/ccsv6/ccs_base/msp430/lib/5xx_6xx_FRxx" --reread_libs --diag_wrap=off --display_error_number --warn_sections --xml_link_info="h2neo_monitor_linkInfo.xml" --use_hw_mpy=F5 --rom_model -o "h2neo_monitor.out" "./lcd_screen.obj" "./main.obj" "./rotary_encoder_w_button.obj" "../lnk_msp430f5529.cmd"  -l"libmath.a" -l"libc.a" 
+<Linking>
+remark #10372-D: (ULP 4.1) Detected uninitialized Port B in this project. Recommend initializing all unused ports to eliminate wasted current consumption on unused pins.
+remark #10372-D: (ULP 4.1) Detected uninitialized Port C in this project. Recommend initializing all unused ports to eliminate wasted current consumption on unused pins.
+'Finished building target: h2neo_monitor.out'
+' '
 
 **** Build Finished ****

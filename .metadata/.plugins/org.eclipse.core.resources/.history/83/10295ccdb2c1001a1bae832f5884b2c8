@@ -7,7 +7,7 @@
 
 extern unsigned short ps;		// Grab BIT4 and BIT5
 extern unsigned short ns;
-extern float value;
+extern double value;
 
 
 /********************************************************************************
@@ -60,12 +60,12 @@ void get_direction(void)
 		prints("left. ");
 	}
 	_delay_cycles(20000);
-	value += (float)temp;
+	value += temp;
 	ps = ns;
-	display_value(&value);
+	display_value(value);
 }
 
-void display_value(float *value)
+void display_value(double value)
 {
 	// TODO: display the current value on the display screen
 	char buf[80];
@@ -75,19 +75,17 @@ void display_value(float *value)
 //	sprintf(buf, ": %d", *value);
 //	puts(buf);
 //	prints(buf);
-//	value = 233.1;
+	value = 233.1;
 	ftoa(value, buf, 2);
 	prints(buf);
-	prints(" ");
 }
 
 // Converts a floating point number to string
-// value  --> Input value pointer
+// n      --> Input number
 // str[]  --> Array for output string
 // afterP --> Number of digits to be considered after the point
-void ftoa(float *value, char* str, int afterP)
+void ftoa(float n, char* str, int afterP)
 {
-	float n = *value;
 	// Extract integer part
 	int ipart = (int)n;
 
