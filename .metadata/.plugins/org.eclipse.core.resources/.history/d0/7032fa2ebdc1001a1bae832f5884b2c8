@@ -1,0 +1,29 @@
+/*
+ * test.h
+ *
+ *  Created on: Jul 9, 2020
+ *      Author: Jenny Cho
+ *
+ *
+ * This file consists of code to test the functionality of each function
+ * before integrating into the project files.
+ */
+
+#include <msp430f5529.h>
+#include "nokia5110.h"
+#include "rotary_encoder.h"
+#include "test.h"
+
+// functions defined here
+void test_cursDripRate() {
+	/* Function: Set cursor to middle of screen
+	 *
+	 * Note:
+	 * Translations are arbitrary. In the end we want it to be fixed
+	 * around the decimal point.
+	 * 	i.e.	 1.25 mL/r		8.12 mL/h
+	 * 			25.70 mL/r 	   13.64 mL/r
+	 */
+	setCursor((X_PIXELS/2) - 2, (Y_PIXELS/2) - 1);
+	prints("hi");
+}

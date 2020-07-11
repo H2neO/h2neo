@@ -1,0 +1,19 @@
+/* 
+ * This file consists of code to test the functionality of each function
+ * before integrating into the project files.
+ */
+#include <msp430f5529.h>
+#include "nokia5110.h"
+#include "rotary_encoder.h"
+
+
+// declare functions here
+void test();
+
+
+// functions defined here
+void test () {
+	// set cursor to middle of screen
+	setCursor(X_PIXELS/2, Y_PIXELS/2);
+	prints("hi");
+}

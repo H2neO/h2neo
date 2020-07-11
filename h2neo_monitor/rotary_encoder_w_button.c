@@ -148,16 +148,16 @@ int intToStr(int x, char str[], int d)
 __interrupt void Port_1(void)
 {
 	if (P1IFG & BIT1) {
-		P1OUT ^= TEST_LED1;					// Toggle P1.0
-		prints("hello! ");
-		_delay_cycles(20000);
+//		P1OUT ^= TEST_LED1;					// Toggle P1.0
+//		prints("hello! ");
+//		_delay_cycles(20000);
 		P1IFG &= ~BRD_BUTTON2;				// P1.1 interrupt flag cleared
 	}
 	if ((P1IFG & BIT4) || (P1IFG & BIT5)) {
-		P1OUT ^= TEST_LED1;					// Toggle P1.0
-		prints("turned ");
-		get_direction();
-		P1IFG &= ~CH_A;						// clear interrupt flag
+//		P1OUT ^= TEST_LED1;					// Toggle P1.0
+//		prints("turned ");
+//		get_direction();
+//		P1IFG &= ~CH_A;						// clear interrupt flag
 		P1IFG &= ~CH_B;						// clear interrupt flag
 	}
 }
@@ -166,7 +166,8 @@ __interrupt void Port_1(void)
 __interrupt void Port_2(void)
 {
 	P1OUT ^= TEST_LED1;						// Toggle P1.0
-	prints("button. ");
-	_delay_cycles(10000);
+//	prints("button. ");
+//	test_cursDripRate();
+//	_delay_cycles(10000);
 	P2IFG &= ~RE_BUTTON;					// P2.7 interrupt flag cleared
 }

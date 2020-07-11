@@ -150,6 +150,10 @@ char sendByte(unsigned char isData, unsigned char byte)
 
 /*******************************************************************************
  * Positions cursor to given coordinates (x, y)
+ * (0,0)-----------------------
+ *  |							|
+ *  |							|
+ * 	L------------------------(83, 5)
  ******************************************************************************/
 void setCursor(unsigned char xAddr, unsigned char yAddr)
 {
