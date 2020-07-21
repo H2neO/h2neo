@@ -9,6 +9,11 @@ extern unsigned short ps;		// Grab BIT4 and BIT5
 extern unsigned short ns;
 extern float value;
 
+// interrupt flags
+extern char rotKnobIFG;	// rotary encoder knob turned
+extern char rotButIFG;		// rotary encoder button pressed
+extern char s2IFG;			// on-board P1.1 (S2) pressed
+
 
 /********************************************************************************
  * Initialize ports and corresponding interrupts
@@ -148,16 +153,22 @@ int intToStr(int x, char str[], int d)
 __interrupt void Port_1(void)
 {
 	if (P1IFG & BIT1) {
-//		P1OUT ^= TEST_LED1;					// Toggle P1.0
+		if (!s2IFG) {
+			P1OUT ^= TEST_LED1;					// Toggle P1.0
+			s2IFG = 1;
 //		prints("hello! ");
 //		_delay_cycles(20000);
+		}
 		P1IFG &= ~BRD_BUTTON2;				// P1.1 interrupt flag cleared
 	}
 	if ((P1IFG & BIT4) || (P1IFG & BIT5)) {
-//		P1OUT ^= TEST_LED1;					// Toggle P1.0
+		P1OUT ^= TEST_LED1;					// Toggle P1.0
+		if (!rotKnobIFG) {
+			rotKnobIFG = 1;
 //		prints("turned ");
 //		get_direction();
-//		P1IFG &= ~CH_A;						// clear interrupt flag
+		}
+		P1IFG &= ~CH_A;						// clear interrupt flag
 		P1IFG &= ~CH_B;						// clear interrupt flag
 	}
 }
@@ -166,8 +177,12 @@ __interrupt void Port_1(void)
 __interrupt void Port_2(void)
 {
 	P1OUT ^= TEST_LED1;						// Toggle P1.0
-//	prints("button. ");
+	if (!rotButIFG) {
+		rotButIFG = 1;
+
 //	test_cursDripRate();
-//	_delay_cycles(10000);
+	}
+	prints("button. ");
+	_delay_cycles(10000);
 	P2IFG &= ~RE_BUTTON;					// P2.7 interrupt flag cleared
 }

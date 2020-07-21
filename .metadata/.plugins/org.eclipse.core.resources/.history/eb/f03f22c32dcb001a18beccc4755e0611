@@ -1,0 +1,145 @@
+#include <msp430.h> 
+
+/* TIMER_A Operation Notes:
+ *
+ * 		Clock source select and divider
+ * 			Options - ACLK, SMCLK, or externally from TAxCLK or INCLK
+ * 			Selected with TASSEL bits
+ * 			Can be divided by 2,4,8 using ID bits
+ * 			Can be further divided by 2,3,4,5,6,7,8 using TAIDEX bits
+ * 			Timer clock divider is reset when TACLR is set (but restored when TACLR is cleared)
+ *
+ * 		When the timer mode is UP or UP/DOWN...
+ * 			Timer may be stopped by writing 0 to TAxCCR0.
+ * 			It
+ * 			 may then be restarted by writing a nonzero value to TAxCCR0.
+ */
+
+// Functions
+void Clock_Init_1MHz(void);
+void initTimer_A(void);
+
+
+
+// tic - number of times the Timer ISR is entered after x clock cycles
+// sec - seconds (tic * clock cycles)
+// min - minutes (sec / 60)
+unsigned short int tic = 0, sec = 0, min = 0; //Example of Global variables.
+
+/*
+ * main.c
+ */
+
+int main (void)
+{
+	//Setup
+	WDTCTL = WDTPW + WDTHOLD; //Stop Watchdog Timer
+	P1DIR |= BIT0;					// Configure P1.0 as output
+
+	//Setup Buttons
+	P1DIR &= ~BIT1;					// P1.1 input
+	P1REN |= BIT1; 					// Enable pullup resistor of P1.1 (default: GND)
+	P1OUT |= BIT1;					// Set pullup resistor to active (+3.3V) mode
+
+	// Initialize Timer A0 (move to function after)
+	TA0CCR0 	 = 0; 		//Initially, Stop the Timer
+	TA0CTL		 =  TASSEL_2 + ID_0 + MC__UP; //Select SMCLK, SMCLK/1, Up Mode
+	TA0CCTL0	|=  CCIE;		//Enable interrupt on TA0.0
+	TA0CCR0		 =  ;		//Period of 50ms or whatever interval you like.
+	
+	P1IE |= BIT1;					// P1.1 interrupt enabled
+	P1IFG &= ~BIT1;					// P1.1 interrupt flag cleared
+//	_enable_interrupts(); //Enable General Interrupts. Best to do this last.
+
+	while (1) {
+		//Poll Buttons here. Control the Timer. Update LCD Display.
+		P1OUT |= BIT0; //Drive P1.0 HIGH - LED1 ON
+		delayMS(500); //Wait 0.5 Secs
+
+		P1OUT &= ~BIT0; //Drive P1.0 LOW - LED1 OFF
+		delayMS(500); //Wait 0.5 Secs
+
+	}
+ }
+
+/*******************************************************************************
+ * Initialize Clock to 1MHz
+ ******************************************************************************/
+void Clock_Init_1MHz(void)
+{
+	P1DIR |= BIT0;							// P1.0 ACLK set out to pins
+	P1SEL |= BIT0;							//    (no longer LED)
+//	P2DIR |= BIT2;							// P2.2 SMCLK set out to pins
+//	P2SEL |= BIT2;
+	P7DIR |= BIT7;							// P7.7 MCLK set out to pins
+	P7SEL |= BIT7;
+
+	UCSCTL3 |= SELREF_2;					// Set DCO FLL reference = REFOCLK
+	UCSCTL4 |= SELA_2;						// Set ACLK = REFOCLK
+
+	__bis_SR_register(SCG0);				// Disable the FLL control loop
+	UCSCTL0 = 0x0000;						// Set lowest possible DCOx, MODx
+	UCSCTL1 = DCORSEL_3;					// Select DCO range 1MHz operation
+	UCSCTL2 = FLLD_1 + 30;					// Set DCO Multiplier for 12MHz
+											// (N + 1) * FLLRef = Fdco
+											// (30 + 1) * 32768 = 1MHz
+											// Set FLL Div = fDCOCLK/2
+	__bic_SR_register(SCG0);				// Enable the FLL control loop
+
+	// Worst-case settling time for the DCO when the DCO range bits have been
+	// changed is n x 32 x 32 x f_MCLK / f_FLL_reference. See UCS chapter in 5xx
+	// UG for optimization.
+	// 32 x 32 x 1 MHz / 32,768 Hz = 31250 = MCLK cycles for DCO to settle
+	__delay_cycles(31250);
+
+	// Loop until XT1,XT2 & DCO fault flag is cleared
+	do
+	{
+	UCSCTL7 &= ~(XT2OFFG + XT1LFOFFG + DCOFFG);
+											// Clear XT2,XT1,DCO fault flags
+	SFRIFG1 &= ~OFIFG;                      // Clear fault flags
+	}while (SFRIFG1&OFIFG);                 // Test oscillator fault flag
+}
+
+
+/*******************************************************************************
+ * Initialize Timer0_A0
+ ******************************************************************************/
+void initTimer_A(void)
+{
+//	//Timer0_A3 Configuration
+//	TACCR0 = 0; 		//Initially, Stop the Timer
+//	TACCTL0 |= CCIE; 	//Enable interrupt for CCR0.
+//	TACTL = TASSEL_2 + ID_0 + MC_1; //Select SMCLK, SMCLK/1, Up Mode
+}
+
+
+/*******************************************************************************
+ * Delay msecs milliseconds of time based on 1MHz clock
+ ******************************************************************************/
+void delayMS(int msecs)
+{
+	tic = 0; //Reset Over-Flow counter
+	TACCR0 = 1000 - 1; //Start Timer, Compare value for Up Mode to get 1ms delay per loop
+	//Total count = TACCR0 + 1. Hence we need to subtract 1.
+
+	while(i<=msecs);
+
+	TACCR0 = 0; //Stop Timer
+}
+
+
+// Timer 0 A0 Interrupt Service Routine
+#pragma vector = TIMER0_A0_VECTOR
+__interrupt void Timer0_A0_ISR( void ) {
+	/* INCREMENT GLOBAL VARIABLES HERE:
+	 *
+	 * Will jump in here when TA0R reaches the value stored in TA0CCR0 during setup.
+	 * Count the number of tics to equal a second, then increment seconds.
+	 * Count the number of seconds to increment minutes. You get it.
+	 *
+	 * Don’t forget to update the LCD Display with the current time here if you
+	 * are not doing that in the main loop.
+	 */
+	tic++;  // increment over-flow counter
+}

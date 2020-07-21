@@ -78,6 +78,7 @@ void test_adc0()
 
 }
 
+/*
 #if defined(__TI_COMPILER_VERSION__) || defined(__IAR_SYSTEMS_ICC__)
 #pragma vector=ADC12_VECTOR
 __interrupt void ADC12ISR (void)
@@ -100,7 +101,11 @@ void __attribute__ ((interrupt(ADC12_VECTOR))) ADC12ISR (void)
 
 	if (index == 8)
 	{
-	  index = 0;
+
+//		prints("test ");
+		index = 0;
+		float n = results[index];
+		display_value(&n);
 	}
 	case  8: break;                           // Vector  8:  ADC12IFG1
 	case 10: break;                           // Vector 10:  ADC12IFG2
@@ -119,3 +124,4 @@ void __attribute__ ((interrupt(ADC12_VECTOR))) ADC12ISR (void)
 	default: break;
 	}
 }
+*/

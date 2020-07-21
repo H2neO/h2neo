@@ -1,1 +1,1 @@
-"./lcd_screen.obj" "./main.obj" "./rotary_encoder_w_button.obj" "./test.obj" "../lnk_msp430f5529.cmd" -l"libmath.a" -l"libc.a" 
+"./lcd_screen.obj" "./main.obj" "./opticalSensor.obj" "./rotary_encoder_w_button.obj" "./test.obj" "../lnk_msp430f5529.cmd" -l"libmath.a" -l"libc.a" 

@@ -15,13 +15,18 @@
 #include "rotary_encoder.h"
 #include "test.h"
 
-#define   Num_of_Results   10
+#define   Num_of_Results   8
 volatile unsigned int results[Num_of_Results];
 
 
 unsigned short ps;		// Grab BIT4 and BIT5
 unsigned short ns;
 float value = 0;
+
+// interrupt flags
+char rotKnobIFG = 0;	// rotary encoder knob turned
+char rotButIFG = 0;		// rotary encoder button pressed
+char s2IFG = 0;			// on-board P1.1 (S2) pressed
 
 /********************************************************************************
  * main.c
@@ -39,37 +44,10 @@ int main(void) {
 	setCursor(0, 0);
 
 //	test_adc0_init();
-	/*
-	 * ADC12SHT0_x   -- sample-and-hold time. Defines num ADC12CLK cycles in the sampling period
-	 * 						 0b100 --> 64 cycles
-	 * ADC12ON       -- ADC12_A on
-	 * ADC12MSC      -- set multiple sample and conversion (valid for sequence or repeated modes)
-	 * ADC12REFON    -- reference generator ON
-	 * ADC12REF2_5V  -- 0b->1.5V, 1b->2.5V (ADC12REFON must be set)
-	 */
-	REFCTL0 &= ~REFMSTR;
-	ADC12CTL0 = ADC12ON + ADC12SHT0_8 + ADC12MSC;
-	ADC12CTL0 |= ADC12REFON;
-//	ADC12CTL0 &= ~ADC12REF2_5V;  // 0b, ref voltage = 1.5V
-	ADC12CTL0 |= ADC12REF2_5V;  // 1b, ref voltage = 2.5V
 
+//	ADC12CTL0 |= ADC12SC;                     // Start conversion
 
-	/*
-	 * ADC12SHP      -- sample-and-hold-pulse-mode select (1->SAMPCON sourced from sampling timer)
-	 * ADC12CONSEQ_x -- 2->repeat single channel
-	 */
-	ADC12CTL1 = ADC12SHP+ADC12CONSEQ_2;       // Use sampling timer, set mode
-	ADC12IE = 0x01;                           // Enable ADC12IFG.0
-	ADC12CTL0 |= ADC12ENC;                    // Enable conversions
-	/*
-	 * Enable A/D channel A0 (P6.0)
-	 * If no ports connect to desired A##, then use ADC12MCTLx register (x == ##)
-	 */
-	P6SEL |= 0x01;
-	ADC12MCTL0 =
-	ADC12CTL0 |= ADC12SC;                     // Start conversion
-
-	static unsigned char i = 0;
+//	static unsigned char in = 0;
 
 
 
@@ -78,14 +56,30 @@ int main(void) {
 
 	__no_operation();						// For debugger
 
+//	char str[5];
 	while (1) {
+		if (s2IFG) {
+			prints("hello! ");
+			s2IFG = 0;
+		}
+		if (rotKnobIFG) {
+			prints("turned ");
+			get_direction();
+			rotKnobIFG = 0;
+		}
+		if (rotButIFG) {
+			prints("button. ");
+			rotButIFG = 0;
+		}
 //		test_adc0();
 		// display value
-		prints(results[i++]);
-		if (i == 8)
-		{
-		  i = 0;
-		}
+
+//		intToStr(results[in++], str, 0);
+//		prints(str);
+//		if (in == 8)
+//		{
+//		  in = 0;
+//		}
 
 
 //		ps = (P1IN>>4) & 0x3;

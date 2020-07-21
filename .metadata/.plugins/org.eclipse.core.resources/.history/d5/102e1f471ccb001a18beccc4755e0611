@@ -1,0 +1,44 @@
+#include <msp430.h> 
+
+
+unsigned short int tic = 0, sec = 0, min = 0; //Example of Global variables.
+
+/*
+ * main.c
+ */
+
+int main (void)
+{
+	//Setup
+	WDTCTL = WDTPW + WDTHOLD; //Stop Watchdog Timer
+
+	//Setup Buttons
+	P1DIR  =  ;
+	P1REN  =  ;		//Optional.
+	P1OUT  =  ;		//Optional.
+
+	//Setup Timer A0
+	TA0CTL		=  ;		//Setup Timer/Start Timer
+	TA0CCTL0	=  ;		//Enable interrupt on TA0.0
+	TA0CCR0		=  ;		//Period of 50ms or whatever interval you like.
+
+	_enable_interrupts(); //Enable General Interrupts. Best to do this last.
+	
+	while (1) {
+		//Poll Buttons here. Control the Timer. Update LCD Display.
+	}
+ }
+
+// Timer 0 A0 Interrupt Service Routine
+#pragma vector = TIMER0_A0_VECTOR
+__interrupt void Timer0_A0_ISR( void ) {
+	/* INCREMENT GLOBAL VARIABLES HERE:
+	 *
+	 * Will jump in here when TA0R reaches the value stored in TA0CCR0 during setup.
+	 * Count the number of tics to equal a second, then increment seconds.
+	 * Count the number of seconds to increment minutes. You get it.
+	 *
+	 * Don’t forget to update the LCD Display with the current time here if you
+	 * are not doing that in the main loop.
+	 */
+}
