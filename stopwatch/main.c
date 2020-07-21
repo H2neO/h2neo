@@ -13,19 +13,33 @@
  * 			Timer may be stopped by writing 0 to TAxCCR0.
  * 			It
  * 			 may then be restarted by writing a nonzero value to TAxCCR0.
+ *
+ * Debouncing in firmware
+ * 		You can use a timer that generates an interrupt every 10ms, for example.
+ * 		In this interrupt you read your inputs and compare it to the state of
+ * 		the previous interrupt. If it has changed you can wait for the next
+ * 		interrupt and check if this changed state still exists - if so, you can
+ * 		register this event as a debounced button press and set a flag to signal
+ * 		the press to the main program. With the right timer interval you can
+ * 		debounce even the worst buttons. And for a human, pressing a button
+ * 		shorter than 10 or 20ms is almost impossible, so a detection is guaranteed.
  */
 
 // Functions
 void Clock_Init_1MHz(void);
-void initTimer_A(void);
+void Timer0_A5_Init(void);
 void delayMS(int msecs);
+void startTimer0_A5(void);
+void stopTimer0_A5(void);
+void getSec(int tics);
 
 
 
 // tic - number of times the Timer ISR is entered after x clock cycles
 // sec - seconds (tic * clock cycles)
 // min - minutes (sec / 60)
-unsigned short int tic = 0, sec = 0, min = 0; //Example of Global variables.
+unsigned short int tic = 0, msec = 0, sec = 0, min = 0; //Example of Global variables.
+unsigned char butFLG = 0;  // button flag
 
 /*
  * main.c
@@ -42,11 +56,8 @@ int main (void)
 	P1REN |= BIT1; 					// Enable pullup resistor of P1.1 (default: GND)
 	P1OUT |= BIT1;					// Set pullup resistor to active (+3.3V) mode
 
-	// Initialize Timer A0 (move to function after)
-	TA0CCR0 	 = 0; 		//Initially, Stop the Timer
-	TA0CTL		 =  TASSEL_2 + ID_0 + MC__UP; //Select SMCLK, SMCLK/1, Up Mode
-	TA0CCTL0	|=  CCIE;		//Enable interrupt on TA0.0
-//	TA0CCR0		 =  ;		//Period of 50ms or whatever interval you like.
+	// Initialize Timer A0
+	Timer0_A5_Init();
 	
 	P1IE |= BIT1;					// P1.1 interrupt enabled
 	P1IFG &= ~BIT1;					// P1.1 interrupt flag cleared
@@ -54,11 +65,26 @@ int main (void)
 
 	while (1) {
 		//Poll Buttons here. Control the Timer. Update LCD Display.
+		if (butFLG) {
+			if (!TA0CCR0) { // TIMER IS OFF if !; else not 0, aka timer is ON
+				startTimer0_A5();
+			} else {
+
+				stopTimer0_A5();
+			}
+			butFLG = 0;
+		}
+		msec = tic;
+		sec = tic / 1000;
+		min = sec / 60;
+
+		/* CODE FOR BLINKING ON-BOARD LED EXAMPLE, works well... dont touch :-(
 		P1OUT |= BIT0; //Drive P1.0 HIGH - LED1 ON
-		delayMS(1000); //Wait 0.5 Secs
+		delayMS(500); //Wait 0.5 Secs
 
 		P1OUT &= ~BIT0; //Drive P1.0 LOW - LED1 OFF
-		delayMS(1000); //Wait 0.5 Secs
+		delayMS(500); //Wait 0.5 Secs
+		*/
 
 	}
  }
@@ -104,35 +130,69 @@ void Clock_Init_1MHz(void)
 
 
 /*******************************************************************************
- * Initialize Timer0_A0
+ * Initialize Timer0_A5
  ******************************************************************************/
-void initTimer_A(void)
+void Timer0_A5_Init(void)
 {
-//	//Timer0_A5 Configuration
-//	TACCR0 = 0; 		//Initially, Stop the Timer
-//	TACCTL0 |= CCIE; 	//Enable interrupt for CCR0.
-//	TACTL = TASSEL_2 + ID_0 + MC_1; //Select SMCLK, SMCLK/1, Up Mode
+	TA0CCR0 	 = 0; 		//Initially, Stop the Timer
+	TA0CTL		 =  TASSEL_2 + ID_0 + MC__UP; //Select SMCLK, SMCLK/1, Up Mode
+	TA0CCTL0	|=  CCIE;		//Enable interrupt on TA0.0
+//	TA0CCR0		 =  ;		//Period of 50ms or whatever interval you like.
 }
 
 
 /*******************************************************************************
  * Delay msecs milliseconds of time based on 1MHz clock
  ******************************************************************************/
-void delayMS(int msecs)
+void delayMS(int ms)
 {
 	tic = 0; //Reset Over-Flow counter
 	// in general, Y MHz clock requires Y*1000 ticks for 1ms delay
 	TA0CCR0 = 1000 - 1; //Start Timer, Compare value for Up Mode to get 1ms delay per loop
 	//Total count = TACCR0 + 1. Hence we need to subtract 1.
-	while(tic<=msecs);
+	while(tic<=ms);
 
 	TA0CCR0 = 0; //Stop Timer
 }
 
+/*******************************************************************************
+ * Start Timer0_A5
+ ******************************************************************************/
+void startTimer0_A5(void)
+{
+	tic = 0; //Reset Over-Flow counter
+	// in general, Y MHz clock requires Y*1000 ticks for 1ms delay
+	TA0CCR0 = 1000 - 1;  // start timer; compare value (up mode): 1 ms
+	P1OUT |= BIT0;
+}
 
-// Timer 0 A0 Interrupt Service Routine
+
+/*******************************************************************************
+ * Stop Timer0_A5
+ ******************************************************************************/
+void stopTimer0_A5(void)
+{
+	TA0CCR0 = 0; // stop Timer
+	P1OUT &= ~BIT0; //Drive P1.0 LOW - LED1 OFF
+}
+
+/*******************************************************************************
+ * calculate seconds from given tics value
+ ******************************************************************************/
+void getSec(int tics)
+{
+
+}
+
+
+
+
+/*******************************************************************************
+ * Timer 0 A0 Interrupt Service Routine
+ ******************************************************************************/
 #pragma vector = TIMER0_A0_VECTOR
-__interrupt void Timer0_A0_ISR( void ) {
+__interrupt void Timer0_A0_ISR( void )
+{
 	/* INCREMENT GLOBAL VARIABLES HERE:
 	 *
 	 * Will jump in here when TA0R reaches the value stored in TA0CCR0 during setup.
@@ -143,4 +203,18 @@ __interrupt void Timer0_A0_ISR( void ) {
 	 * are not doing that in the main loop.
 	 */
 	tic++;  // increment over-flow counter
+}
+
+
+/*******************************************************************************
+ * Timer 0 A0 Interrupt Service Routine
+ ******************************************************************************/
+#pragma vector=PORT1_VECTOR
+__interrupt void Port_1_ISR( void )
+{
+	if (P1IFG & BIT1) {
+		butFLG = 1;
+		_delay_cycles(20000);	// debouncing
+		P1IFG &= ~BIT1;				// P1.1 interrupt flag cleared
+	}
 }
