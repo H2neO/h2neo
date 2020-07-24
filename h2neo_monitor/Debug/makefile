@@ -9,7 +9,6 @@ CG_TOOL_ROOT := C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS
 ORDERED_OBJS += \
 "./lcd_screen.obj" \
 "./main.obj" \
-"./opticalSensor.obj" \
 "./rotary_encoder_w_button.obj" \
 "./test.obj" \
 "../lnk_msp430f5529.cmd" \
@@ -151,8 +150,8 @@ h2neo_monitor.hex: $(EXE_OUTPUTS)
 # Other Targets
 clean:
 	-$(RM) $(EXE_OUTPUTS__QUOTED)$(BIN_OUTPUTS__QUOTED)
-	-$(RM) "lcd_screen.pp" "main.pp" "opticalSensor.pp" "rotary_encoder_w_button.pp" "test.pp" 
-	-$(RM) "lcd_screen.obj" "main.obj" "opticalSensor.obj" "rotary_encoder_w_button.obj" "test.obj" 
+	-$(RM) "lcd_screen.pp" "main.pp" "rotary_encoder_w_button.pp" "test.pp" 
+	-$(RM) "lcd_screen.obj" "main.obj" "rotary_encoder_w_button.obj" "test.obj" 
 	-@echo 'Finished clean'
 	-@echo ' '
 

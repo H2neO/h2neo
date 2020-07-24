@@ -1,0 +1,22 @@
+/*
+ * scrap.h
+ *
+ * This file contains all the unorganized method headers. These should be eventually
+ * moved to source files with descriptive names (just copy paste).
+ *
+ *  Created on: Jul 24, 2020
+ *      Author: Jenny Cho
+ */
+
+#ifndef SCRAP_H_
+#define SCRAP_H_
+
+// Functions
+void Clock_Init_1MHz(void);
+void Timer0_A5_Init(void);
+void delayMS(int msecs);
+void startTimer0_A5(void);
+void stopTimer0_A5(void);
+void getSec(int tics);
+
+#endif /* SCRAP_H_ */
