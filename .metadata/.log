@@ -3780,3 +3780,12 @@ java.nio.channels.ClosedByInterruptException
 	at org.eclipse.cdt.internal.ui.text.c.hover.BestMatchHover.getHoverInfo2(BestMatchHover.java:144)
 	at org.eclipse.cdt.internal.ui.text.c.hover.CEditorTextHoverProxy.getHoverInfo2(CEditorTextHoverProxy.java:84)
 	at org.eclipse.jface.text.TextViewerHoverManager$4.run(TextViewerHoverManager.java:166)
+
+!ENTRY com.ti.ccstudio.project.core 2 0 2020-07-24 13:12:52.126
+!MESSAGE Unrecognized option setting '--silicon_errata=CPU30' for tool 'com.ti.ccstudio.buildDefinitions.MSP430_20.2.exe.compilerDebug.1553467535'
+
+!ENTRY com.ti.ccstudio.project.core 2 0 2020-07-24 13:12:52.200
+!MESSAGE Unrecognized option setting '--silicon_errata=CPU30' for tool 'com.ti.ccstudio.buildDefinitions.MSP430_20.2.exe.compilerRelease.1299900516'
+
+!ENTRY org.eclipse.cdt.core 1 0 2020-07-24 13:12:52.878
+!MESSAGE Indexed 'switches' (1 sources, 5 headers) in 0.373 sec: 825 declarations; 1,047 references; 0 unresolved inclusions; 0 syntax errors; 0 unresolved names (0%)
