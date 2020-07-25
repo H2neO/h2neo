@@ -4,13 +4,21 @@
 #include "scrap.h"
 #include "nokia5110.h"
 
+#define MEMSIZE			5  // size of memory buffer used for flow rate calculations
+
 // tic - number of times the Timer ISR is entered after x clock cycles
+//			tic will be programmed to be 1ms long
 // sec - seconds (tic * clock cycles)
 // min - minutes (sec / 60)
-unsigned int tic = 0;  // data type short can only go up to 65,535 ms which is only ~1m5sec
-unsigned short msec = 0, sec = 0, min = 0; //Example of Global variables.
-unsigned short oSec = 0; oMin = 0; // old sec; old min
+unsigned long int tic = 0;  // data type short can only go up to 65,535 ms which is only ~1m5sec
+unsigned short int msec = 0, sec = 0, min = 0; //Example of Global variables.
+unsigned short int oMsec = 0, oSec = 0, oMin = 0; // old sec; old min
 unsigned char butFLG = 0;  // button flag
+
+// save last 5 time interval values and average to find more accurate flow rate
+unsigned long int ticMem[MEMSIZE];  // global var auto initialized to 0
+unsigned short int index = 0;
+char str[6]; // used to convert each integer to string
 
 /*
  * main.c
@@ -37,13 +45,22 @@ int main (void)
 	clearLCD();
 	setCursor(0, 0);
 	prints("test:");
-	setCursor(30, 0);  // each character is 6wide 8tall
-	prints("00");
+	setCursor(36, 0);  // each character is 6wide 8tall
+	prints("00:00:00");
 
+	// set up display of memory buffer
+	short i = 0, yCursor = 1;  // yCursor = 0 is taken by the stopwatch display
+	for (i = 0; i < MEMSIZE; i++) {
+		int2str(ticMem[i], str);
+		setCursor(0, yCursor++);
+		prints(str);
+	}
+	yCursor = 1;
 
 	P1IE |= BIT1;					// P1.1 interrupt enabled
 	P1IFG &= ~BIT1;					// P1.1 interrupt flag cleared
 	_enable_interrupts(); //Enable General Interrupts. Best to do this last.
+
 
 	while (1) {
 		//Poll Buttons here. Control the Timer. Update LCD Display.
@@ -51,20 +68,53 @@ int main (void)
 			if (!TA0CCR0) { // TIMER IS OFF if !; else not 0, aka timer is ON
 				startTimer0_A5();
 			} else {
-
 				stopTimer0_A5();
+
+				ticMem[index] = tic;		// save measured time to ticMem buffer
+
+				// print to screen (for debugging)
+				int2str(ticMem[index++], str);
+				setCursor(0, yCursor);
+				prints("      ");  // 6 blank to clear screen
+				setCursor(0, yCursor++);
+				prints(str);
+				if (index > MEMSIZE-1) {
+					index = 0;  // index wraparound
+					yCursor = 1;
+				}
+
+				startTimer0_A5();
 			}
 			butFLG = 0;
 		}
 		msec = tic;
 		sec = tic / 1000;
+		min = tic / 60000;
+
+		if (msec != oMsec) {  // if different
+			char str[2];
+			msec = msec % 100;
+			int2strXX(msec, str);
+			setCursor(72, 0);
+			prints(str);
+		}
+		oMsec = msec;
 
 		if (sec != oSec) {  // if different
-			int2strXX(sec);
+			char str[2];
+			int2strXX(sec%60, str);
+			setCursor(54, 0);
+			prints(str);
 		}
 		oSec = sec;
 
-		min = sec / 60;
+		if (min != oMin) {
+			char str[2];
+			int2strXX(min, str);
+			setCursor(36, 0);
+			prints(str);
+		}
+		oMin = min;
 
 		/* CODE FOR BLINKING ON-BOARD LED EXAMPLE, works well... dont touch :-(
 		P1OUT |= BIT0; //Drive P1.0 HIGH - LED1 ON

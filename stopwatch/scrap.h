@@ -24,6 +24,7 @@ void startTimer0_A5(void);
 void stopTimer0_A5(void);
 void getSec(int tics);
 
-void int2strXX(int num);
+void int2strXX(int num, char*str);
+void int2str(int num, char* str);
 
 #endif /* SCRAP_H_ */

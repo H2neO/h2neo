@@ -13,8 +13,8 @@
 #include "scrap.h"
 #include "nokia5110.h"
 
-extern unsigned int tic;  // data type short can only go up to 65,535 ms which is only ~1m5sec
-extern unsigned short msec, sec, min; //Example of Global variables.
+extern unsigned long int tic;  // data type short can only go up to 65,535 ms which is only ~1m5sec
+//extern unsigned short int msec, sec, min; //Example of Global variables.
 extern unsigned char butFLG;  // button flag
 
 
@@ -63,7 +63,7 @@ extern unsigned char butFLG;  // button flag
  ******************************************************************************/
 void Timer0_A5_Init(void)
 {
-	TA0CCR0 	 = 0; 		//Initially, Stop the Timer
+	TA0CCR0 	 =  0; 		//Initially, Stop the Timer
 	TA0CTL		 =  TASSEL_2 + ID_0 + MC__UP; //Select SMCLK, SMCLK/1, Up Mode
 	TA0CCTL0	|=  CCIE;		//Enable interrupt on TA0.0
 //	TA0CCR0		 =  ;		//Period of 50ms or whatever interval you like.
@@ -113,9 +113,8 @@ void getSec(int tics)
 
 }
 
-void int2strXX(int num)
+void int2strXX(int num, char* str)
 {
-	char str[2];
 	sprintf(str, "%d", num);
 	if (num < 10) {
 		char temp[1];
@@ -123,8 +122,11 @@ void int2strXX(int num)
 		strcat(temp, str);
 		strcpy(str, temp);
 	}
-	setCursor(30, 0);
-	prints(str);
+}
+
+void int2str(int num, char* str)
+{
+	sprintf(str, "%d", num);
 }
 
 
