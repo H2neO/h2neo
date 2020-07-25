@@ -14,6 +14,9 @@ scrap.obj: C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/sys/_type
 scrap.obj: C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/sys/cdefs.h
 scrap.obj: C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/machine/_types.h
 scrap.obj: C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/string.h
+scrap.obj: C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/math.h
+scrap.obj: C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h
+scrap.obj: C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/machine/_limits.h
 scrap.obj: ../scrap.h
 scrap.obj: ../nokia5110.h
 
@@ -31,5 +34,8 @@ C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/sys/_types.h:
 C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/sys/cdefs.h: 
 C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/machine/_types.h: 
 C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/string.h: 
+C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/math.h: 
+C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/_defs.h: 
+C:/ti/ccsv6/tools/compiler/ti-cgt-msp430_20.2.1.LTS/include/machine/_limits.h: 
 ../scrap.h: 
 ../nokia5110.h: 

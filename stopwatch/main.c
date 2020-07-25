@@ -4,7 +4,9 @@
 #include "scrap.h"
 #include "nokia5110.h"
 
-#define MEMSIZE			5  // size of memory buffer used for flow rate calculations
+#define MEMSIZE			5		// size of memory buffer used for flow rate calculations
+#define GTT_FACTOR		20		// factor specified in tubing packaging
+#define GTT_FACTOR_STR  "20"	// ^ in string format... not sure if it'll work lol
 
 // tic - number of times the Timer ISR is entered after x clock cycles
 //			tic will be programmed to be 1ms long
@@ -19,6 +21,8 @@ unsigned char butFLG = 0;  // button flag
 unsigned long int ticMem[MEMSIZE];  // global var auto initialized to 0
 unsigned short int index = 0;
 char str[6]; // used to convert each integer to string
+
+float flowRate;
 
 /*
  * main.c
@@ -44,9 +48,15 @@ int main (void)
 	LCD_Init();
 	clearLCD();
 	setCursor(0, 0);
-	prints("test:");
+	prints("time:");
 	setCursor(36, 0);  // each character is 6wide 8tall
 	prints("00:00:00");
+
+	// display GTT factor
+	setCursor(42, 1);
+	prints("GTT:");
+	setCursor(72, 1);
+	prints(GTT_FACTOR_STR);
 
 	// set up display of memory buffer
 	short i = 0, yCursor = 1;  // yCursor = 0 is taken by the stopwatch display
@@ -116,6 +126,36 @@ int main (void)
 		}
 		oMin = min;
 
+		// TODO calculate rate based on the 1-5 saved instances
+		// short i variable is taken from outside while loop
+		if (ticMem[0]) {  // not zero
+			// this might be being repeated too many times...
+			short int count = 0, avgTime_ms = 0;
+			long int sum = 0;
+			for (i = 0; i < MEMSIZE; i++) {
+				if (ticMem[i]) { // not zero
+					sum += ticMem[i];
+					count++;
+				}
+			}
+			avgTime_ms = (float) sum / count;  // yields average msec
+			float gtt = GTT_FACTOR;
+			float temp = gtt * avgTime_ms;
+			flowRate = 3600000.0 / temp;
+
+			// change the flowRate to string (there is a method that i worked on previously)
+			char buf[80];
+			displayFlowRate(&flowRate, buf);
+			setCursor(36, 3);
+			prints(buf);
+			setCursor(60, 3);
+			prints(" mLh");
+		} else {
+			setCursor(36, 3);
+			prints("no drops");
+			setCursor(36, 4);
+			prints("detected");
+		}
 		/* CODE FOR BLINKING ON-BOARD LED EXAMPLE, works well... dont touch :-(
 		P1OUT |= BIT0; //Drive P1.0 HIGH - LED1 ON
 		delayMS(500); //Wait 0.5 Secs
