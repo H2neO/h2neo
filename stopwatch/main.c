@@ -26,6 +26,8 @@ float flowRate;
 
 /*
  * main.c
+ * www.ocfreaks.com/msp430-timer-programming-tutorial/
+ *
  */
 int main (void)
 {
