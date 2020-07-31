@@ -1,0 +1,39 @@
+################################################################################
+# Automatically-generated file. Do not edit!
+################################################################################
+
+# Add inputs and outputs from these tool invocations to the build variables 
+CMD_SRCS += \
+../lnk_msp430f5529.cmd 
+
+C_SRCS += \
+../lcd_screen.c \
+../main.c \
+../scrap.c 
+
+OBJS += \
+./lcd_screen.obj \
+./main.obj \
+./scrap.obj 
+
+C_DEPS += \
+./lcd_screen.pp \
+./main.pp \
+./scrap.pp 
+
+C_DEPS__QUOTED += \
+"lcd_screen.pp" \
+"main.pp" \
+"scrap.pp" 
+
+OBJS__QUOTED += \
+"lcd_screen.obj" \
+"main.obj" \
+"scrap.obj" 
+
+C_SRCS__QUOTED += \
+"../lcd_screen.c" \
+"../main.c" \
+"../scrap.c" 
+
+

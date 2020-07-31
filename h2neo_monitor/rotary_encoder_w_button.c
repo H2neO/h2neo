@@ -67,23 +67,12 @@ void get_direction(void)
 	_delay_cycles(20000);
 	value += (float)temp;
 	ps = ns;
-	display_value(&value);
+//	display_value(&value);
 }
 
-void display_value(float *value)
+void displayFlowRate(float *value, char* buf)
 {
-	// TODO: display the current value on the display screen
-	char buf[80];
-//	gcvt(value, 5, buf);
-//	prints(buf);
-
-//	sprintf(buf, ": %d", *value);
-//	puts(buf);
-//	prints(buf);
-//	value = 233.1;
 	ftoa(value, buf, 2);
-	prints(buf);
-	prints(" ");
 }
 
 // Converts a floating point number to string
@@ -149,40 +138,40 @@ int intToStr(int x, char str[], int d)
  * Defined Interrupt Service Routines (ISRs)
  *
  *********************************************************************************/
-#pragma vector=PORT1_VECTOR
-__interrupt void Port_1(void)
-{
-	if (P1IFG & BIT1) {
-		if (!s2IFG) {
-			P1OUT ^= TEST_LED1;					// Toggle P1.0
-			s2IFG = 1;
-//		prints("hello! ");
-//		_delay_cycles(20000);
-		}
-		P1IFG &= ~BRD_BUTTON2;				// P1.1 interrupt flag cleared
-	}
-	if ((P1IFG & BIT4) || (P1IFG & BIT5)) {
-		P1OUT ^= TEST_LED1;					// Toggle P1.0
-		if (!rotKnobIFG) {
-			rotKnobIFG = 1;
-//		prints("turned ");
-//		get_direction();
-		}
-		P1IFG &= ~CH_A;						// clear interrupt flag
-		P1IFG &= ~CH_B;						// clear interrupt flag
-	}
-}
-
-#pragma vector=PORT2_VECTOR
-__interrupt void Port_2(void)
-{
-	P1OUT ^= TEST_LED1;						// Toggle P1.0
-	if (!rotButIFG) {
-		rotButIFG = 1;
-
-//	test_cursDripRate();
-	}
-	prints("button. ");
-	_delay_cycles(10000);
-	P2IFG &= ~RE_BUTTON;					// P2.7 interrupt flag cleared
-}
+//#pragma vector=PORT1_VECTOR
+//__interrupt void Port_1(void)
+//{
+//	if (P1IFG & BIT1) {
+//		if (!s2IFG) {
+//			P1OUT ^= TEST_LED1;					// Toggle P1.0
+//			s2IFG = 1;
+////		prints("hello! ");
+////		_delay_cycles(20000);
+//		}
+//		P1IFG &= ~BRD_BUTTON2;				// P1.1 interrupt flag cleared
+//	}
+//	if ((P1IFG & BIT4) || (P1IFG & BIT5)) {
+//		P1OUT ^= TEST_LED1;					// Toggle P1.0
+//		if (!rotKnobIFG) {
+//			rotKnobIFG = 1;
+////		prints("turned ");
+////		get_direction();
+//		}
+//		P1IFG &= ~CH_A;						// clear interrupt flag
+//		P1IFG &= ~CH_B;						// clear interrupt flag
+//	}
+//}
+//
+//#pragma vector=PORT2_VECTOR
+//__interrupt void Port_2(void)
+//{
+//	P1OUT ^= TEST_LED1;						// Toggle P1.0
+//	if (!rotButIFG) {
+//		rotButIFG = 1;
+//
+////	test_cursDripRate();
+//	}
+//	prints("button. ");
+//	_delay_cycles(10000);
+//	P2IFG &= ~RE_BUTTON;					// P2.7 interrupt flag cleared
+//}

@@ -10,7 +10,7 @@
  *******************************************************************************/
 void RotEnc_Init(void);
 void get_direction(void);
-void display_value(float *value);
+void displayFlowRate(float *value, char* buf);
 void ftoa(float *value, char* str, int afterP);
 void reverse(char* str, int len);
 int intToStr(int x, char str[], int d);
