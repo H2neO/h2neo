@@ -1,7 +1,6 @@
 #include <msp430.h> 
 
-#define	NUM_RESULTS		8
-#define	THRESHOLD		2600  // low "peak" value for drop detection
+#define   NUM_RESULTS   8
 
 volatile unsigned int results[NUM_RESULTS];
                                             // Needs to be global in this
@@ -156,10 +155,8 @@ void __attribute__ ((interrupt(ADC12_VECTOR))) ADC12ISR (void)
 	case  2: break;                           // Vector  2:  ADC overflow
 	case  4: break;                           // Vector  4:  ADC timing overflow
 	case  6:                                  // Vector  6:  ADC12IFG0
-		if (ADC12MEM0 < THRESHOLD) {
+		if (ADC12MEM0 < 2500) {
 			P1OUT ^= BIT0;  // toggle LED
-		} else {
-			P1OUT &= ~BIT0;
 		}
 		results[index] = ADC12MEM0;             // Move results
 		index++;                                // Increment results index, modulo; Set Breakpoint1 here

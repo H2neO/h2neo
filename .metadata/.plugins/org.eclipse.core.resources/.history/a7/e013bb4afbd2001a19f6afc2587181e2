@@ -1,7 +1,6 @@
 #include <msp430.h> 
 
-#define	NUM_RESULTS		8
-#define	THRESHOLD		2600  // low "peak" value for drop detection
+#define   NUM_RESULTS   8
 
 volatile unsigned int results[NUM_RESULTS];
                                             // Needs to be global in this
@@ -19,9 +18,6 @@ void ADC12_0_Init2(void);
  */
 int main(void) {
     WDTCTL = WDTPW | WDTHOLD;					// Stop watchdog timer
-
-    P1DIR |= BIT0;					// Configure P1.0 as output (for blinking debugging)
-
     ADC12_0_Init2();
 
     ADC12CTL0 &= ~ADC12SC;      				// Clear the start bit (precautionary)
@@ -148,40 +144,35 @@ void __attribute__ ((interrupt(ADC12_VECTOR))) ADC12ISR (void)
 #error Compiler not supported!
 #endif
 {
-	static unsigned char index = 0;
+  static unsigned char index = 0;
 
-	switch(__even_in_range(ADC12IV,34))
+  switch(__even_in_range(ADC12IV,34))
+  {
+  case  0: break;                           // Vector  0:  No interrupt
+  case  2: break;                           // Vector  2:  ADC overflow
+  case  4: break;                           // Vector  4:  ADC timing overflow
+  case  6:                                  // Vector  6:  ADC12IFG0
+	results[index] = ADC12MEM0;             // Move results
+	index++;                                // Increment results index, modulo; Set Breakpoint1 here
+
+	if (index == 8)
 	{
-	case  0: break;                           // Vector  0:  No interrupt
-	case  2: break;                           // Vector  2:  ADC overflow
-	case  4: break;                           // Vector  4:  ADC timing overflow
-	case  6:                                  // Vector  6:  ADC12IFG0
-		if (ADC12MEM0 < THRESHOLD) {
-			P1OUT ^= BIT0;  // toggle LED
-		} else {
-			P1OUT &= ~BIT0;
-		}
-		results[index] = ADC12MEM0;             // Move results
-		index++;                                // Increment results index, modulo; Set Breakpoint1 here
-
-		if (index == 8)
-		{
-		  index = 0;
-		}
-	case  8: break;                           // Vector  8:  ADC12IFG1
-	case 10: break;                           // Vector 10:  ADC12IFG2
-	case 12: break;                           // Vector 12:  ADC12IFG3
-	case 14: break;                           // Vector 14:  ADC12IFG4
-	case 16: break;                           // Vector 16:  ADC12IFG5
-	case 18: break;                           // Vector 18:  ADC12IFG6
-	case 20: break;                           // Vector 20:  ADC12IFG7
-	case 22: break;                           // Vector 22:  ADC12IFG8
-	case 24: break;                           // Vector 24:  ADC12IFG9
-	case 26: break;                           // Vector 26:  ADC12IFG10
-	case 28: break;                           // Vector 28:  ADC12IFG11
-	case 30: break;                           // Vector 30:  ADC12IFG12
-	case 32: break;                           // Vector 32:  ADC12IFG13
-	case 34: break;                           // Vector 34:  ADC12IFG14
-	default: break;
+	  index = 0;
 	}
+  case  8: break;                           // Vector  8:  ADC12IFG1
+  case 10: break;                           // Vector 10:  ADC12IFG2
+  case 12: break;                           // Vector 12:  ADC12IFG3
+  case 14: break;                           // Vector 14:  ADC12IFG4
+  case 16: break;                           // Vector 16:  ADC12IFG5
+  case 18: break;                           // Vector 18:  ADC12IFG6
+  case 20: break;                           // Vector 20:  ADC12IFG7
+  case 22: break;                           // Vector 22:  ADC12IFG8
+  case 24: break;                           // Vector 24:  ADC12IFG9
+  case 26: break;                           // Vector 26:  ADC12IFG10
+  case 28: break;                           // Vector 28:  ADC12IFG11
+  case 30: break;                           // Vector 30:  ADC12IFG12
+  case 32: break;                           // Vector 32:  ADC12IFG13
+  case 34: break;                           // Vector 34:  ADC12IFG14
+  default: break;
+  }
 }
