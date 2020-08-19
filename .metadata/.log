@@ -8789,3 +8789,6 @@ java.nio.channels.ClosedByInterruptException
 	at org.eclipse.cdt.internal.ui.text.c.hover.BestMatchHover.getHoverInfo2(BestMatchHover.java:144)
 	at org.eclipse.cdt.internal.ui.text.c.hover.CEditorTextHoverProxy.getHoverInfo2(CEditorTextHoverProxy.java:84)
 	at org.eclipse.jface.text.TextViewerHoverManager$4.run(TextViewerHoverManager.java:166)
+
+!ENTRY org.eclipse.cdt.core 1 0 2020-08-19 16:50:32.301
+!MESSAGE Indexed 'h2neo_monitor' (6 sources, 18 headers) in 0.606 sec: 1,784 declarations; 2,682 references; 0 unresolved inclusions; 3 syntax errors; 0 unresolved names (0%)
