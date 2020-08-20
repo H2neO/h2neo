@@ -63,7 +63,11 @@ int main(void) {
 			setCursor(60, 5);
 			prints("mL/h");
 		} else if (rotButIFG) {
-			isPrompting = 0;
+			if (isPrompting) {
+				isPrompting = 0;
+			} else {
+				isPrompting = 1;
+			}
 			rotButIFG = 0;
 			clearLCD();
 		} else { // display flow rate

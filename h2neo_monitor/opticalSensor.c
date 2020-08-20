@@ -13,23 +13,29 @@
 #include <msp430.h>
 #include "test.h"
 
-//#define	NUM_RESULTS		8
-#define	THRESHOLD		2600  // low "peak" value for drop detection
+//#define	THRESHOLD		2600	// low "peak" value for drop detection
+//#define	THRESHOLD		1090	// 0.4V
+//#define	THRESHOLD		1638	// 0.6V
+//#define	THRESHOLD		2047	// 0.75V
+#define	THRESHOLD		1911	// 0.7V
 
+extern unsigned char dropFLG;				// presence of drop
+
+// Used for debugging
 //volatile unsigned int results[NUM_RESULTS];
                                             // Needs to be global in this
                                             // example. Otherwise, the
                                             // compiler removes it because it
                                             // is not used for anything.
-extern unsigned char butFLG;	// presence of drop
-/*
+
+/*******************************************************************************
  * ADC12_0_Init()
  *
  * Initialize P6.0 as ADC12. Uses 0 ~ (internal) 1.5V as input range and internal
  * clock for timing.
  *
  * See p.750 of https://www.ti.com/lit/ug/slau208q/slau208q.pdf?ts=1594281016406
- */
+ ******************************************************************************/
 void ADC12_0_Init() {
 	P6SEL |= 0x01;									// Enable A/D channel A0
 	REFCTL0 &= ~REFMSTR;  			// Reset REFMSTR to hand over control to ADC12_A ref control registers
@@ -70,10 +76,12 @@ void ADC12_0_Init() {
 }
 
 
-
+/*******************************************************************************
+ * ADC12 Interrupt Service Routine
+ ******************************************************************************/
 #if defined(__TI_COMPILER_VERSION__) || defined(__IAR_SYSTEMS_ICC__)
 #pragma vector=ADC12_VECTOR
-__interrupt void ADC12ISR (void)
+__interrupt void ADC12_ISR (void)
 #elif defined(__GNUC__)
 void __attribute__ ((interrupt(ADC12_VECTOR))) ADC12ISR (void)
 #else
@@ -90,7 +98,7 @@ void __attribute__ ((interrupt(ADC12_VECTOR))) ADC12ISR (void)
 	case  6:                                  // Vector  6:  ADC12IFG0
 		if (ADC12MEM0 < THRESHOLD) {
 			P4OUT ^= BIT7;  // toggle LED
-			butFLG = 1;
+			dropFLG = 1;
 		} else {
 			P4OUT &= ~BIT7;
 		}

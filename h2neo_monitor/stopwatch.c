@@ -8,9 +8,6 @@
  *      Author: Jenny Cho
  */
 #include <msp430.h>
-#include <stdio.h>
-#include <string.h>
-#include <math.h>
 #include "test.h"
 #include "nokia5110.h"
 
@@ -73,22 +70,8 @@ void getSec(int tics)
 
 }
 
-void int2strXX(int num, char* str)
-{
-	sprintf(str, "%d", num);
-	if (num < 10) {
-		char temp[1];
-		strcpy(temp, "0");
-		strcat(temp, str);
-		strcpy(str, temp);
-	}
-}
 
-// if num is not "long int" the printed result might be negative if num < 65,536
-void int2str(int num, char* str)
-{
-	sprintf(str, "%d", num);
-}
+
 
 
 
@@ -112,15 +95,15 @@ __interrupt void Timer0_A0_ISR( void )
 }
 
 
-/*******************************************************************************
- * Timer 0 A0 Interrupt Service Routine
- ******************************************************************************/
-#pragma vector=PORT1_VECTOR
-__interrupt void Port_1_ISR( void )
-{
-	if (P1IFG & BIT1) {
-		butFLG = 1;
-		_delay_cycles(20000);	// debouncing
-		P1IFG &= ~BIT1;				// P1.1 interrupt flag cleared
-	}
-}
+///*******************************************************************************
+// * PORT1 Interrupt Service Routine
+// ******************************************************************************/
+//#pragma vector=PORT1_VECTOR
+//__interrupt void Port_1_ISR( void )
+//{
+//	if (P1IFG & BIT1) {
+//		butFLG = 1;
+//		_delay_cycles(20000);	// debouncing
+//		P1IFG &= ~BIT1;				// P1.1 interrupt flag cleared
+//	}
+//}

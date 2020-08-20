@@ -1,4 +1,3 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<session version="1.0">
-<refactoring comment="Rename resource &apos;switches&apos; to &apos;userInteraction&apos;" description="Rename resource &apos;switches&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="/switches" name="userInteraction" stamp="1597881158128" updateReferences="true"/>
+<session version="1.0">&#x0A;<refactoring comment="Rename resource &apos;switches&apos; to &apos;userInteraction&apos;" description="Rename resource &apos;switches&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="/switches" name="userInteraction" stamp="1597881158128" updateReferences="true"/>&#x0A;<refactoring comment="Delete resource &apos;h2neo_monitor/test.c&apos;" deleteContents="false" description="Delete resource &apos;h2neo_monitor/test.c&apos;" element1="/h2neo_monitor/test.c" flags="7" id="org.eclipse.ltk.core.refactoring.delete.resources" resources="1" stamp="1597900898769"/>
 </session>

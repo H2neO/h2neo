@@ -14,7 +14,7 @@ extern char rotKnobIFG;	// rotary encoder knob turned
 extern unsigned char rotButIFG;		// rotary encoder button pressed
 extern char s2IFG;			// on-board P1.1 (S2) pressed
 
-
+extern unsigned char isPrompting;
 extern unsigned short desiredRate;
 
 /********************************************************************************
@@ -170,16 +170,18 @@ void stepCW(void)
 #pragma vector=PORT1_VECTOR
 __interrupt void Port_1(void)
 {
-	// this "algorithm was borrowed from:
+	// this "algorithm" was borrowed from:
 	// https://github.com/sneznaovca/Launchpad-rotary-encoder/blob/master/rotary-encoder.c
 	if (P1IFG & BIT4) {
-		if (P1IN & CH_B) {
-			stepCW();
-		} else {
-			stepCCW();
+		// turning the knob when "locked" shouldn't change the desired flow rate
+		if (isPrompting) {
+			if (P1IN & CH_B) {
+				stepCW();
+			} else {
+				stepCCW();
+			}
+			_delay_cycles(10000);
 		}
-		_delay_cycles(10000);
-
 		P1IFG &= ~CH_A;
 	}
 

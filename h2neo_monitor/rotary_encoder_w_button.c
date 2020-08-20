@@ -14,6 +14,9 @@ extern char rotKnobIFG;	// rotary encoder knob turned
 extern char rotButIFG;		// rotary encoder button pressed
 extern char s2IFG;			// on-board P1.1 (S2) pressed
 
+extern unsigned char isPrompting;
+extern unsigned short desiredRate;
+
 
 /********************************************************************************
  * Initialize ports and corresponding interrupts
@@ -37,100 +40,37 @@ void RotEnc_Init()
 	P2DIR &= ~RE_BUTTON;
 
 	// Enable Pull Up Resistor
-//	P1REN |= CH_A + CH_B;					// needed if no physical resistor present
+//	P1REN |= (CH_A + CH_B);					// needed if no physical resistor present
+//	P1OUT |= (CH_A + CH_B);					// needed if no physical resistor present
 
-	// Enable interrupt
-	P1IE |= CH_A + CH_B;					// rotary encoder interrupt
+	// Enable interrupt (only of channel A)
 	P1IFG &= ~CH_A;							// clear interrupt flag
-	P1IFG &= ~CH_B;							// ^
+//	P1IFG &= ~CH_B;							// ^
+	P1IE |= (CH_A);// + CH_B);				// rotary encoder interrupt enable
 
-	P2IE |= RE_BUTTON;						// button interrupt
 	P2IFG &= ~RE_BUTTON;					// clear interrupt flag
+	P2IE |= RE_BUTTON;						// button interrupt enable
 }
+
 
 /********************************************************************************
  *
  * Utility Functions
  *
  ********************************************************************************/
-void get_direction(void)
+void stepCCW(void)
 {
-	ns = (P1IN>>4) & 0x3;					// Grab BIT4 and BIT5
-	__delay_cycles(100000);					// dEbOuNcInG hEhEH
-	unsigned short index = (ps<<0x2) | ns;	// make it 0b0000PSNS
-	signed short temp = rot_enc_table[index];
-	if (temp == 1) {
-		prints("right. ");
-	} else if (temp == -1) {
-		prints("left. ");
-	}
-	_delay_cycles(20000);
-	value += (float)temp;
-	ps = ns;
-//	display_value(&value);
+	desiredRate++;
+	P1OUT ^= TEST_LED1;
+
 }
 
-void displayFlowRate(float *value, char* buf)
+void stepCW(void)
 {
-	ftoa(value, buf, 2);
-}
-
-// Converts a floating point number to string
-// value  --> Input value pointer
-// str[]  --> Array for output string
-// afterP --> Number of digits to be considered after the point
-void ftoa(float *value, char* str, int afterP)
-{
-	float n = *value;
-	// Extract integer part
-	int ipart = (int)n;
-
-	// Extract floating part
-	float fpart = n - (float)ipart;
-
-	// Convert integer part to string
-	int i = intToStr(ipart, str, 0);
-
-	// Check for display option after point
-	if (afterP != 0) {
-		str[i] = '.';  // add 'point'
-
-		// Get value of fraction part upto given afterP
-		fpart = fpart * pow(10, afterP);
-
-		intToStr((int)fpart, str + i + 1, afterP);
+	if (desiredRate > 1) {
+		desiredRate--;
+		P1OUT ^= TEST_LED1;
 	}
-}
-
-// Reverses a string 'str' of length 'len'
-void reverse(char* str, int len)
-{
-	int i = 0, j = len - 1, temp;
-	while (i < j) {
-		temp = str[i];
-		str[i] = str[j];
-		str[j] = temp;
-		i++; j--;
-	}
-}
-
-// Converts given x (int) to str[].
-// d --> num digits required for output
-//       If d is more than the num digits in x, 0s are added at beginning
-int intToStr(int x, char str[], int d)
-{
-	int i = 0;
-	while(x) {
-		str[i++] = (x % 10) + '0';
-		x = x / 10;
-	}
-
-	// If num digits required is more, add 0s in beginning
-	while (i < d) str[i++] = '0';
-
-	reverse(str, i);
-	str[i] = '\0';
-	return i;
 }
 
 /*********************************************************************************
@@ -138,40 +78,32 @@ int intToStr(int x, char str[], int d)
  * Defined Interrupt Service Routines (ISRs)
  *
  *********************************************************************************/
-//#pragma vector=PORT1_VECTOR
-//__interrupt void Port_1(void)
-//{
-//	if (P1IFG & BIT1) {
-//		if (!s2IFG) {
-//			P1OUT ^= TEST_LED1;					// Toggle P1.0
-//			s2IFG = 1;
-////		prints("hello! ");
-////		_delay_cycles(20000);
-//		}
-//		P1IFG &= ~BRD_BUTTON2;				// P1.1 interrupt flag cleared
-//	}
-//	if ((P1IFG & BIT4) || (P1IFG & BIT5)) {
-//		P1OUT ^= TEST_LED1;					// Toggle P1.0
-//		if (!rotKnobIFG) {
-//			rotKnobIFG = 1;
-////		prints("turned ");
-////		get_direction();
-//		}
-//		P1IFG &= ~CH_A;						// clear interrupt flag
-//		P1IFG &= ~CH_B;						// clear interrupt flag
-//	}
-//}
-//
-//#pragma vector=PORT2_VECTOR
-//__interrupt void Port_2(void)
-//{
-//	P1OUT ^= TEST_LED1;						// Toggle P1.0
-//	if (!rotButIFG) {
-//		rotButIFG = 1;
-//
-////	test_cursDripRate();
-//	}
-//	prints("button. ");
-//	_delay_cycles(10000);
-//	P2IFG &= ~RE_BUTTON;					// P2.7 interrupt flag cleared
-//}
+#pragma vector=PORT1_VECTOR
+__interrupt void Port_1(void)
+{
+	// this "algorithm" was borrowed from:
+	// https://github.com/sneznaovca/Launchpad-rotary-encoder/blob/master/rotary-encoder.c
+	if (P1IFG & BIT4) {
+		// turning the knob when "locked" shouldn't change the desired flow rate
+		if (isPrompting) {
+			if (P1IN & CH_B) {
+				stepCW();
+			} else {
+				stepCCW();
+			}
+			_delay_cycles(10000);
+		}
+		P1IFG &= ~CH_A;
+	}
+}
+
+
+#pragma vector=PORT2_VECTOR
+__interrupt void Port2_ISR(void)
+{
+	if (!rotButIFG) {
+		rotButIFG = 1;
+	}
+	_delay_cycles(10000);
+	P2IFG &= ~RE_BUTTON;
+}

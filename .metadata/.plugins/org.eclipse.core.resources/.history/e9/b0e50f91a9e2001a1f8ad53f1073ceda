@@ -1,0 +1,108 @@
+#include <msp430.h>
+#include <stdio.h>
+//#include <stdlib.h>
+#include <math.h>
+#include "rotary_encoder.h"
+#include "nokia5110.h"
+
+extern unsigned short ps;		// Grab BIT4 and BIT5
+extern unsigned short ns;
+extern float value;
+
+// interrupt flags
+extern char rotKnobIFG;	// rotary encoder knob turned
+extern char rotButIFG;		// rotary encoder button pressed
+extern char s2IFG;			// on-board P1.1 (S2) pressed
+
+extern unsigned char isPrompting;
+extern unsigned short desiredRate;
+
+
+/********************************************************************************
+ * Initialize ports and corresponding interrupts
+ ********************************************************************************/
+void RotEnc_Init()
+{
+	P1DIR |= TEST_LED1;						// P1.0 output
+	P1OUT &= ~TEST_LED1;					// set P1.0 to OFF
+
+	// P1.1 prob not necessary
+	P1DIR &= ~BRD_BUTTON2;					// P1.1 input
+	P1REN |= BRD_BUTTON2; 					// Enable pullup resistor of P1.1 (default: GND)
+	P1OUT |= BRD_BUTTON2;					// Set pullup resistor to active (+3.3V) mode
+
+	P1IE |= BRD_BUTTON2;					// P1.1 interrupt enabled
+	P1IFG &= ~BRD_BUTTON2;					// P1.1 interrupt flag cleared
+
+	// Make GPIO direction as input
+	P1DIR &= ~CH_A;
+	P1DIR &= ~CH_B;
+	P2DIR &= ~RE_BUTTON;
+
+	// Enable Pull Up Resistor
+//	P1REN |= CH_A + CH_B;					// needed if no physical resistor present
+
+	// Enable interrupt
+	P1IE |= CH_A + CH_B;					// rotary encoder interrupt
+	P1IFG &= ~CH_A;							// clear interrupt flag
+	P1IFG &= ~CH_B;							// ^
+
+	P2IE |= RE_BUTTON;						// button interrupt
+	P2IFG &= ~RE_BUTTON;					// clear interrupt flag
+}
+
+
+/********************************************************************************
+ *
+ * Utility Functions
+ *
+ ********************************************************************************/
+void stepCCW(void)
+{
+	desiredRate++;
+	P1OUT ^= TEST_LED1;
+
+}
+
+void stepCW(void)
+{
+	if (desiredRate > 1) {
+		desiredRate--;
+		P1OUT ^= TEST_LED1;
+	}
+}
+
+/*********************************************************************************
+ *
+ * Defined Interrupt Service Routines (ISRs)
+ *
+ *********************************************************************************/
+#pragma vector=PORT1_VECTOR
+__interrupt void Port_1(void)
+{
+	// this "algorithm" was borrowed from:
+	// https://github.com/sneznaovca/Launchpad-rotary-encoder/blob/master/rotary-encoder.c
+	if (P1IFG & BIT4) {
+		// turning the knob when "locked" shouldn't change the desired flow rate
+		if (isPrompting) {
+			if (P1IN & CH_B) {
+				stepCW();
+			} else {
+				stepCCW();
+			}
+			_delay_cycles(10000);
+		}
+		P1IFG &= ~CH_A;
+	}
+}
+
+
+#pragma vector=PORT2_VECTOR
+__interrupt void Port2_ISR(void)
+{
+	if (!rotButIFG) {
+		rotButIFG = 1;
+	}
+	_delay_cycles(10000);
+	P2IFG &= ~RE_BUTTON;
+}
