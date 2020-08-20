@@ -28,7 +28,7 @@ The source files should have comments to help understand the steps taken in the 
 This CCS project contains relevant code for timing related modules of the monitor. TimerA is the key module used here, 
 A timer is (stopped, then) started at every drop of IV liquid. This project initializes the relevant clocks and timers and implements a stopwatch that forms the basis of the flow rate computation code. See Section 17: Timer_A in the [User Guide](https://www.ti.com/lit/ug/slau208q/slau208q.pdf) for more details.
 
-### switches
+### userInteraction
 This CCS project contains relevant code for user interaction peripherals, such as the rotary encoder. Various GPIO pins are the key module used here. The peripherals are currently broken and need to be fixed by debouncing the circuit/code correctly. The rotary encoder should increment when turned CW and decrement when turned CCW. The push button on the rotary encoder should register as one button press every time it is pressed. The button is used as a confirmation button to set the desired flow rate into the monitor. See Section 12: Digital I/O Module in the [User Guide](https://www.ti.com/lit/ug/slau208q/slau208q.pdf) for more details.
 
 ## Resources
