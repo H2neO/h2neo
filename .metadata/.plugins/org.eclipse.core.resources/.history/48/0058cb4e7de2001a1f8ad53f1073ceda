@@ -1,0 +1,36 @@
+#include <msp430.h> 
+#include "nokia5110.h"
+#include "rotary_encoder.h"
+
+unsigned char isPrompting = 1;		// initially set to YES
+unsigned char alarmTriggered = 0;
+
+/*
+ * main.c
+ */
+int main(void) {
+    WDTCTL = WDTPW | WDTHOLD;	// Stop watchdog timer
+    Clock_Init_1MHz();			// used for LCD
+    SPI_Init();						// for LCD screen connection
+	_delay_cycles(50000);
+
+	LCD_Init();
+	clearLCD();
+	
+	while (1) {
+		// initial screen shows "Desired Flow Rate" prompt
+		// Flow rate value should be displayed and the rotary encoder motion action should reflect on the screen
+		if (isPrompting) {
+			// "Desired flow rate"
+			setCursor(0, 0);
+			prints("Desired");		// 7 characters				Desired
+			setCursor(0, 1);		//							flow rate:
+			prints("flow rate:");	// 10 characters
+
+			setCursor(30, 5);
+			prints(" 1.0");
+			setCursor(60, 6);
+			prints("mL/h");
+		}
+	}
+}
