@@ -21,6 +21,7 @@
 #define	THRESHOLD		1392	// 0.51V
 
 extern unsigned char dropFLG;				// presence of drop
+extern int adcValue;
 
 // Used for debugging
 //volatile unsigned int results[NUM_RESULTS];
@@ -97,12 +98,15 @@ void __attribute__ ((interrupt(ADC12_VECTOR))) ADC12ISR (void)
 	case  2: break;                           // Vector  2:  ADC overflow
 	case  4: break;                           // Vector  4:  ADC timing overflow
 	case  6:                                  // Vector  6:  ADC12IFG0
-		if (ADC12MEM0 < THRESHOLD) {
-			P4OUT ^= BIT7;  // toggle LED
-			dropFLG = 1;
-		} else {
-			P4OUT &= ~BIT7;
-		}
+	    if (ADC12MEM0 < THRESHOLD) {
+            P4OUT ^= BIT7;  // toggle LED
+            //dropFLG = 1;  // Eric: Commented out because dropFLG is toggled in the algo (main.c)
+        } else {
+            P4OUT &= ~BIT7;
+        }
+
+        adcValue = ADC12MEM0;   // Eric: Store the ADC value into a global variable for use in the algo
+
 //		results[index] = ADC12MEM0;             // Move results
 //		index++;                                // Increment results index, modulo; Set Breakpoint1 here
 

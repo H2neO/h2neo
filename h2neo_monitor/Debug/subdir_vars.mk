@@ -2,6 +2,8 @@
 # Automatically-generated file. Do not edit!
 ################################################################################
 
+SHELL = cmd.exe
+
 # Add inputs and outputs from these tool invocations to the build variables 
 CMD_SRCS += \
 ../lnk_msp430f5529.cmd 
@@ -14,6 +16,14 @@ C_SRCS += \
 ../rotary_encoder_w_button.c \
 ../stopwatch.c 
 
+C_DEPS += \
+./convertNprint.d \
+./lcd_screen.d \
+./main.d \
+./opticalSensor.d \
+./rotary_encoder_w_button.d \
+./stopwatch.d 
+
 OBJS += \
 ./convertNprint.obj \
 ./lcd_screen.obj \
@@ -21,22 +31,6 @@ OBJS += \
 ./opticalSensor.obj \
 ./rotary_encoder_w_button.obj \
 ./stopwatch.obj 
-
-C_DEPS += \
-./convertNprint.pp \
-./lcd_screen.pp \
-./main.pp \
-./opticalSensor.pp \
-./rotary_encoder_w_button.pp \
-./stopwatch.pp 
-
-C_DEPS__QUOTED += \
-"convertNprint.pp" \
-"lcd_screen.pp" \
-"main.pp" \
-"opticalSensor.pp" \
-"rotary_encoder_w_button.pp" \
-"stopwatch.pp" 
 
 OBJS__QUOTED += \
 "convertNprint.obj" \
@@ -46,11 +40,17 @@ OBJS__QUOTED += \
 "rotary_encoder_w_button.obj" \
 "stopwatch.obj" 
 
+C_DEPS__QUOTED += \
+"convertNprint.d" \
+"lcd_screen.d" \
+"main.d" \
+"opticalSensor.d" \
+"rotary_encoder_w_button.d" \
+"stopwatch.d" 
+
 C_SRCS__QUOTED += \
 "../convertNprint.c" \
 "../lcd_screen.c" \
-"../main.c" \
-"../opticalSensor.c" \
 "../rotary_encoder_w_button.c" \
 "../stopwatch.c" 
 
