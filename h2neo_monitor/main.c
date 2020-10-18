@@ -62,13 +62,15 @@ int adcValue;
 float inSignal[SAMPLE_LENGTH];
 unsigned int pos = 0;
 
+// **--CHANGE THESE PARAMETERS FOR ALGORITHM--**
 unsigned int lag = 5;
-
 float threshold = 70;
 float influence = 0.001;
+// **-----------------------------------------**
+
 float filteredIn[SAMPLE_LENGTH];
 float avgFilter[SAMPLE_LENGTH];
-float stdFilter[SAMPLE_LENGTH];
+//float stdFilter[SAMPLE_LENGTH];
 int outSignal[SAMPLE_LENGTH];
 int trigger = 0;
 int peaks = 0;
@@ -131,7 +133,7 @@ int main(void) {
 // -------------------------------------------- **Main Loop** --------------------------------------------
     while (1) {
         // If prompting the user and the rotary encoder buttons is not pressed
-        /*if (isPrompting && !rotButIFG) {
+        if (isPrompting && !rotButIFG) {
             int2str(desiredRate, refRate);
 
             // LCD screen display
@@ -154,16 +156,14 @@ int main(void) {
                 isPrompting = 0;
             }/*else {
                 isPrompting = 1; // **Eric: I only commented this one out because my button is a bit glitchy
-            }
+            }*/
             rotButIFG = 0;
             clearLCD();
         }
         // If not prompting anymore, starting detecting drops through the active_monitor() function
         else {
             active_monitor();
-        }*/
-        active_monitor();
-
+        }
     }
 
  }
@@ -184,6 +184,8 @@ float calcMean(float data[], int len) {
     return mean;
 }
 
+/* TAKING THIS OUT FOR NOW, STD DEVIATION IS TOO BUGGY
+ *
 // Simple function to calculate the standard deviation
 float calcStdDev(float data[], int len) {
     float mean = calcMean(data, len);
@@ -196,15 +198,15 @@ float calcStdDev(float data[], int len) {
 
     return sqrt(stddev / len);
 }
-
+*/
 // The actual drop detection calculations
 void thresholding(int i, float inSignal[], int outSignal[], int lag, float threshold, float influence) {
     if (fabsf(inSignal[i] - avgFilter[i - 1]) > threshold /* stdFilter[i - 1]*/) {
-        // if the input value is greater than the set number of stddev from mean, set the output signal = 1
+        // If the different between input and average is greater than a threshold value, toggle
         if (inSignal[i] < avgFilter[i - 1]) {
            outSignal[i] = -1;
            trigger = 1;
-           P4OUT ^= BIT7;
+           P4OUT ^= BIT7; // Debugging
         }
 
         filteredIn[i] = influence * inSignal[i] +  (1-influence) * filteredIn[i - 1];
@@ -216,7 +218,7 @@ void thresholding(int i, float inSignal[], int outSignal[], int lag, float thres
             dropFLG = 1; // dropFLG triggers when incrementing # of peaks
         }
         trigger = 0;
-        P4OUT &= ~BIT7;
+        P4OUT &= ~BIT7; // Debugging
 
         filteredIn[i] = inSignal[i];
     }
