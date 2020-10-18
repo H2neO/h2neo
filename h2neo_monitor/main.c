@@ -56,14 +56,16 @@ short i = 0, yCursor = 1;  // yCursor = 0 is taken by the stopwatch display
 char refRate[6];                                        // The desired rate but as a string
 
 // Eric's additions
-#define SAMPLE_LENGTH 50
+#define SAMPLE_LENGTH 10
 
 int adcValue;
-int inSignal[SAMPLE_LENGTH];
+float inSignal[SAMPLE_LENGTH];
 unsigned int pos = 0;
-unsigned int lag = 10;
-float threshold = 2;
-float influence = 0.4;
+
+unsigned int lag = 5;
+
+float threshold = 70;
+float influence = 0.001;
 float filteredIn[SAMPLE_LENGTH];
 float avgFilter[SAMPLE_LENGTH];
 float stdFilter[SAMPLE_LENGTH];
@@ -79,8 +81,8 @@ int main(void) {
     WDTCTL = WDTPW + WDTHOLD;       // stop watchdog timer
     P4DIR |= BIT7;                  // Configure P4.7 as output (for blinking debugging)
 
-    //P2DIR |= BIT5;                  // Configure PIN2.5 (IR LED) as output
-    //P2OUT |= BIT5;                  // Set PIN 2.5 as HIGH
+    P2DIR |= BIT5;                  // Configure PIN2.5 (IR LED) as output
+    P2OUT |= BIT5;                  // Set PIN 2.5 as HIGH
 
     //Setup Buttons (REMOVE ONCE REPLACED BY SIGNAL)
     P1DIR &= ~BIT1;                 // P1.1 input
@@ -129,7 +131,7 @@ int main(void) {
 // -------------------------------------------- **Main Loop** --------------------------------------------
     while (1) {
         // If prompting the user and the rotary encoder buttons is not pressed
-        if (isPrompting && !rotButIFG) {
+        /*if (isPrompting && !rotButIFG) {
             int2str(desiredRate, refRate);
 
             // LCD screen display
@@ -152,15 +154,18 @@ int main(void) {
                 isPrompting = 0;
             }/*else {
                 isPrompting = 1; // **Eric: I only commented this one out because my button is a bit glitchy
-            }*/
+            }
             rotButIFG = 0;
             clearLCD();
         }
         // If not prompting anymore, starting detecting drops through the active_monitor() function
         else {
             active_monitor();
-        }
+        }*/
+        active_monitor();
+
     }
+
  }
 
 // -------------------------------------------- **Drop Detection** --------------------------------------------
@@ -193,15 +198,17 @@ float calcStdDev(float data[], int len) {
 }
 
 // The actual drop detection calculations
-void thresholding(int i, int inSignal[], int outSignal[], int lag, float threshold, float influence) {
-    if (fabsf(inSignal[i] - avgFilter[i - 1]) > threshold * stdFilter[i - 1]) {
+void thresholding(int i, float inSignal[], int outSignal[], int lag, float threshold, float influence) {
+    if (fabsf(inSignal[i] - avgFilter[i - 1]) > threshold /* stdFilter[i - 1]*/) {
         // if the input value is greater than the set number of stddev from mean, set the output signal = 1
-        if (inSignal[i] > avgFilter[i - 1]) {
-            outSignal[i] = 1;
-            trigger = 1;
+        if (inSignal[i] < avgFilter[i - 1]) {
+           outSignal[i] = -1;
+           trigger = 1;
+           P4OUT ^= BIT7;
         }
 
-        filteredIn[i] = influence * inSignal[i] + (1 - influence) * filteredIn[i - 1];
+        filteredIn[i] = influence * inSignal[i] +  (1-influence) * filteredIn[i - 1];
+        //printf("input: %d, filteredIn: %d\n", inSignal[i], (int) filteredIn[i]);
     }else {
         outSignal[i] = 0;
         if(outSignal[i] == 0 && trigger){
@@ -209,25 +216,31 @@ void thresholding(int i, int inSignal[], int outSignal[], int lag, float thresho
             dropFLG = 1; // dropFLG triggers when incrementing # of peaks
         }
         trigger = 0;
+        P4OUT &= ~BIT7;
+
+        filteredIn[i] = inSignal[i];
     }
 
     avgFilter[i] = calcMean(filteredIn + i - lag, lag);
-    stdFilter[i] = calcStdDev(filteredIn + i - lag, lag);
+    //stdFilter[i] = calcStdDev(filteredIn + i - lag, lag);
 
     // For debugging
-    printf("in: %d | out: %d | drops: %d\n", inSignal[i], outSignal[i], peaks);
+    //printf("in: %d | out: %d | drops: %d\n", (int) inSignal[i], outSignal[i], peaks);
+   // printf("avg: %d | in: %d| Fin: %d\n", (int) avgFilter[i], (int) inSignal[i], (int) filteredIn[i]);
+
 }
 
 void active_monitor(void)
 {
-    if(pos < SAMPLE_LENGTH){        // Before the array is filled...
-        inSignal[pos] = adcValue;   // store ADC value into array
+   if(pos < SAMPLE_LENGTH){        // Before the array is filled...
+        inSignal[pos] = (float) adcValue;   // store ADC value into array
 
         if(pos == lag){             // When lag value is reached, start peak detection
             // Thresholding Init
             memcpy(filteredIn, inSignal, sizeof(float)*SAMPLE_LENGTH);  // Copy the values of inSignal to filteredIn
             avgFilter[lag - 1] = calcMean(inSignal, lag);               // Initial Mean
-            stdFilter[lag - 1] = calcStdDev(inSignal, lag);             // Initial Std Dev
+            // stdFilter[lag - 1] = calcStdDev(inSignal, lag);             // Initial Std Dev
+            //printf("avg: %d | std: %d | Fin: %d| in: %d\n", (int) avgFilter[pos-1], (int) stdFilter[pos-1], (int) filteredIn[pos], (int) inSignal[pos]);
 
             thresholding(pos, inSignal, outSignal, lag, threshold, influence);
         }else if (pos > lag){
@@ -236,16 +249,21 @@ void active_monitor(void)
 
         pos++;
     }else{ // When array is full, the new values are getting added to the end and the array is getting shifted, with the first value getting deleted.
-        memmove(&inSignal[0], &inSignal[1], sizeof(inSignal) - sizeof(*inSignal));  //Shift function
+        memmove(&inSignal[0], &inSignal[1], sizeof(inSignal) - sizeof(*inSignal));  //Shift function (WORKS)
         inSignal[pos-1] = adcValue;
+        memmove(&filteredIn[0], &filteredIn[1], sizeof(filteredIn) - sizeof(*filteredIn));
+        memmove(&avgFilter[0], &avgFilter[1], sizeof(avgFilter) - sizeof(*avgFilter));
+        //memmove(&stdFilter[0], &stdFilter[1], sizeof(stdFilter) - sizeof(*stdFilter));
 
         thresholding(pos-1, inSignal, outSignal, lag, threshold, influence);
     }
+
 // -------------------------------------------- ** END ** --------------------------------------------
 
 
     //Poll Buttons here. Control the Timer. Update LCD Display.
     // If drop is detected (from ADC12 interrupt)
+    //printf("drop: %d\n", dropFLG);
     if (dropFLG && (dropStopwatch > SIGNAL_LENGTH)) { //Get the first value that is below the threshold and ignore all values within 40ms within that value
         if (!TA0CCR0) { // TIMER IS OFF if !; else not 0, aka timer is ON
             startTimer0_A5();
