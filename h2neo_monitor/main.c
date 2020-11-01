@@ -216,6 +216,7 @@ void thresholding(int i, float inSignal[], int outSignal[], int lag, float thres
         if(outSignal[i] == 0 && trigger){
             peaks++;
             dropFLG = 1; // dropFLG triggers when incrementing # of peaks
+            printf("Drops Detected: %d\n", peaks);
         }
         trigger = 0;
         P4OUT &= ~BIT7; // Debugging
