@@ -5,7 +5,7 @@
 <stringAttribute key="com.ti.ccstudio.debug.debugModel.ATTR_PROGRAM.MSP430F5529.ccxml.TI MSP430 USB1/MSP430" value="${build_artifact:h2neo_monitor}"/>
 <stringAttribute key="com.ti.ccstudio.debug.debugModel.ATTR_PROJECT.MSP430F5529.ccxml.TI MSP430 USB1/MSP430" value="h2neo_monitor"/>
 <stringAttribute key="com.ti.ccstudio.debug.debugModel.ATTR_TARGET_CONFIG" value="${target_config_active_default:h2neo_monitor}"/>
-<stringAttribute key="com.ti.ccstudio.debug.debugModel.MRU_PROGRAM.MSP430F5529.ccxml.TI MSP430 USB1/MSP430" value="C:\Users\ericj\Desktop\h2neo\h2neo_monitor\Debug\h2neo_monitor.out"/>
+<stringAttribute key="com.ti.ccstudio.debug.debugModel.MRU_PROGRAM.MSP430F5529.ccxml.TI MSP430 USB1/MSP430" value="C:\Users\ericj\Desktop\h2neo MASTER BRANCH\h2neo\h2neo_monitor\Debug\h2neo_monitor.out"/>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
 <listEntry value="/h2neo_monitor"/>
 </listAttribute>

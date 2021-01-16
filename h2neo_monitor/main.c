@@ -23,7 +23,7 @@
 #define MEMSIZE         10                              // size of memory buffer used for flow rate calculations
 #define GTT_FACTOR      20                              // factor specified in tubing packaging (used to calculate # drops/min)
 #define GTT_FACTOR_STR  "20"                            // ^ in string format... not sure if it'll work lol
-#define SIGNAL_LENGTH   40                              // 2 * 20ms
+#define SIGNAL_LENGTH   1000                            // 2 * 20ms **Eric: Changed this to 1000ms to limit double drop counting (so max rate we can go to is around 350ml/hr)
 
 // tic - number of times the Timer ISR is entered after x clock cycles
 //          tic will be programmed to be 1ms long
@@ -40,7 +40,7 @@ unsigned long int ticMem[MEMSIZE];                      // global var auto initi
 unsigned short int index = 0;
 char str[6];                                            // used to convert each integer to string
 
-float flowRate; // mL/hr
+float flowRate = 0.0; // mL/hr
 
 unsigned char isPrompting = 1;                          // initially set to YES
 unsigned char alarmTriggered = 0;
@@ -64,8 +64,8 @@ unsigned int pos = 0;
 
 // **--CHANGE THESE PARAMETERS FOR ALGORITHM--**
 unsigned int lag = 5;
-float threshold = 70;
-float influence = 0.001;
+float threshold = 100;
+float influence = 0.0;
 // **-----------------------------------------**
 
 float filteredIn[SAMPLE_LENGTH];
@@ -132,7 +132,7 @@ int main(void) {
 
 // -------------------------------------------- **Main Loop** --------------------------------------------
     while (1) {
-        // If prompting the user and the rotary encoder buttons is not pressed
+       // If prompting the user and the rotary encoder buttons is not pressed
         if (isPrompting && !rotButIFG) {
             int2str(desiredRate, refRate);
 
@@ -154,9 +154,9 @@ int main(void) {
         else if (rotButIFG) {
             if (isPrompting) {
                 isPrompting = 0;
-            }/*else {
+            }else {
                 isPrompting = 1; // **Eric: I only commented this one out because my button is a bit glitchy
-            }*/
+            }
             rotButIFG = 0;
             clearLCD();
         }
@@ -165,7 +165,6 @@ int main(void) {
             active_monitor();
         }
     }
-
  }
 
 // -------------------------------------------- **Drop Detection** --------------------------------------------
@@ -184,33 +183,16 @@ float calcMean(float data[], int len) {
     return mean;
 }
 
-/* TAKING THIS OUT FOR NOW, STD DEVIATION IS TOO BUGGY
- *
-// Simple function to calculate the standard deviation
-float calcStdDev(float data[], int len) {
-    float mean = calcMean(data, len);
-    float stddev = 0.0;
-    int i;
-
-    for (i = 0; i < len; ++i) {
-        stddev += pow(data[i] - mean, 2);
-    }
-
-    return sqrt(stddev / len);
-}
-*/
 // The actual drop detection calculations
 void thresholding(int i, float inSignal[], int outSignal[], int lag, float threshold, float influence) {
-    if (fabsf(inSignal[i] - avgFilter[i - 1]) > threshold /* stdFilter[i - 1]*/) {
+    if (fabsf(inSignal[i] - avgFilter[i - 1]) > threshold) {
         // If the different between input and average is greater than a threshold value, toggle
         if (inSignal[i] < avgFilter[i - 1]) {
            outSignal[i] = -1;
            trigger = 1;
-           P4OUT ^= BIT7; // Debugging
         }
 
         filteredIn[i] = influence * inSignal[i] +  (1-influence) * filteredIn[i - 1];
-        //printf("input: %d, filteredIn: %d\n", inSignal[i], (int) filteredIn[i]);
     }else {
         outSignal[i] = 0;
         if(outSignal[i] == 0 && trigger){
@@ -219,18 +201,15 @@ void thresholding(int i, float inSignal[], int outSignal[], int lag, float thres
             printf("Drops Detected: %d\n", peaks);
         }
         trigger = 0;
-        P4OUT &= ~BIT7; // Debugging
 
         filteredIn[i] = inSignal[i];
     }
 
     avgFilter[i] = calcMean(filteredIn + i - lag, lag);
-    //stdFilter[i] = calcStdDev(filteredIn + i - lag, lag);
 
     // For debugging
-    //printf("in: %d | out: %d | drops: %d\n", (int) inSignal[i], outSignal[i], peaks);
+   // printf("in: %d | out: %d | drops: %d\n", (int) inSignal[i], outSignal[i], peaks);
    // printf("avg: %d | in: %d| Fin: %d\n", (int) avgFilter[i], (int) inSignal[i], (int) filteredIn[i]);
-
 }
 
 void active_monitor(void)
@@ -242,9 +221,6 @@ void active_monitor(void)
             // Thresholding Init
             memcpy(filteredIn, inSignal, sizeof(float)*SAMPLE_LENGTH);  // Copy the values of inSignal to filteredIn
             avgFilter[lag - 1] = calcMean(inSignal, lag);               // Initial Mean
-            // stdFilter[lag - 1] = calcStdDev(inSignal, lag);             // Initial Std Dev
-            //printf("avg: %d | std: %d | Fin: %d| in: %d\n", (int) avgFilter[pos-1], (int) stdFilter[pos-1], (int) filteredIn[pos], (int) inSignal[pos]);
-
             thresholding(pos, inSignal, outSignal, lag, threshold, influence);
         }else if (pos > lag){
             thresholding(pos, inSignal, outSignal, lag, threshold, influence);
@@ -256,18 +232,15 @@ void active_monitor(void)
         inSignal[pos-1] = adcValue;
         memmove(&filteredIn[0], &filteredIn[1], sizeof(filteredIn) - sizeof(*filteredIn));
         memmove(&avgFilter[0], &avgFilter[1], sizeof(avgFilter) - sizeof(*avgFilter));
-        //memmove(&stdFilter[0], &stdFilter[1], sizeof(stdFilter) - sizeof(*stdFilter));
 
         thresholding(pos-1, inSignal, outSignal, lag, threshold, influence);
     }
 
 // -------------------------------------------- ** END ** --------------------------------------------
-
-
     //Poll Buttons here. Control the Timer. Update LCD Display.
     // If drop is detected (from ADC12 interrupt)
-    //printf("drop: %d\n", dropFLG);
     if (dropFLG && (dropStopwatch > SIGNAL_LENGTH)) { //Get the first value that is below the threshold and ignore all values within 40ms within that value
+        // Start timer
         if (!TA0CCR0) { // TIMER IS OFF if !; else not 0, aka timer is ON
             startTimer0_A5();
             dropStopwatch = 0;
@@ -338,18 +311,19 @@ void active_monitor(void)
     // Calculation of flow rate & display
     if (ticMem[0]) {  // not zero
         // this might be being repeated too many times...
-        short int count = 0, avgTime_ms = 0;
-        long int sum = 0;
+        unsigned short int count = 0;
+        unsigned long int sum = 0, avgTime_ms = 0;;
+        // Get total sum of time values that are currently in the ticMem array
         for (i = 0; i < MEMSIZE; i++) {
-            if (ticMem[i] > 500) { // assuming that drops will not be < 500ms apart
+           // **Eric: Commented this out because this was not allowing flow rate to go under 5.49ml/hr
+           // if (ticMem[i] > 500) { // assuming that drops will not be < 500ms apart
                 sum += ticMem[i];
                 count++;
-            }
+          //  }
         }
+
         avgTime_ms = (float) sum / count;  // yields average msec
-        float gtt = GTT_FACTOR;
-        float temp = gtt * avgTime_ms;
-        flowRate = 3600000.0 / temp;
+        flowRate = 3600000.0 / ((float) GTT_FACTOR * avgTime_ms);
 
         // change the flowRate to string
         char buf[80];
@@ -358,7 +332,6 @@ void active_monitor(void)
         prints(buf);
         setCursor(60, 3);
         prints(" mLh");
-
     } else {
         setCursor(36, 3);
         prints("no drops");

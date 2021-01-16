@@ -47,6 +47,7 @@ void delayMS(int ms)
 void startTimer0_A5(void)
 {
 	tic = 0; //Reset Over-Flow counter
+	dropStopwatch = 0; // reset dropStopwatch (For double drop solution)
 	// in general, Y MHz clock requires Y*1000 ticks for 1ms delay
 	TA0CCR0 = 1000 - 1;  // start timer; compare value (up mode): 1 ms
 //	P1OUT |= BIT0;
