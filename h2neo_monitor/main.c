@@ -64,7 +64,7 @@ unsigned int pos = 0;
 
 // **--CHANGE THESE PARAMETERS FOR ALGORITHM--**
 unsigned int lag = 5;
-float threshold = 100;
+float threshold = 35;
 float influence = 0.0;
 // **-----------------------------------------**
 
