@@ -190,6 +190,7 @@ void thresholding(int i, float inSignal[], int outSignal[], int lag, float thres
         if (inSignal[i] < avgFilter[i - 1]) {
            outSignal[i] = -1;
            trigger = 1;
+           P4OUT ^= BIT7;  // toggle LED
         }
 
         filteredIn[i] = influence * inSignal[i] +  (1-influence) * filteredIn[i - 1];
@@ -201,6 +202,7 @@ void thresholding(int i, float inSignal[], int outSignal[], int lag, float thres
             printf("Drops Detected: %d\n", peaks);
         }
         trigger = 0;
+        P4OUT &= ~BIT7;
 
         filteredIn[i] = inSignal[i];
     }
