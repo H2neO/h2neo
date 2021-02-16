@@ -76,7 +76,7 @@ int trigger = 0;
 int peaks = 0;
 
 int ticMem_isFull = 0;
-int numDrops = 0;
+unsigned short int numDrops = 0;
 
 /********************************************************************************
  * main.c
@@ -261,7 +261,7 @@ void active_monitor(void)
             setCursor(0, yCursor++);
             prints(str);
 
-            if (index == MEMSIZE-1) {  // memsize - 1 (when memsize = 5)
+            if (index > MEMSIZE-1) {  // memsize - 1 (when memsize = 5)
                 index = 0;  // index wraparound
                 yCursor = 1;
             }
