@@ -75,6 +75,9 @@ int outSignal[SAMPLE_LENGTH];
 int trigger = 0;
 int peaks = 0;
 
+int ticMem_isFull = 0;
+int numDrops = 0;
+
 /********************************************************************************
  * main.c
  ********************************************************************************/
@@ -251,16 +254,24 @@ void active_monitor(void)
 
             ticMem[index] = tic;        // save measured time to ticMem buffer
 
-            // print to screen (for debugging)
+            // print to screen ms between drops (for debugging)
             int2str(ticMem[index++], str);
             setCursor(0, yCursor);
             prints("      ");  // 6 blank to clear screen
             setCursor(0, yCursor++);
             prints(str);
 
-            if (index > 4) {  // memsize - 1 (when memsize = 5)
+            if (index == MEMSIZE-1) {  // memsize - 1 (when memsize = 5)
                 index = 0;  // index wraparound
                 yCursor = 1;
+            }
+
+            if(!ticMem_isFull){
+                numDrops += 1;
+            }
+
+            if(index == MEMSIZE-1 && !ticMem_isFull){
+                ticMem_isFull = 1;
             }
 
             startTimer0_A5();
@@ -313,18 +324,18 @@ void active_monitor(void)
     // Calculation of flow rate & display
     if (ticMem[0]) {  // not zero
         // this might be being repeated too many times...
-        unsigned short int count = 0;
+        //unsigned short int count = 0;
         unsigned long int sum = 0, avgTime_ms = 0;;
         // Get total sum of time values that are currently in the ticMem array
-        for (i = 0; i < MEMSIZE; i++) {
+        for (i = 0; i < numDrops; i++) {
            // **Eric: Commented this out because this was not allowing flow rate to go under 5.49ml/hr
            // if (ticMem[i] > 500) { // assuming that drops will not be < 500ms apart
                 sum += ticMem[i];
-                count++;
+                //count++;
           //  }
         }
 
-        avgTime_ms = (float) sum / count;  // yields average msec
+        avgTime_ms = (float) sum / numDrops;  // yields average msec
         flowRate = 3600000.0 / ((float) GTT_FACTOR * avgTime_ms);
 
         // change the flowRate to string
