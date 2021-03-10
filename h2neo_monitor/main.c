@@ -14,13 +14,14 @@
 #include <string.h>
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <msp430f5529.h>
 #include "nokia5110.h"
 #include "rotary_encoder.h"
 #include "test.h"
 #include "convertNprint.h"
 
-#define MEMSIZE         10                              // size of memory buffer used for flow rate calculations
+#define MEMSIZE         5                              // size of memory buffer used for flow rate calculations
 #define GTT_FACTOR      20                              // factor specified in tubing packaging (used to calculate # drops/min)
 #define GTT_FACTOR_STR  "20"                            // ^ in string format... not sure if it'll work lol
 #define SIGNAL_LENGTH   1000                            // 2 * 20ms **Eric: Changed this to 1000ms to limit double drop counting (so max rate we can go to is around 350ml/hr)
@@ -51,7 +52,7 @@ char rotKnobIFG = 0;                                    // rotary encoder knob t
 char rotButIFG = 0;                                     // rotary encoder button pressed
 char s2IFG = 0;                                         // on-board P1.1 (S2) pressed
 
-short i = 0, yCursor = 1;  // yCursor = 0 is taken by the stopwatch display
+short i = 0, yCursor = 1;                               // yCursor = 0 is taken by the stopwatch display
 
 char refRate[6];                                        // The desired rate but as a string
 
@@ -70,7 +71,6 @@ float influence = 0.0;
 
 float filteredIn[SAMPLE_LENGTH];
 float avgFilter[SAMPLE_LENGTH];
-//float stdFilter[SAMPLE_LENGTH];
 int outSignal[SAMPLE_LENGTH];
 int trigger = 0;
 int peaks = 0;
@@ -107,19 +107,7 @@ int main(void) {
 
     LCD_Init();
     clearLCD();
-//  setCursor(0, 0);
-//  prints("time:");
-//  setCursor(36, 0);  // each character is 6wide 8tall
-//  prints("00:00:00");
 
-
-
-//  // set up display of memory buffer
-//  for (i = 0; i < 5; i++) {
-//      int2str(ticMem[i], str);
-//      setCursor(0, yCursor++);
-//      prints(str);
-//  }
     yCursor = 1;
 
     // P1.1 (Button) Intterupts
@@ -171,7 +159,6 @@ int main(void) {
  }
 
 // -------------------------------------------- **Drop Detection** --------------------------------------------
-
 // -------------------------------------------- **Std-Dev Based Algo START (Eric)** --------------------------------------------
 // Simple function to calculate mean
 float calcMean(float data[], int len) {
@@ -209,10 +196,35 @@ void thresholding(int i, float inSignal[], int outSignal[], int lag, float thres
     }
 
     avgFilter[i] = calcMean(filteredIn + i - lag, lag);
+}
 
-    // For debugging
-   // printf("in: %d | out: %d | drops: %d\n", (int) inSignal[i], outSignal[i], peaks);
-   // printf("avg: %d | in: %d| Fin: %d\n", (int) avgFilter[i], (int) inSignal[i], (int) filteredIn[i]);
+void swap(unsigned long *p,unsigned long *q) {
+    unsigned long temp;
+
+   temp = *p;
+   *p = *q;
+   *q = temp;
+}
+
+unsigned long calc_median(unsigned long array[], int size) {
+   int i, j, k;
+   unsigned long copyArray[size];
+
+   for(k = 0; k < size; k++){
+       copyArray[k] = array[k];
+   }
+
+   // Sort Array
+   for(i = 0; i < size-1; i++) {
+      for(j = 0; j < size-i-1; j++) {
+         if(copyArray[j] > copyArray[j+1])
+            swap(&copyArray[j], &copyArray[j+1]);
+      }
+   }
+
+   int middle = ((size+1)/2) - 1;
+
+   return copyArray[middle];
 }
 
 void active_monitor(void)
@@ -247,6 +259,13 @@ void active_monitor(void)
         if (!TA0CCR0) { // TIMER IS OFF if !; else not 0, aka timer is ON
             startTimer0_A5();
             dropStopwatch = 0;
+
+            // Display number of drops detected
+            char str[2];
+            int2strXX(peaks, str);
+            setCursor(72, 0);
+            prints(str);
+
         } else {
             stopTimer0_A5();
 
@@ -261,8 +280,14 @@ void active_monitor(void)
             setCursor(0, yCursor++);
             prints(str);
 
+            // Display number of drops detected
+            char str[2];
+            int2strXX(peaks, str);
+            setCursor(72, 0);
+            prints(str);
+
             if (index > MEMSIZE-1) {  // memsize - 1 (when memsize = 5)
-                index = 0;  // index wraparound
+                index = 0;            // index wraparound
                 yCursor = 1;
             }
 
@@ -276,7 +301,9 @@ void active_monitor(void)
 
             startTimer0_A5();
         }
+
         dropFLG = 0;
+
     }else{
         P4OUT &= ~BIT7;
     }
@@ -294,7 +321,7 @@ void active_monitor(void)
     prints(GTT_FACTOR_STR);
 
 /** Refreshing display timer everytime a drop is detected */
-    msec = tic;
+/*    msec = tic;
     sec = tic / 1000;
     min = tic / 60000;
 
@@ -321,23 +348,23 @@ void active_monitor(void)
         setCursor(36, 0);
         prints(str);
     }
-    oMin = min;
+    oMin = min;*/
 
     // Calculation of flow rate & display
     if (ticMem[0]) {  // not zero
         // this might be being repeated too many times...
         //unsigned short int count = 0;
-        unsigned long int sum = 0, avgTime_ms = 0;;
+        unsigned long int sum = 0, avgTime_ms = 0;
+        //unsigned long medianTime_ms = 0;
+
         // Get total sum of time values that are currently in the ticMem array
-        for (i = 0; i < numDrops; i++) {
-           // **Eric: Commented this out because this was not allowing flow rate to go under 5.49ml/hr
-           // if (ticMem[i] > 500) { // assuming that drops will not be < 500ms apart
-                sum += ticMem[i];
-                //count++;
-          //  }
+        for (i = 0; i <= numDrops; i++) {
+            sum += ticMem[i];
         }
 
         avgTime_ms = (float) sum / numDrops;  // yields average msec
+
+        //medianTime_ms = calc_median(ticMem, numDrops);
         flowRate = 3600000.0 / ((float) GTT_FACTOR * avgTime_ms);
 
         // change the flowRate to string
