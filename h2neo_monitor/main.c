@@ -189,6 +189,7 @@ void thresholding(int i, float inSignal[], int outSignal[], int lag, float thres
             peaks++;
             dropFLG = 1; // dropFLG triggers when incrementing # of peaks
             printf("Drops Detected: %d\n", peaks);
+            printf("Flow Rate: %f\n", flowRate);
         }
         trigger = 0;
 
