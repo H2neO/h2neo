@@ -189,12 +189,7 @@ void thresholding(int i, float inSignal[], int outSignal[], int lag, float thres
         if(outSignal[i] == 0 && trigger){
             peaks++;
             dropFLG = 1; // dropFLG triggers when incrementing # of peaks
-<<<<<<< HEAD
             //printf("Drops Detected: %d\n", peaks);
-=======
-            printf("Drops Detected: %d\n", peaks);
-
->>>>>>> 8306e5ae8967cb50213b08571645f6c758adb20d
         }
         trigger = 0;
 
@@ -348,7 +343,8 @@ void active_monitor(void)
 
         // change the flowRate to string
         char buf[80];
-        if (flowRate != oldRate) {
+
+        /*if (flowRate != oldRate) {
 			displayFlowRate(&flowRate, buf);
 			setCursor(36, 3);
 			prints(buf);
@@ -357,7 +353,7 @@ void active_monitor(void)
 			printf("Tic = %d\n", tic);
 			printf("Flow Rate %f\n", flowRate);
 			oldRate = flowRate;
-        }
+        }*/
 
     } else {
         setCursor(36, 3);
