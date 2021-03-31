@@ -42,6 +42,7 @@ unsigned short int index = 0;
 char str[6];                                            // used to convert each integer to string
 
 float flowRate = 0.0; // mL/hr
+float oldRate = 0.0;  // old value used to determine if rate should be printed again
 
 unsigned char isPrompting = 1;                          // initially set to YES
 unsigned char alarmTriggered = 0;
@@ -188,7 +189,12 @@ void thresholding(int i, float inSignal[], int outSignal[], int lag, float thres
         if(outSignal[i] == 0 && trigger){
             peaks++;
             dropFLG = 1; // dropFLG triggers when incrementing # of peaks
+<<<<<<< HEAD
             //printf("Drops Detected: %d\n", peaks);
+=======
+            printf("Drops Detected: %d\n", peaks);
+
+>>>>>>> 8306e5ae8967cb50213b08571645f6c758adb20d
         }
         trigger = 0;
 
@@ -251,11 +257,13 @@ void active_monitor(void)
             setCursor(0, yCursor++);
             prints(str);
 
+
             // Display number of drops detected
             char str[2];
             int2strXX(peaks, str);
             setCursor(72, 0);
             prints(str);
+
 
             if (index > MEMSIZE-1) {  // memsize - 1 (when memsize = 5)
                 index = 0;            // index wraparound
@@ -340,11 +348,17 @@ void active_monitor(void)
 
         // change the flowRate to string
         char buf[80];
-        displayFlowRate(&flowRate, buf);
-        setCursor(36, 3);
-        prints(buf);
-        setCursor(60, 3);
-        prints(" mLh");
+        if (flowRate != oldRate) {
+			displayFlowRate(&flowRate, buf);
+			setCursor(36, 3);
+			prints(buf);
+			setCursor(60, 3);
+			prints(" mLh");
+			printf("Tic = %d\n", tic);
+			printf("Flow Rate %f\n", flowRate);
+			oldRate = flowRate;
+        }
+
     } else {
         setCursor(36, 3);
         prints("no drops");
