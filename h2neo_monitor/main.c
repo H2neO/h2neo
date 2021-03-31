@@ -65,7 +65,7 @@ unsigned int pos = 0;
 
 // **--CHANGE THESE PARAMETERS FOR ALGORITHM--**
 unsigned int lag = 5;
-float threshold = 35;
+float threshold = 100;
 float influence = 0.0;
 // **-----------------------------------------**
 
@@ -124,7 +124,7 @@ int main(void) {
 // -------------------------------------------- **Main Loop** --------------------------------------------
     while (1) {
        // If prompting the user and the rotary encoder buttons is not pressed
-        if (isPrompting && !rotButIFG) {
+        /*if (isPrompting && !rotButIFG) {
             int2str(desiredRate, refRate);
 
             // LCD screen display
@@ -152,9 +152,9 @@ int main(void) {
             clearLCD();
         }
         // If not prompting anymore, starting detecting drops through the active_monitor() function
-        else {
+        else {*/
             active_monitor();
-        }
+       // }
     }
  }
 
@@ -188,8 +188,7 @@ void thresholding(int i, float inSignal[], int outSignal[], int lag, float thres
         if(outSignal[i] == 0 && trigger){
             peaks++;
             dropFLG = 1; // dropFLG triggers when incrementing # of peaks
-            printf("Drops Detected: %d\n", peaks);
-            printf("Flow Rate: %f\n", flowRate);
+            //printf("Drops Detected: %d\n", peaks);
         }
         trigger = 0;
 
@@ -197,35 +196,6 @@ void thresholding(int i, float inSignal[], int outSignal[], int lag, float thres
     }
 
     avgFilter[i] = calcMean(filteredIn + i - lag, lag);
-}
-
-void swap(unsigned long *p,unsigned long *q) {
-    unsigned long temp;
-
-   temp = *p;
-   *p = *q;
-   *q = temp;
-}
-
-unsigned long calc_median(unsigned long array[], int size) {
-   int i, j, k;
-   unsigned long copyArray[size];
-
-   for(k = 0; k < size; k++){
-       copyArray[k] = array[k];
-   }
-
-   // Sort Array
-   for(i = 0; i < size-1; i++) {
-      for(j = 0; j < size-i-1; j++) {
-         if(copyArray[j] > copyArray[j+1])
-            swap(&copyArray[j], &copyArray[j+1]);
-      }
-   }
-
-   int middle = ((size+1)/2) - 1;
-
-   return copyArray[middle];
 }
 
 void active_monitor(void)
@@ -300,6 +270,9 @@ void active_monitor(void)
                 ticMem_isFull = 1;
             }
 
+            printf("%d ", tic);
+            printf("%f\n", flowRate);
+
             startTimer0_A5();
         }
 
@@ -354,9 +327,7 @@ void active_monitor(void)
     // Calculation of flow rate & display
     if (ticMem[0]) {  // not zero
         // this might be being repeated too many times...
-        //unsigned short int count = 0;
         unsigned long int sum = 0, avgTime_ms = 0;
-        //unsigned long medianTime_ms = 0;
 
         // Get total sum of time values that are currently in the ticMem array
         for (i = 0; i <= numDrops; i++) {
@@ -365,7 +336,6 @@ void active_monitor(void)
 
         avgTime_ms = (float) sum / numDrops;  // yields average msec
 
-        //medianTime_ms = calc_median(ticMem, numDrops);
         flowRate = 3600000.0 / ((float) GTT_FACTOR * avgTime_ms);
 
         // change the flowRate to string
