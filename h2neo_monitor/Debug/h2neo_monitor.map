@@ -1,7 +1,7 @@
 ******************************************************************************
                   MSP430 Linker PC v20.2.1                     
 ******************************************************************************
->> Linked Wed Mar 31 12:09:48 2021
+>> Linked Wed Mar 31 13:59:33 2021
 
 OUTPUT FILE NAME:   <h2neo_monitor.out>
 ENTRY POINT SYMBOL: "_c_int00_noargs"  address: 00004456
@@ -19,8 +19,8 @@ MEMORY CONFIGURATION
   INFOB                 00001900   00000080  00000000  00000080  RWIX
   INFOA                 00001980   00000080  00000000  00000080  RWIX
   USBRAM                00001c00   00000800  00000000  00000800  RWIX
-  RAM                   00002400   00002000  00000628  000019d8  RWIX
-  FLASH                 00004400   0000bb80  000004a0  0000b6e0  RWIX
+  RAM                   00002400   00002000  0000062c  000019d4  RWIX
+  FLASH                 00004400   0000bb80  000004a2  0000b6de  RWIX
   INT00                 0000ff80   00000002  00000000  00000002  RWIX
   INT01                 0000ff82   00000002  00000000  00000002  RWIX
   INT02                 0000ff84   00000002  00000000  00000002  RWIX
@@ -93,39 +93,39 @@ SECTION ALLOCATION MAP
  output                                  attributes/
 section   page    origin      length       input sections
 --------  ----  ----------  ----------   ----------------
-.data      0    00002400    000001ce     UNINITIALIZED
+.data      0    00002400    000001d2     UNINITIALIZED
                   00002400    000000c8     rts430x_lc_rd_eabi.lib : defs.c.obj (.data:_ftable)
                   000024c8    00000078                            : host_device.c.obj (.data:_device)
-                  00002540    0000003c                            : host_device.c.obj (.data:_stream)
-                  0000257c    0000003a     main.obj (.data)
-                  000025b6    00000004     rts430x_lc_rd_eabi.lib : exit_gvars.c.obj (.data:__TI_cleanup_ptr)
-                  000025ba    00000004                            : exit_gvars.c.obj (.data:__TI_dtors_ptr)
-                  000025be    00000004                            : _lock.c.obj (.data:_lock)
-                  000025c2    00000004                            : _lock.c.obj (.data:_unlock)
-                  000025c6    00000002                            : defs.c.obj (.data)
-                  000025c8    00000002                            : errno.c.obj (.data)
-                  000025ca    00000002                            : exit.c.obj (.data)
-                  000025cc    00000002                            : memory.c.obj (.data)
+                  00002540    0000003e     main.obj (.data)
+                  0000257e    0000003c     rts430x_lc_rd_eabi.lib : host_device.c.obj (.data:_stream)
+                  000025ba    00000004                            : exit_gvars.c.obj (.data:__TI_cleanup_ptr)
+                  000025be    00000004                            : exit_gvars.c.obj (.data:__TI_dtors_ptr)
+                  000025c2    00000004                            : _lock.c.obj (.data:_lock)
+                  000025c6    00000004                            : _lock.c.obj (.data:_unlock)
+                  000025ca    00000002                            : defs.c.obj (.data)
+                  000025cc    00000002                            : errno.c.obj (.data)
+                  000025ce    00000002                            : exit.c.obj (.data)
+                  000025d0    00000002                            : memory.c.obj (.data)
 
-.bss       0    000025ce    0000015a     UNINITIALIZED
-                  000025ce    000000a0     (.common:__TI_tmpnams)
-                  0000266e    00000028     (.common:avgFilter)
-                  00002696    00000028     (.common:filteredIn)
-                  000026be    00000028     (.common:inSignal)
-                  000026e6    00000014     (.common:outSignal)
-                  000026fa    00000014     (.common:ticMem)
-                  0000270e    00000008     (.common:parmbuf)
-                  00002716    00000006     (.common:refRate)
-                  0000271c    00000006     (.common:str)
-                  00002722    00000004     rts430x_lc_rd_eabi.lib : memory.c.obj (.bss)
-                  00002726    00000002     (.common:adcValue)
+.bss       0    000025d2    0000015a     UNINITIALIZED
+                  000025d2    000000a0     (.common:__TI_tmpnams)
+                  00002672    00000028     (.common:avgFilter)
+                  0000269a    00000028     (.common:filteredIn)
+                  000026c2    00000028     (.common:inSignal)
+                  000026ea    00000014     (.common:outSignal)
+                  000026fe    00000014     (.common:ticMem)
+                  00002712    00000008     (.common:parmbuf)
+                  0000271a    00000006     (.common:refRate)
+                  00002720    00000006     (.common:str)
+                  00002726    00000004     rts430x_lc_rd_eabi.lib : memory.c.obj (.bss)
+                  0000272a    00000002     (.common:adcValue)
 
-.sysmem    0    00002728    00000140     UNINITIALIZED
-                  00002728    00000008     rts430x_lc_rd_eabi.lib : memory.c.obj (.sysmem)
-                  00002730    00000138     --HOLE--
+.sysmem    0    0000272c    00000140     UNINITIALIZED
+                  0000272c    00000008     rts430x_lc_rd_eabi.lib : memory.c.obj (.sysmem)
+                  00002734    00000138     --HOLE--
 
-.cio       0    00002868    00000120     UNINITIALIZED
-                  00002868    00000120     rts430x_lc_rd_eabi.lib : trgmsg.c.obj (.cio)
+.cio       0    0000286c    00000120     UNINITIALIZED
+                  0000286c    00000120     rts430x_lc_rd_eabi.lib : trgmsg.c.obj (.cio)
 
 .stack     0    00004360    000000a0     UNINITIALIZED
                   00004360    00000004     rts430x_lc_rd_eabi.lib : boot.c.obj (.stack)
@@ -151,11 +151,12 @@ section   page    origin      length       input sections
                   00004800    00000010                            : e_pow.c.obj (.const:dp_l)
                   00004810    00000006     convertNprint.obj (.const:.string)
 
-.cinit     0    00004816    0000008a     
-                  00004816    00000068     (.cinit..data.load) [load image, compression = lzss]
-                  0000487e    0000000c     (__TI_handler_table)
-                  0000488a    00000006     (.cinit..bss.load) [load image, compression = zero_init]
-                  00004890    00000010     (__TI_cinit_table)
+.cinit     0    00004816    0000008c     
+                  00004816    00000069     (.cinit..data.load) [load image, compression = lzss]
+                  0000487f    00000001     --HOLE-- [fill = 0]
+                  00004880    0000000c     (__TI_handler_table)
+                  0000488c    00000006     (.cinit..bss.load) [load image, compression = zero_init]
+                  00004892    00000010     (__TI_cinit_table)
 
 .init_array 
 *          0    00004400    00000000     UNINITIALIZED
@@ -394,14 +395,14 @@ MODULE SUMMARY
        Module                        code    ro data   rw data
        ------                        ----    -------   -------
     .\
-       main.obj                      1430    64        232    
+       main.obj                      1430    64        236    
        lcd_screen.obj                490     480       0      
        convertNprint.obj             460     6         0      
        rotary_encoder_w_button.obj   184     4         0      
        opticalSensor.obj             90      2         0      
        stopwatch.obj                 56      2         0      
     +--+-----------------------------+-------+---------+---------+
-       Total:                        2710    558       232    
+       Total:                        2710    558       236    
                                                               
     C:\ti\ccs1010\ccs\tools\compiler\ti-cgt-msp430_20.2.1.LTS\lib\rts430x_lc_rd_eabi.lib
        _printfi.c.obj                6690    38        0      
@@ -525,21 +526,21 @@ MODULE SUMMARY
                                                               
        Heap:                         0       0         320    
        Stack:                        0       0         160    
-       Linker Generated:             0       138       0      
+       Linker Generated:             0       139       0      
     +--+-----------------------------+-------+---------+---------+
-       Grand Total:                  27180   1077      1576   
+       Grand Total:                  27180   1078      1580   
 
 
 LINKER GENERATED COPY TABLES
 
-__TI_cinit_table @ 00004890 records: 2, size/record: 8, table size: 16
-	.data: load addr=00004816, load size=00000068 bytes, run addr=00002400, run size=000001ce bytes, compression=lzss
-	.bss: load addr=0000488a, load size=00000006 bytes, run addr=000025ce, run size=0000015a bytes, compression=zero_init
+__TI_cinit_table @ 00004892 records: 2, size/record: 8, table size: 16
+	.data: load addr=00004816, load size=00000069 bytes, run addr=00002400, run size=000001d2 bytes, compression=lzss
+	.bss: load addr=0000488c, load size=00000006 bytes, run addr=000025d2, run size=0000015a bytes, compression=zero_init
 
 
 LINKER GENERATED HANDLER TABLE
 
-__TI_handler_table @ 0000487e records: 3, size/record: 4, table size: 12
+__TI_handler_table @ 00004880 records: 3, size/record: 4, table size: 12
 	index: 0, handler: __TI_zero_init
 	index: 1, handler: __TI_decompress_lzss
 	index: 2, handler: __TI_decompress_none
@@ -1298,28 +1299,28 @@ address   name
 0000015c  WDTCTL                                 
 0000015d  WDTCTL_H                               
 0000015c  WDTCTL_L                               
-00002868  _CIOBUF_                               
+0000286c  _CIOBUF_                               
 00004400  __STACK_END                            
 000000a0  __STACK_SIZE                           
 00000140  __SYSMEM_SIZE                          
-00004890  __TI_CINIT_Base                        
-000048a0  __TI_CINIT_Limit                       
-0000487e  __TI_Handler_Table_Base                
-0000488a  __TI_Handler_Table_Limit               
+00004892  __TI_CINIT_Base                        
+000048a2  __TI_CINIT_Limit                       
+00004880  __TI_Handler_Table_Base                
+0000488c  __TI_Handler_Table_Limit               
 00004490  __TI_ISR_TRAP                          
 00015cc0  __TI_auto_init_nobinit_nopinit_hold_wdt
 00016340  __TI_cleanup                           
-000025b6  __TI_cleanup_ptr                       
+000025ba  __TI_cleanup_ptr                       
 000155ee  __TI_closefile                         
 00015504  __TI_decompress_lzss                   
 000168b0  __TI_decompress_none                   
 00015a32  __TI_doflush                           
-000025ba  __TI_dtors_ptr                         
-000025ca  __TI_enable_exit_profile_output        
+000025be  __TI_dtors_ptr                         
+000025ce  __TI_enable_exit_profile_output        
 00012ec2  __TI_frcaddd                           
 00011148  __TI_frcdivd                           
 000124fa  __TI_frcmpyd                           
-000025c6  __TI_ft_end                            
+000025ca  __TI_ft_end                            
 0000ffd2  __TI_int41                             
 0000ffd4  __TI_int42                             
 0000ffd6  __TI_int43                             
@@ -1349,7 +1350,7 @@ ffffffff  __TI_prof_data_size
 ffffffff  __TI_prof_data_start                   
 000163e2  __TI_readmsg                           
 00014c6a  __TI_renormd                           
-000025ce  __TI_tmpnams                           
+000025d2  __TI_tmpnams                           
 00016376  __TI_writemsg                          
 00015394  __TI_wrt_ok                            
 000166be  __TI_zero_init_nomemset                
@@ -1441,37 +1442,37 @@ ffffffff  __c_args__
 00004678  _ctypes_                               
 000024c8  _device                                
 00002400  _ftable                                
-000025be  _lock                                  
+000025c2  _lock                                  
 00016990  _nop                                   
 0000fffe  _reset_vector                          
 00004360  _stack                                 
-00002540  _stream                                
-00002728  _sys_memory                            
+0000257e  _stream                                
+0000272c  _sys_memory                            
 00016992  _system_post_cinit                     
 0001698c  _system_pre_init                       
-000025c2  _unlock                                
+000025c6  _unlock                                
 0001697c  abort                                  
 00016952  abs                                    
 000115ae  active_monitor                         
-00002726  adcValue                               
-00002597  alarmTriggered                         
+0000272a  adcValue                               
+0000255f  alarmTriggered                         
 0001445e  aligned_alloc                          
 00015afa  atoi                                   
-0000266e  avgFilter                              
+00002672  avgFilter                              
 0001604e  calcMean                               
 0001661c  clearLCD                               
 00015b5c  close                                  
 00016568  copysign                               
 00016568  copysignl                              
-00002598  desiredRate                            
+00002560  desiredRate                            
 00016966  displayFlowRate                        
-0000258e  dropFLG                                
-0000257c  dropStopwatch                          
-000025c8  errno                                  
+00002552  dropFLG                                
+00002540  dropStopwatch                          
+000025cc  errno                                  
 00015ee2  exit                                   
-00002696  filteredIn                             
+0000269a  filteredIn                             
 00016596  finddevice                             
-00002592  flowRate                               
+00002556  flowRate                               
 00015168  fputc                                  
 00014678  fputs                                  
 00014852  free                                   
@@ -1480,15 +1481,15 @@ ffffffff  __c_args__
 000158fa  fseek                                  
 00014d1c  ftoa                                   
 00015bb6  getdevice                              
-0000259e  i                                      
-000026be  inSignal                               
-00002590  index                                  
-000025aa  influence                              
+00002566  i                                      
+000026c2  inSignal                               
+00002554  index                                  
+00002572  influence                              
 0001674a  int2str                                
 00015d14  int2strXX                              
 000157b6  intToStr                               
-00002596  isPrompting                            
-000025a4  lag                                    
+0000255e  isPrompting                            
+0000256c  lag                                    
 00013e1c  ldexp                                  
 00013e1c  ldexpl                                 
 00016252  lseek                                  
@@ -1500,31 +1501,32 @@ ffffffff  __c_args__
 0001688a  memcpy                                 
 000164aa  memmove                                
 0001681e  memset                                 
-00002586  min                                    
-00002582  msec                                   
-000025b4  numDrops                               
-0000258c  oMin                                   
-00002588  oMsec                                  
-0000258a  oSec                                   
-000026e6  outSignal                              
-0000270e  parmbuf                                
-000025b0  peaks                                  
-000025a2  pos                                    
+0000254a  min                                    
+00002546  msec                                   
+0000257c  numDrops                               
+00002550  oMin                                   
+0000254c  oMsec                                  
+0000254e  oSec                                   
+0000255a  oldRate                                
+000026ea  outSignal                              
+00002712  parmbuf                                
+00002578  peaks                                  
+0000256a  pos                                    
 00010000  pow                                    
 00010000  powl                                   
 000160d8  printc                                 
 00015f2c  printf                                 
 00016834  prints                                 
 00015168  putc                                   
-00002716  refRate                                
+0000271a  refRate                                
 0001650a  remove                                 
 00016118  reverse                                
-0000259b  rotButIFG                              
-0000259a  rotKnobIFG                             
-0000259c  s2IFG                                  
+00002563  rotButIFG                              
+00002562  rotKnobIFG                             
+00002564  s2IFG                                  
 00013e1c  scalbn                                 
 00013e1c  scalbnl                                
-00002584  sec                                    
+00002548  sec                                    
 000164da  sendByte                               
 00016786  setCursor                              
 00014934  setvbuf                                
@@ -1535,24 +1537,24 @@ ffffffff  __c_args__
 0001695c  stepCCW                                
 00016928  stepCW                                 
 00016982  stopTimer0_A5                          
-0000271c  str                                    
+00002720  str                                    
 00016768  strcat                                 
 000167a2  strchr                                 
 000167be  strcmp                                 
 000168d4  strcpy                                 
 00016938  strlen                                 
 00016478  strncpy                                
-000025a6  threshold                              
+0000256e  threshold                              
 000140be  thresholding                           
-0000257e  tic                                    
-000026fa  ticMem                                 
-000025b2  ticMem_isFull                          
+00002542  tic                                    
+000026fe  ticMem                                 
+0000257a  ticMem_isFull                          
 000168e6  toupper                                
-000025ae  trigger                                
+00002576  trigger                                
 0001650a  unlink                                 
 00016860  wcslen                                 
 00016290  write                                  
-000025a0  yCursor                                
+00002568  yCursor                                
 
 
 GLOBAL SYMBOLS: SORTED BY Symbol Address 
@@ -2293,53 +2295,54 @@ address   name
 000023ff  USBIEPSIZXY_7                          
 00002400  _ftable                                
 000024c8  _device                                
-00002540  _stream                                
-0000257c  dropStopwatch                          
-0000257e  tic                                    
-00002582  msec                                   
-00002584  sec                                    
-00002586  min                                    
-00002588  oMsec                                  
-0000258a  oSec                                   
-0000258c  oMin                                   
-0000258e  dropFLG                                
-00002590  index                                  
-00002592  flowRate                               
-00002596  isPrompting                            
-00002597  alarmTriggered                         
-00002598  desiredRate                            
-0000259a  rotKnobIFG                             
-0000259b  rotButIFG                              
-0000259c  s2IFG                                  
-0000259e  i                                      
-000025a0  yCursor                                
-000025a2  pos                                    
-000025a4  lag                                    
-000025a6  threshold                              
-000025aa  influence                              
-000025ae  trigger                                
-000025b0  peaks                                  
-000025b2  ticMem_isFull                          
-000025b4  numDrops                               
-000025b6  __TI_cleanup_ptr                       
-000025ba  __TI_dtors_ptr                         
-000025be  _lock                                  
-000025c2  _unlock                                
-000025c6  __TI_ft_end                            
-000025c8  errno                                  
-000025ca  __TI_enable_exit_profile_output        
-000025ce  __TI_tmpnams                           
-0000266e  avgFilter                              
-00002696  filteredIn                             
-000026be  inSignal                               
-000026e6  outSignal                              
-000026fa  ticMem                                 
-0000270e  parmbuf                                
-00002716  refRate                                
-0000271c  str                                    
-00002726  adcValue                               
-00002728  _sys_memory                            
-00002868  _CIOBUF_                               
+00002540  dropStopwatch                          
+00002542  tic                                    
+00002546  msec                                   
+00002548  sec                                    
+0000254a  min                                    
+0000254c  oMsec                                  
+0000254e  oSec                                   
+00002550  oMin                                   
+00002552  dropFLG                                
+00002554  index                                  
+00002556  flowRate                               
+0000255a  oldRate                                
+0000255e  isPrompting                            
+0000255f  alarmTriggered                         
+00002560  desiredRate                            
+00002562  rotKnobIFG                             
+00002563  rotButIFG                              
+00002564  s2IFG                                  
+00002566  i                                      
+00002568  yCursor                                
+0000256a  pos                                    
+0000256c  lag                                    
+0000256e  threshold                              
+00002572  influence                              
+00002576  trigger                                
+00002578  peaks                                  
+0000257a  ticMem_isFull                          
+0000257c  numDrops                               
+0000257e  _stream                                
+000025ba  __TI_cleanup_ptr                       
+000025be  __TI_dtors_ptr                         
+000025c2  _lock                                  
+000025c6  _unlock                                
+000025ca  __TI_ft_end                            
+000025cc  errno                                  
+000025ce  __TI_enable_exit_profile_output        
+000025d2  __TI_tmpnams                           
+00002672  avgFilter                              
+0000269a  filteredIn                             
+000026c2  inSignal                               
+000026ea  outSignal                              
+000026fe  ticMem                                 
+00002712  parmbuf                                
+0000271a  refRate                                
+00002720  str                                    
+0000272a  adcValue                               
+0000272c  _sys_memory                            
+0000286c  _CIOBUF_                               
 00004360  _stack                                 
 00004400  Port_1                                 
 00004400  __STACK_END                            
@@ -2349,10 +2352,10 @@ address   name
 00004482  Timer0_A0_ISR                          
 00004490  __TI_ISR_TRAP                          
 00004678  _ctypes_                               
-0000487e  __TI_Handler_Table_Base                
-0000488a  __TI_Handler_Table_Limit               
-00004890  __TI_CINIT_Base                        
-000048a0  __TI_CINIT_Limit                       
+00004880  __TI_Handler_Table_Base                
+0000488c  __TI_Handler_Table_Limit               
+00004892  __TI_CINIT_Base                        
+000048a2  __TI_CINIT_Limit                       
 0000ffd2  __TI_int41                             
 0000ffd4  __TI_int42                             
 0000ffd6  __TI_int43                             
@@ -2564,4 +2567,4 @@ ffffffff  __TI_prof_data_size
 ffffffff  __TI_prof_data_start                   
 ffffffff  __c_args__                             
 
-[1004 symbols]
+[1005 symbols]

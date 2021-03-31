@@ -343,13 +343,12 @@ void active_monitor(void)
 
         // change the flowRate to string
         char buf[80];
-
+        displayFlowRate(&flowRate, buf);
+        setCursor(36, 3);
+        prints(buf);
+        setCursor(60, 3);
+        prints(" mLh");
         /*if (flowRate != oldRate) {
-			displayFlowRate(&flowRate, buf);
-			setCursor(36, 3);
-			prints(buf);
-			setCursor(60, 3);
-			prints(" mLh");
 			printf("Tic = %d\n", tic);
 			printf("Flow Rate %f\n", flowRate);
 			oldRate = flowRate;
