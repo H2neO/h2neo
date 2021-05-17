@@ -19,10 +19,7 @@
 //#define	THRESHOLD		1911	// 0.7V
 //#define   THRESHOLD       2047    // 0.75V
 
-#define	THRESHOLD		1000	// 0.51V
-
-extern unsigned char dropFLG;				// presence of drop
-extern int adcValue;
+extern int curr_adcValue;
 
 // Used for debugging
 //volatile unsigned int results[NUM_RESULTS];
@@ -104,8 +101,7 @@ void __attribute__ ((interrupt(ADC12_VECTOR))) ADC12ISR (void)
         } else {
             P4OUT &= ~BIT7;
         }*/
-
-        adcValue = ADC12MEM0;   // Eric: Store the ADC value into a global variable for use in the algo
+	    curr_adcValue = ADC12MEM0;   // Eric: Store the ADC value into a global variable for use in the algo
 
 //		results[index] = ADC12MEM0;             // Move results
 //		index++;                                // Increment results index, modulo; Set Breakpoint1 here

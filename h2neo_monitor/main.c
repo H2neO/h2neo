@@ -58,23 +58,12 @@ short i = 0, yCursor = 1;                               // yCursor = 0 is taken 
 char refRate[6];                                        // The desired rate but as a string
 
 // Eric's additions
-#define SAMPLE_LENGTH 10
-
-int adcValue;
-float inSignal[SAMPLE_LENGTH];
-unsigned int pos = 0;
-
-// **--CHANGE THESE PARAMETERS FOR ALGORITHM--**
-unsigned int lag = 5;
-float threshold = 100;
-float influence = 0.0;
-// **-----------------------------------------**
-
-float filteredIn[SAMPLE_LENGTH];
-float avgFilter[SAMPLE_LENGTH];
-int outSignal[SAMPLE_LENGTH];
-int trigger = 0;
-int peaks = 0;
+float time_base = 0.01;
+int prev_adcValue = -1;
+int curr_adcValue = -1;
+float slope = 0;
+float slope_threshold = 5000.0;
+int peak_flag = 0;
 
 int ticMem_isFull = 0;
 unsigned short int numDrops = 0;
@@ -159,71 +148,34 @@ int main(void) {
     }
  }
 
-// -------------------------------------------- **Drop Detection** --------------------------------------------
-// -------------------------------------------- **Std-Dev Based Algo START (Eric)** --------------------------------------------
-// Simple function to calculate mean
-float calcMean(float data[], int len) {
-    float sum = 0.0, mean = 0.0;
-    int i;
-
-    for (i = 0; i < len; ++i) {
-        sum += data[i];
-    }
-
-    mean = sum / len;
-    return mean;
+float calc_slope(int a, int b){
+    return (b - a) / time_base;
 }
 
-// The actual drop detection calculations
-void thresholding(int i, float inSignal[], int outSignal[], int lag, float threshold, float influence) {
-    if (fabsf(inSignal[i] - avgFilter[i - 1]) > threshold) {
-        // If the different between input and average is greater than a threshold value, toggle
-        if (inSignal[i] < avgFilter[i - 1]) {
-           outSignal[i] = -1;
-           trigger = 1;
+void active_monitor(void){
+
+// -------------------------------------------- ** DERIV FILTER ** --------------------------------------------
+
+    if(prev_adcValue != -1){
+        slope = calc_slope(prev_adcValue, curr_adcValue);
+
+        if(slope < slope_threshold){
+            peak_flag = 1;
         }
 
-        filteredIn[i] = influence * inSignal[i] +  (1-influence) * filteredIn[i - 1];
-    }else {
-        outSignal[i] = 0;
-        if(outSignal[i] == 0 && trigger){
-            peaks++;
-            dropFLG = 1; // dropFLG triggers when incrementing # of peaks
-            //printf("Drops Detected: %d\n", peaks);
+        if(peak_flag && slope > slope_threshold){
+            dropFLG = 1;
+            peak_flag = 0;
+/*            printf("%f DROP DETECTED \n", slope);*/
         }
-        trigger = 0;
-
-        filteredIn[i] = inSignal[i];
     }
 
-    avgFilter[i] = calcMean(filteredIn + i - lag, lag);
-}
-
-void active_monitor(void)
-{
-   if(pos < SAMPLE_LENGTH){        // Before the array is filled...
-        inSignal[pos] = (float) adcValue;   // store ADC value into array
-
-        if(pos == lag){             // When lag value is reached, start peak detection
-            // Thresholding Init
-            memcpy(filteredIn, inSignal, sizeof(float)*SAMPLE_LENGTH);  // Copy the values of inSignal to filteredIn
-            avgFilter[lag - 1] = calcMean(inSignal, lag);               // Initial Mean
-            thresholding(pos, inSignal, outSignal, lag, threshold, influence);
-        }else if (pos > lag){
-            thresholding(pos, inSignal, outSignal, lag, threshold, influence);
-        }
-
-        pos++;
-    }else{ // When array is full, the new values are getting added to the end and the array is getting shifted, with the first value getting deleted.
-        memmove(&inSignal[0], &inSignal[1], sizeof(inSignal) - sizeof(*inSignal));  //Shift function (WORKS)
-        inSignal[pos-1] = adcValue;
-        memmove(&filteredIn[0], &filteredIn[1], sizeof(filteredIn) - sizeof(*filteredIn));
-        memmove(&avgFilter[0], &avgFilter[1], sizeof(avgFilter) - sizeof(*avgFilter));
-
-        thresholding(pos-1, inSignal, outSignal, lag, threshold, influence);
-    }
+    prev_adcValue = curr_adcValue;
+/*    printf("%d ", curr_adcValue);
+    printf("%f\n", slope);*/
 
 // -------------------------------------------- ** END ** --------------------------------------------
+
     //Poll Buttons here. Control the Timer. Update LCD Display.
     // If drop is detected (from ADC12 interrupt)
     if (dropFLG && (dropStopwatch > SIGNAL_LENGTH)) { //Get the first value that is below the threshold and ignore all values within 40ms within that value
@@ -233,10 +185,10 @@ void active_monitor(void)
             dropStopwatch = 0;
 
             // Display number of drops detected
-            char str[2];
+/*            char str[2];
             int2strXX(peaks, str);
             setCursor(72, 0);
-            prints(str);
+            prints(str);*/
 
         } else {
             stopTimer0_A5();
@@ -254,10 +206,10 @@ void active_monitor(void)
 
 
             // Display number of drops detected
-            char str[2];
+/*            char str[2];
             int2strXX(peaks, str);
             setCursor(72, 0);
-            prints(str);
+            prints(str);*/
 
 
             if (index > MEMSIZE-1) {  // memsize - 1 (when memsize = 5)
@@ -272,10 +224,9 @@ void active_monitor(void)
             if(index == MEMSIZE-1 && !ticMem_isFull){
                 ticMem_isFull = 1;
             }
-
+            //printf("%f ", slope);
             printf("%d ", tic);
             printf("%f\n", flowRate);
-
             startTimer0_A5();
         }
 
@@ -348,11 +299,6 @@ void active_monitor(void)
         prints(buf);
         setCursor(60, 3);
         prints(" mLh");
-        /*if (flowRate != oldRate) {
-			printf("Tic = %d\n", tic);
-			printf("Flow Rate %f\n", flowRate);
-			oldRate = flowRate;
-        }*/
 
     } else {
         setCursor(36, 3);
