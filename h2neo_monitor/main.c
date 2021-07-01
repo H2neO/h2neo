@@ -61,12 +61,14 @@ char refRate[6];                                        // The desired rate but 
 float time_base = 0.01;
 int prev_adcValue = -1;
 int curr_adcValue = -1;
-float slope = 0;
-float slope_threshold = 5000.0;
+double slope = 0;
+int slope_threshold = 5000;
 int peak_flag = 0;
 
 int ticMem_isFull = 0;
 unsigned short int numDrops = 0;
+
+void active_monitor_debug(void);
 
 /********************************************************************************
  * main.c
@@ -148,7 +150,7 @@ int main(void) {
     }
  }
 
-float calc_slope(int a, int b){
+double calc_slope(int a, int b){
     return (b - a) / time_base;
 }
 
@@ -166,13 +168,13 @@ void active_monitor(void){
         if(peak_flag && slope > slope_threshold){
             dropFLG = 1;
             peak_flag = 0;
-/*            printf("%f DROP DETECTED \n", slope);*/
+//            printf("%f DROP DETECTED \n", slope);
         }
     }
 
     prev_adcValue = curr_adcValue;
-/*    printf("%d ", curr_adcValue);
-    printf("%f\n", slope);*/
+//    printf("%d ", curr_adcValue);
+//    printf("%f\n", slope);
 
 // -------------------------------------------- ** END ** --------------------------------------------
 
@@ -224,8 +226,8 @@ void active_monitor(void){
             if(index == MEMSIZE-1 && !ticMem_isFull){
                 ticMem_isFull = 1;
             }
-            //printf("%f ", slope);
-            printf("%d ", tic);
+            printf("%lf ", slope);
+            printf("%lu ", tic);
             printf("%f\n", flowRate);
             startTimer0_A5();
         }

@@ -47,7 +47,7 @@ void ADC12_0_Init() {
 	 //						 0b100 --> 64 cycles
 	 // ADC12MSC      -- set multiple sample and conversion (valid for sequence or repeated modes)
 
-	ADC12CTL0 = ADC12ON + ADC12SHT0_8 + ADC12MSC;	// Turn on ADC12, set sampling time
+	ADC12CTL0 = ADC12ON + ADC12SHT0_4 + ADC12MSC;	// Turn on ADC12, set sampling time
 													// 	set multiple sample conversion
 	 // ADC12REFON    -- reference generator ON
 	 // ADC12REF2_5V  -- 0b->1.5V, 1b->2.5V (ADC12REFON must be set)
@@ -95,21 +95,9 @@ void __attribute__ ((interrupt(ADC12_VECTOR))) ADC12ISR (void)
 	case  2: break;                           // Vector  2:  ADC overflow
 	case  4: break;                           // Vector  4:  ADC timing overflow
 	case  6:                                  // Vector  6:  ADC12IFG0
-	    /*if (ADC12MEM0 < THRESHOLD) {
-            P4OUT ^= BIT7;  // toggle LED
-            //dropFLG = 1;  // Eric: Commented out because dropFLG is toggled in the algo (main.c)
-        } else {
-            P4OUT &= ~BIT7;
-        }*/
-	    curr_adcValue = ADC12MEM0;   // Eric: Store the ADC value into a global variable for use in the algo
 
-//		results[index] = ADC12MEM0;             // Move results
-//		index++;                                // Increment results index, modulo; Set Breakpoint1 here
+	    curr_adcValue = ADC12MEM0;   // Eric: Store the ADC value into a global variable
 
-//		if (index == 8)
-//		{
-//		  index = 0;
-//		}
 	case  8: break;                           // Vector  8:  ADC12IFG1
 	case 10: break;                           // Vector 10:  ADC12IFG2
 	case 12: break;                           // Vector 12:  ADC12IFG3
