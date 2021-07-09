@@ -60,9 +60,16 @@ char refRate[6];                                        // The desired rate but 
 // Eric's additions
 float time_base = 0.01;
 int prev_adcValue = -1;
+<<<<<<< HEAD
 int curr_adcValue = -1;
 double slope = 0;
 int slope_threshold = 5000;
+=======
+// set as volatile because value is being used and updated in different places (one of which is an interrupt)
+volatile int curr_adcValue = -1;
+float slope = 0;
+float slope_threshold = 5000.0;
+>>>>>>> 17a5ba5c043815aa85f4e7d2d0b51d525078aae5
 int peak_flag = 0;
 
 int ticMem_isFull = 0;

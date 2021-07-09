@@ -44,7 +44,7 @@ void ADC12_0_Init() {
 
 	 // ADC12ON       -- ADC12_A on
 	 // ADC12SHT0_x   -- sample-and-hold time. Defines num ADC12CLK cycles in the sampling period
-	 //						 0b100 --> 64 cycles
+	 //						 0b1000 --> 256 cycles
 	 // ADC12MSC      -- set multiple sample and conversion (valid for sequence or repeated modes)
 
 	ADC12CTL0 = ADC12ON + ADC12SHT0_4 + ADC12MSC;	// Turn on ADC12, set sampling time
@@ -60,7 +60,7 @@ void ADC12_0_Init() {
 	 // ADC12CONSEQ_x -- 2->repeat single channel
 
 	ADC12CTL1 = ADC12SHP + ADC12CONSEQ_2;			// Use sampling timer, set mode
-	ADC12CTL1 |= ADC12SSEL_0;						// ADC12OSC (MODCLK)
+	ADC12CTL1 |= ADC12SSEL_0;						// ADC12OSC (MODCLK) 5-MHz oscillator
 	ADC12CTL2 |= ADC12PDIV;							// Predivide by 4 (0b == prediv by 1)
 
 	// Set conversion memory control register ADC12MCTL0
@@ -68,9 +68,9 @@ void ADC12_0_Init() {
 	// INCH = 000b => A0 (INput CHannel)
 	// EOS  =   0  => End of sequence not set (not a multi-channel conversion, so ignore)
 	ADC12MCTL0 = ADC12SREF_1 | ADC12INCH_0;
-	__delay_cycles(100);							// delay to allow Ref to settle
+	__delay_cycles(100);							// delay to allow Ref to settle (maybe change to _no_operation? play with)
 
-	ADC12IE = 0x01;									// Enable ADC12IFG.0
+	ADC12IE = 0x01;									// Enable ADC12IFG.0 interrupt
 	ADC12CTL0 |= ADC12ENC;							// Enable conversions
 }
 
@@ -95,9 +95,27 @@ void __attribute__ ((interrupt(ADC12_VECTOR))) ADC12ISR (void)
 	case  2: break;                           // Vector  2:  ADC overflow
 	case  4: break;                           // Vector  4:  ADC timing overflow
 	case  6:                                  // Vector  6:  ADC12IFG0
+<<<<<<< HEAD
 
 	    curr_adcValue = ADC12MEM0;   // Eric: Store the ADC value into a global variable
 
+=======
+	    /*if (ADC12MEM0 < THRESHOLD) {
+            P4OUT ^= BIT7;  // toggle LED
+            //dropFLG = 1;  // Eric: Commented out because dropFLG is toggled in the algo (main.c)
+        } else {
+            P4OUT &= ~BIT7;
+        }*/
+	    curr_adcValue = ADC12MEM0;   // Eric: Store the ADC value into a global variable for use in the algo
+//	    printf("The adc value is %x\n", ADC12MEM0);
+//		results[index] = ADC12MEM0;             // Move results
+//		index++;                                // Increment results index, modulo; Set Breakpoint1 here
+
+//		if (index == 8)
+//		{
+//		  index = 0;
+//		}
+>>>>>>> 17a5ba5c043815aa85f4e7d2d0b51d525078aae5
 	case  8: break;                           // Vector  8:  ADC12IFG1
 	case 10: break;                           // Vector 10:  ADC12IFG2
 	case 12: break;                           // Vector 12:  ADC12IFG3
