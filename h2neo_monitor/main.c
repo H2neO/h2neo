@@ -21,7 +21,7 @@
 #include "test.h"
 #include "convertNprint.h"
 
-#define MEMSIZE         8                              // size of memory buffer used for flow rate calculations
+#define MEMSIZE         10                              // size of memory buffer used for flow rate calculations
 #define GTT_FACTOR      20                              // factor specified in tubing packaging (used to calculate # drops/min)
 #define GTT_FACTOR_STR  "20"                            // ^ in string format... not sure if it'll work lol
 #define SIGNAL_LENGTH   1000                            // 2 * 20ms **Eric: Changed this to 1000ms to limit double drop counting (so max rate we can go to is around 350ml/hr)
@@ -60,16 +60,13 @@ char refRate[6];                                        // The desired rate but 
 // Eric's additions
 float time_base = 0.01;
 int prev_adcValue = -1;
-<<<<<<< HEAD
 int curr_adcValue = -1;
 double slope = 0;
 int slope_threshold = 5000;
-=======
 // set as volatile because value is being used and updated in different places (one of which is an interrupt)
 volatile int curr_adcValue = -1;
 float slope = 0;
 float slope_threshold = 5000.0;
->>>>>>> 17a5ba5c043815aa85f4e7d2d0b51d525078aae5
 int peak_flag = 0;
 
 int ticMem_isFull = 0;
