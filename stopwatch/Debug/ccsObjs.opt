@@ -1,1 +1,1 @@
-"./lcd_screen.obj" "./main.obj" "./scrap.obj" "../lnk_msp430f5529.cmd" -l"libmath.a" -l"libc.a" 
+"./lcd_screen.obj" "./main.obj" "./scrap.obj" "../lnk_msp430f5529.cmd" -llibmath.a -llibc.a 

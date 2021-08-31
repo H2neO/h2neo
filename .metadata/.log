@@ -11653,3 +11653,229 @@ java.nio.channels.ClosedByInterruptException
 !ENTRY com.ti.ccstudio.debug 1 0 2020-08-20 22:03:24.220
 !MESSAGE DS_ERROR: MSP430: JTAG Communication Error 
 
+!SESSION 2021-06-30 16:46:06.089 -----------------------------------------------
+eclipse.buildId=4.14.0.I20191210-0610
+java.version=1.8.0_144
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_US
+Framework arguments:  -product com.ti.ccstudio.branding.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product com.ti.ccstudio.branding.product
+
+!ENTRY org.eclipse.core.resources 2 10035 2021-06-30 16:46:13.413
+!MESSAGE The workspace exited with unsaved changes in the previous session; refreshing workspace to recover changes.
+
+!ENTRY com.ti.common.core 1 0 2021-06-30 16:46:13.612
+!MESSAGE path=ccs_base/DebugServer
+
+!ENTRY com.ti.common.core 1 0 2021-06-30 16:46:13.612
+!MESSAGE debugServerDir=C:/Program Files (x86)/ccs/ccs_base/DebugServer
+
+!ENTRY com.ti.ccstudio.ui 1 0 2021-06-30 16:46:22.718
+!MESSAGE CCS IDE session started!
+	CCS build: 10.1.0.00010 (previously: 6.0.0.201502111100)
+	CCS location: C:/Program Files (x86)/ccs (previously: C:/ti/ccsv6)
+	Workspace location: C:/Users/Cory's PC/Documents/CoryPersonal/Junior/h2neo (previously: )
+
+!ENTRY com.ti.dbgtrc.webapp.CloudTraceInterface 0 0 2021-06-30 16:46:22.891
+!MESSAGE constructor
+
+!ENTRY com.ti.dbgtrc.webapp.CloudTraceInterface 0 0 2021-06-30 16:46:22.891
+!MESSAGE done with directories
+
+!ENTRY com.ti.dbgtrc.webapp.CloudTraceInterface 0 0 2021-06-30 16:46:22.891
+!MESSAGE loading ti_logger
+
+!ENTRY com.ti.dbgtrc.webapp.CloudTraceInterface 0 0 2021-06-30 16:46:22.891
+!MESSAGE Platform os: win32
+
+!ENTRY com.ti.dbgtrc.webapp.CloudTraceInterface 0 0 2021-06-30 16:46:22.891
+!MESSAGE loading cToolsIF
+
+!ENTRY com.ti.dbgtrc.webapp.CloudTraceInterface 0 0 2021-06-30 16:46:22.891
+!MESSAGE loading cTools
+
+!ENTRY com.ti.dbgtrc.webapp.CloudTraceInterface 0 0 2021-06-30 16:46:22.907
+!MESSAGE loading TraceFactory
+
+!ENTRY com.ti.dbgtrc.webapp.CloudTraceInterface 0 0 2021-06-30 16:46:22.907
+!MESSAGE loading sqlite3
+
+!ENTRY com.ti.dbgtrc.webapp.CloudTraceInterface 0 0 2021-06-30 16:46:22.907
+!MESSAGE loading CloudTrace
+
+!ENTRY com.ti.dbgtrc.webapp.CloudTraceInterface 0 0 2021-06-30 16:46:22.907
+!MESSAGE CloudTrace interface loaded
+
+!ENTRY com.ti.ccstudio.project.ui.webcontent 1 0 2021-06-30 16:46:23.000
+!MESSAGE CCS HTTP adapter started! [ccs.port:62645] - Open 'http://localhost:62645/ide' in web browser to see listing of available APIs...
+
+!ENTRY org.eclipse.cdt.core 1 0 2021-06-30 16:46:25.585
+!MESSAGE Indexed 'stopwatch' (4 sources, 18 headers) in 0.726 sec: 1,776 declarations; 2,690 references; 0 unresolved inclusions; 0 syntax errors; 36 unresolved names (0.8%)
+
+!ENTRY org.eclipse.cdt.core 1 0 2021-06-30 16:46:25.755
+!MESSAGE Indexed 'opticalSensor' (1 sources, 5 headers) in 0.169 sec: 834 declarations; 1,093 references; 0 unresolved inclusions; 0 syntax errors; 0 unresolved names (0%)
+
+!ENTRY org.eclipse.cdt.core 1 0 2021-06-30 16:46:25.992
+!MESSAGE Indexed 'userInteraction' (3 sources, 17 headers) in 0.236 sec: 1,716 declarations; 2,451 references; 0 unresolved inclusions; 0 syntax errors; 36 unresolved names (0.86%)
+
+!ENTRY org.eclipse.cdt.core 1 0 2021-06-30 16:46:26.307
+!MESSAGE Indexed 'h2neo_monitor' (6 sources, 21 headers) in 0.299 sec: 1,936 declarations; 2,746 references; 0 unresolved inclusions; 0 syntax errors; 39 unresolved names (0.83%)
+!SESSION 2021-07-01 17:08:25.463 -----------------------------------------------
+eclipse.buildId=4.14.0.I20191210-0610
+java.version=1.8.0_144
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_US
+Framework arguments:  -product com.ti.ccstudio.branding.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product com.ti.ccstudio.branding.product
+
+!ENTRY com.ti.common.core 1 0 2021-07-01 17:08:29.195
+!MESSAGE path=ccs_base/DebugServer
+
+!ENTRY com.ti.common.core 1 0 2021-07-01 17:08:29.198
+!MESSAGE debugServerDir=C:/Program Files (x86)/ccs/ccs_base/DebugServer
+
+!ENTRY com.ti.ccstudio.ui 1 0 2021-07-01 17:08:55.375
+!MESSAGE CCS IDE session started!
+	CCS build: 10.1.0.00010
+	CCS location: C:/Program Files (x86)/ccs
+	Workspace location: C:/Users/Cory's PC/Documents/CoryPersonal/Junior/h2neo
+
+!ENTRY com.ti.dbgtrc.webapp.CloudTraceInterface 0 0 2021-07-01 17:08:55.736
+!MESSAGE constructor
+
+!ENTRY com.ti.dbgtrc.webapp.CloudTraceInterface 0 0 2021-07-01 17:08:55.738
+!MESSAGE done with directories
+
+!ENTRY com.ti.dbgtrc.webapp.CloudTraceInterface 0 0 2021-07-01 17:08:55.738
+!MESSAGE loading ti_logger
+
+!ENTRY com.ti.dbgtrc.webapp.CloudTraceInterface 0 0 2021-07-01 17:08:55.740
+!MESSAGE Platform os: win32
+
+!ENTRY com.ti.dbgtrc.webapp.CloudTraceInterface 0 0 2021-07-01 17:08:55.741
+!MESSAGE loading cToolsIF
+
+!ENTRY com.ti.dbgtrc.webapp.CloudTraceInterface 0 0 2021-07-01 17:08:55.786
+!MESSAGE loading cTools
+
+!ENTRY com.ti.dbgtrc.webapp.CloudTraceInterface 0 0 2021-07-01 17:08:55.838
+!MESSAGE loading TraceFactory
+
+!ENTRY com.ti.dbgtrc.webapp.CloudTraceInterface 0 0 2021-07-01 17:08:55.885
+!MESSAGE loading sqlite3
+
+!ENTRY com.ti.dbgtrc.webapp.CloudTraceInterface 0 0 2021-07-01 17:08:55.952
+!MESSAGE loading CloudTrace
+
+!ENTRY com.ti.dbgtrc.webapp.CloudTraceInterface 0 0 2021-07-01 17:08:56.120
+!MESSAGE CloudTrace interface loaded
+
+!ENTRY com.ti.ccstudio.project.ui.webcontent 1 0 2021-07-01 17:08:56.270
+!MESSAGE CCS HTTP adapter started! [ccs.port:55232] - Open 'http://localhost:55232/ide' in web browser to see listing of available APIs...
+!SESSION 2021-07-07 14:48:34.716 -----------------------------------------------
+eclipse.buildId=4.14.0.I20191210-0610
+java.version=1.8.0_144
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_US
+Framework arguments:  -product com.ti.ccstudio.branding.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product com.ti.ccstudio.branding.product
+
+!ENTRY com.ti.common.core 1 0 2021-07-07 14:48:38.677
+!MESSAGE path=ccs_base/DebugServer
+
+!ENTRY com.ti.common.core 1 0 2021-07-07 14:48:38.679
+!MESSAGE debugServerDir=C:/Program Files (x86)/ccs/ccs_base/DebugServer
+
+!ENTRY com.ti.ccstudio.ui 1 0 2021-07-07 14:49:07.512
+!MESSAGE CCS IDE session started!
+	CCS build: 10.1.0.00010
+	CCS location: C:/Program Files (x86)/ccs
+	Workspace location: C:/Users/Cory's PC/Documents/CoryPersonal/Junior/h2neo
+
+!ENTRY com.ti.dbgtrc.webapp.CloudTraceInterface 0 0 2021-07-07 14:49:07.944
+!MESSAGE constructor
+
+!ENTRY com.ti.dbgtrc.webapp.CloudTraceInterface 0 0 2021-07-07 14:49:07.945
+!MESSAGE done with directories
+
+!ENTRY com.ti.dbgtrc.webapp.CloudTraceInterface 0 0 2021-07-07 14:49:07.945
+!MESSAGE loading ti_logger
+
+!ENTRY com.ti.dbgtrc.webapp.CloudTraceInterface 0 0 2021-07-07 14:49:07.947
+!MESSAGE Platform os: win32
+
+!ENTRY com.ti.dbgtrc.webapp.CloudTraceInterface 0 0 2021-07-07 14:49:07.947
+!MESSAGE loading cToolsIF
+
+!ENTRY com.ti.dbgtrc.webapp.CloudTraceInterface 0 0 2021-07-07 14:49:07.987
+!MESSAGE loading cTools
+
+!ENTRY com.ti.dbgtrc.webapp.CloudTraceInterface 0 0 2021-07-07 14:49:08.040
+!MESSAGE loading TraceFactory
+
+!ENTRY com.ti.dbgtrc.webapp.CloudTraceInterface 0 0 2021-07-07 14:49:08.092
+!MESSAGE loading sqlite3
+
+!ENTRY com.ti.dbgtrc.webapp.CloudTraceInterface 0 0 2021-07-07 14:49:08.151
+!MESSAGE loading CloudTrace
+
+!ENTRY com.ti.dbgtrc.webapp.CloudTraceInterface 0 0 2021-07-07 14:49:08.345
+!MESSAGE CloudTrace interface loaded
+
+!ENTRY com.ti.ccstudio.project.ui.webcontent 1 0 2021-07-07 14:49:08.469
+!MESSAGE CCS HTTP adapter started! [ccs.port:56588] - Open 'http://localhost:56588/ide' in web browser to see listing of available APIs...
+!SESSION 2021-08-26 16:51:26.756 -----------------------------------------------
+eclipse.buildId=4.14.0.I20191210-0610
+java.version=1.8.0_144
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_US
+Framework arguments:  -product com.ti.ccstudio.branding.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product com.ti.ccstudio.branding.product
+
+!ENTRY org.eclipse.core.resources 2 10035 2021-08-26 16:51:29.981
+!MESSAGE The workspace exited with unsaved changes in the previous session; refreshing workspace to recover changes.
+
+!ENTRY com.ti.common.core 1 0 2021-08-26 16:51:30.208
+!MESSAGE path=ccs_base/DebugServer
+
+!ENTRY com.ti.common.core 1 0 2021-08-26 16:51:30.209
+!MESSAGE debugServerDir=C:/Program Files (x86)/ccs/ccs_base/DebugServer
+
+!ENTRY com.ti.ccstudio.ui 1 0 2021-08-26 16:51:53.370
+!MESSAGE CCS IDE session started!
+	CCS build: 10.1.0.00010
+	CCS location: C:/Program Files (x86)/ccs
+	Workspace location: C:/Users/Cory's PC/Documents/CoryPersonal/Junior/h2neo
+
+!ENTRY com.ti.dbgtrc.webapp.CloudTraceInterface 0 0 2021-08-26 16:51:53.718
+!MESSAGE constructor
+
+!ENTRY com.ti.dbgtrc.webapp.CloudTraceInterface 0 0 2021-08-26 16:51:53.719
+!MESSAGE done with directories
+
+!ENTRY com.ti.dbgtrc.webapp.CloudTraceInterface 0 0 2021-08-26 16:51:53.720
+!MESSAGE loading ti_logger
+
+!ENTRY com.ti.dbgtrc.webapp.CloudTraceInterface 0 0 2021-08-26 16:51:53.721
+!MESSAGE Platform os: win32
+
+!ENTRY com.ti.dbgtrc.webapp.CloudTraceInterface 0 0 2021-08-26 16:51:53.722
+!MESSAGE loading cToolsIF
+
+!ENTRY com.ti.dbgtrc.webapp.CloudTraceInterface 0 0 2021-08-26 16:51:53.765
+!MESSAGE loading cTools
+
+!ENTRY com.ti.dbgtrc.webapp.CloudTraceInterface 0 0 2021-08-26 16:51:53.815
+!MESSAGE loading TraceFactory
+
+!ENTRY com.ti.dbgtrc.webapp.CloudTraceInterface 0 0 2021-08-26 16:51:53.864
+!MESSAGE loading sqlite3
+
+!ENTRY com.ti.dbgtrc.webapp.CloudTraceInterface 0 0 2021-08-26 16:51:53.915
+!MESSAGE loading CloudTrace
+
+!ENTRY com.ti.dbgtrc.webapp.CloudTraceInterface 0 0 2021-08-26 16:51:54.089
+!MESSAGE CloudTrace interface loaded
+
+!ENTRY com.ti.ccstudio.project.ui.webcontent 1 0 2021-08-26 16:51:54.336
+!MESSAGE CCS HTTP adapter started! [ccs.port:65028] - Open 'http://localhost:65028/ide' in web browser to see listing of available APIs...

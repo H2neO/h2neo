@@ -10,224 +10,306 @@
 // The flow rate sensing is done using an optical system consisting of an infrared
 // LED and a photodiode.
 
+#include <math.h>
+#include <string.h>
+
+#include <stdio.h>
+#include <stdlib.h>
 #include <msp430f5529.h>
 #include "nokia5110.h"
 #include "rotary_encoder.h"
 #include "test.h"
 #include "convertNprint.h"
 
-#define MEMSIZE			10								// size of memory buffer used for flow rate calculations
-#define GTT_FACTOR		20								// factor specified in tubing packaging
-#define GTT_FACTOR_STR  "20"							// ^ in string format... not sure if it'll work lol
-#define SIGNAL_LENGTH	40								// 2 * 20ms
+#define MEMSIZE         10                              // size of memory buffer used for flow rate calculations
+#define GTT_FACTOR      20                              // factor specified in tubing packaging (used to calculate # drops/min)
+#define GTT_FACTOR_STR  "20"                            // ^ in string format... not sure if it'll work lol
+#define SIGNAL_LENGTH   1000                            // 2 * 20ms **Eric: Changed this to 1000ms to limit double drop counting (so max rate we can go to is around 350ml/hr)
 
 // tic - number of times the Timer ISR is entered after x clock cycles
-//			tic will be programmed to be 1ms long
+//          tic will be programmed to be 1ms long
 // sec - seconds (tic * clock cycles)
 // min - minutes (sec / 60)
-unsigned short int dropStopwatch = SIGNAL_LENGTH + 1;	// Length of time between each drop
-														// used to check if 1 drop has occurred ( > 20ms)
-														// value primed to enter if() the first time
-unsigned long int tic = 0;  							// (data type short can only go up to 65,535 ms which is only ~1m5sec)
+unsigned short int dropStopwatch = SIGNAL_LENGTH + 1;   // Length of time between each drop used to check if 1 drop has occurred ( > 20ms) value primed to enter if() the first time
+unsigned long int tic = 0;                              // (data type short can only go up to 65,535 ms which is only ~1m5sec)
 unsigned short int msec = 0, sec = 0, min = 0;
-unsigned short int oMsec = 0, oSec = 0, oMin = 0; 		// old sec; old min
-unsigned char dropFLG = 0;  							// presence of a drop
+unsigned short int oMsec = 0, oSec = 0, oMin = 0;       // old sec; old min
+unsigned char dropFLG = 0;                              // presence of a drop
 
 // save last 5 time interval values and average to find more accurate flow rate
-unsigned long int ticMem[MEMSIZE];  					// global var auto initialized to 0
+unsigned long int ticMem[MEMSIZE];                      // global var auto initialized to 0
 unsigned short int index = 0;
-char str[6]; 											// used to convert each integer to string
+char str[6];                                            // used to convert each integer to string
 
-float flowRate;
+float flowRate = 0.0; // mL/hr
+float oldRate = 0.0;  // old value used to determine if rate should be printed again
 
-unsigned char isPrompting = 1;							// initially set to YES
+unsigned char isPrompting = 1;                          // initially set to YES
 unsigned char alarmTriggered = 0;
 unsigned short desiredRate = 0;
 
 // interrupt flags
-char rotKnobIFG = 0;									// rotary encoder knob turned
-char rotButIFG = 0;										// rotary encoder button pressed
-char s2IFG = 0;											// on-board P1.1 (S2) pressed
+char rotKnobIFG = 0;                                    // rotary encoder knob turned
+char rotButIFG = 0;                                     // rotary encoder button pressed
+char s2IFG = 0;                                         // on-board P1.1 (S2) pressed
 
-short i = 0, yCursor = 1;  // yCursor = 0 is taken by the stopwatch display
+short i = 0, yCursor = 1;                               // yCursor = 0 is taken by the stopwatch display
 
-char refRate[6];
+char refRate[6];                                        // The desired rate but as a string
+
+// Eric's additions
+float time_base = 0.01;
+int prev_adcValue = -1;
+int curr_adcValue = -1;
+double slope = 0;
+int slope_threshold = 5000;
+// set as volatile because value is being used and updated in different places (one of which is an interrupt)
+volatile int curr_adcValue = -1;
+float slope = 0;
+float slope_threshold = 5000.0;
+int peak_flag = 0;
+
+int ticMem_isFull = 0;
+unsigned short int numDrops = 0;
+
+void active_monitor_debug(void);
 
 /********************************************************************************
  * main.c
  ********************************************************************************/
 int main(void) {
-	WDTCTL = WDTPW + WDTHOLD;				// stop watchdog timer
-	P4DIR |= BIT7;					// Configure P4.7 as output (for blinking debugging)
+// -------------------------------------------- **Initialization** --------------------------------------------
+    WDTCTL = WDTPW + WDTHOLD;       // stop watchdog timer
+    P4DIR |= BIT7;                  // Configure P4.7 as output (for blinking debugging)
 
-	//Setup Buttons (REMOVE ONCE REPLACED BY SIGNAL)
-	P1DIR &= ~BIT1;					// P1.1 input
-	P1REN |= BIT1; 					// Enable pullup resistor of P1.1 (default: GND)
-	P1OUT |= BIT1;					// Set pullup resistor to active (+3.3V) mode
+    P2DIR |= BIT5;                  // Configure PIN2.5 (IR LED) as output
+    P2OUT |= BIT5;                  // Set PIN 2.5 as HIGH
 
-	Clock_Init_1MHz();				// used for TimerA and LCD
+    //Setup Buttons (REMOVE ONCE REPLACED BY SIGNAL)
+    P1DIR &= ~BIT1;                 // P1.1 input
+    P1REN |= BIT1;                  // Enable pullup resistor of P1.1 (default: GND)
+    P1OUT |= BIT1;                  // Set pullup resistor to active (+3.3V) mode
 
-	Timer0_A5_Init();				// Initialize Timer A0
+    Clock_Init_1MHz();              // used for TimerA and LCD
 
-	ADC12_0_Init();					// for analog sensor signal
+    Timer0_A5_Init();               // Initialize Timer A0
 
-	SPI_Init();						// for LCD screen connection
-	_delay_cycles(50000);
+    ADC12_0_Init();                 // for analog sensor signal
 
-	RotEnc_Init();				// sets on-board LED to output for debugging
+    SPI_Init();                     // for LCD screen connection
+    _delay_cycles(50000);
 
-	LCD_Init();
-	clearLCD();
-//	setCursor(0, 0);
-//	prints("time:");
-//	setCursor(36, 0);  // each character is 6wide 8tall
-//	prints("00:00:00");
+    RotEnc_Init();              // sets on-board LED to output for debugging
 
+    LCD_Init();
+    clearLCD();
 
+    yCursor = 1;
 
-//	// set up display of memory buffer
-//	for (i = 0; i < 5; i++) {
-//		int2str(ticMem[i], str);
-//		setCursor(0, yCursor++);
-//		prints(str);
-//	}
-	yCursor = 1;
+    // P1.1 (Button) Intterupts
+    P1IE |= BIT1;                   // P1.1 interrupt enabled
+    P1IFG &= ~BIT1;                 // P1.1 interrupt flag cleared
 
-	P1IE |= BIT1;					// P1.1 interrupt enabled
-	P1IFG &= ~BIT1;					// P1.1 interrupt flag cleared
+    // ADC12 Init
+    ADC12CTL0 &= ~ADC12SC;          // Clear the start bit (precautionary)
+    ADC12CTL0 |= ADC12SC;           // Start conversion
 
-	ADC12CTL0 &= ~ADC12SC;      				// Clear the start bit (precautionary)
-	ADC12CTL0 |= ADC12SC;						// Start conversion
+    // General interrupts enable
+    __bis_SR_register(GIE);
 
-	__bis_SR_register(GIE);						// General interrupts enable
+// -------------------------------------------- **Main Loop** --------------------------------------------
+    while (1) {
+       // If prompting the user and the rotary encoder buttons is not pressed
+        /*if (isPrompting && !rotButIFG) {
+            int2str(desiredRate, refRate);
 
-	while (1) {
+            // LCD screen display
+            setCursor(0, 0);
+            prints("Desired");      // 7 characters             "Desired
+            setCursor(0, 1);        //                           flow rate:"
+            prints("flow rate:");   // 10 characters
 
-		if (isPrompting && !rotButIFG) {
-			int2str(desiredRate, refRate);
+            setCursor(30, 5);
+            prints("   ");
+            setCursor(30, 5);
+            prints(refRate);        // The desired flow rate (changes with turn of encoder)
 
-			// LCD screen display
-			setCursor(0, 0);
-			prints("Desired");		// 7 characters				Desired
-			setCursor(0, 1);		//							flow rate:
-			prints("flow rate:");	// 10 characters
-
-			setCursor(30, 5);
-			prints("   ");
-			setCursor(30, 5);
-			prints(refRate);
-
-			setCursor(60, 5);
-			prints("mL/h");
-		} else if (rotButIFG) {
-			if (isPrompting) {
-				isPrompting = 0;
-			} else {
-				isPrompting = 1;
-			}
-			rotButIFG = 0;
-			clearLCD();
-		} else { // display flow rate
-			active_monitor();
-		}
-	}
+            setCursor(60, 5);
+            prints("mL/h");
+        }
+        // If rotary encoder button is pressed
+        else if (rotButIFG) {
+            if (isPrompting) {
+                isPrompting = 0;
+            }else {
+                isPrompting = 1; // **Eric: I only commented this one out because my button is a bit glitchy
+            }
+            rotButIFG = 0;
+            clearLCD();
+        }
+        // If not prompting anymore, starting detecting drops through the active_monitor() function
+        else {*/
+            active_monitor();
+       // }
+    }
  }
 
-void active_monitor(void)
-{
-	//Poll Buttons here. Control the Timer. Update LCD Display.
-	if (dropFLG && (dropStopwatch > SIGNAL_LENGTH)) {
-		if (!TA0CCR0) { // TIMER IS OFF if !; else not 0, aka timer is ON
-			startTimer0_A5();
-			dropStopwatch = 0;
-		} else {
-			stopTimer0_A5();
+double calc_slope(int a, int b){
+    return (b - a) / time_base;
+}
 
-			ticMem[index] = tic;		// save measured time to ticMem buffer
+void active_monitor(void){
 
-			// print to screen (for debugging)
-			int2str(ticMem[index++], str);
-			setCursor(0, yCursor);
-			prints("      ");  // 6 blank to clear screen
-			setCursor(0, yCursor++);
-			prints(str);
-			if (index > 4) {  // memsize - 1 (when memsize = 5)
-				index = 0;  // index wraparound
-				yCursor = 1;
-			}
+// -------------------------------------------- ** DERIV FILTER ** --------------------------------------------
 
-			startTimer0_A5();
-		}
-		dropFLG = 0;
-	}
+    if(prev_adcValue != -1){
+        slope = calc_slope(prev_adcValue, curr_adcValue);
 
-	// display desired flow rate
-	setCursor(0, 0);
-	prints("ref: ");
-	prints(refRate);
-	prints(" mL/h");
+        if(slope < slope_threshold){
+            peak_flag = 1;
+        }
 
-	// display GTT factor
-	setCursor(42, 1);
-	prints("GTT:");
-	setCursor(72, 1);
-	prints(GTT_FACTOR_STR);
+        if(peak_flag && slope > slope_threshold){
+            dropFLG = 1;
+            peak_flag = 0;
+//            printf("%f DROP DETECTED \n", slope);
+        }
+    }
 
-	msec = tic;
-	sec = tic / 1000;
-	min = tic / 60000;
+    prev_adcValue = curr_adcValue;
+//    printf("%d ", curr_adcValue);
+//    printf("%f\n", slope);
 
-	if (msec != oMsec) {  // if different
-		char str[2];
-		msec = msec % 100;
-		int2strXX(msec, str);
-		setCursor(72, 0);
-		prints(str);
-	}
-	oMsec = msec;
+// -------------------------------------------- ** END ** --------------------------------------------
 
-	if (sec != oSec) {  // if different
-		char str[2];
-		int2strXX(sec%60, str);
-		setCursor(54, 0);
-		prints(str);
-	}
-	oSec = sec;
+    //Poll Buttons here. Control the Timer. Update LCD Display.
+    // If drop is detected (from ADC12 interrupt)
+    if (dropFLG && (dropStopwatch > SIGNAL_LENGTH)) { //Get the first value that is below the threshold and ignore all values within 40ms within that value
+        // Start timer
+        if (!TA0CCR0) { // TIMER IS OFF if !; else not 0, aka timer is ON
+            startTimer0_A5();
+            dropStopwatch = 0;
 
-	if (min != oMin) {
-		char str[2];
-		int2strXX(min, str);
-		setCursor(36, 0);
-		prints(str);
-	}
-	oMin = min;
+            // Display number of drops detected
+/*            char str[2];
+            int2strXX(peaks, str);
+            setCursor(72, 0);
+            prints(str);*/
 
-	if (ticMem[0]) {  // not zero
-		// this might be being repeated too many times...
-		short int count = 0, avgTime_ms = 0;
-		long int sum = 0;
-		for (i = 0; i < MEMSIZE; i++) {
-			if (ticMem[i] > 500) { // assuming that drops will not be < 500ms apart
-				sum += ticMem[i];
-				count++;
-			}
-		}
-		avgTime_ms = (float) sum / count;  // yields average msec
-		float gtt = GTT_FACTOR;
-		float temp = gtt * avgTime_ms;
-		flowRate = 3600000.0 / temp;
+        } else {
+            stopTimer0_A5();
 
-		// change the flowRate to string
-		char buf[80];
-		displayFlowRate(&flowRate, buf);
-		setCursor(36, 3);
-		prints(buf);
-		setCursor(60, 3);
-		prints(" mLh");
-	} else {
-		setCursor(36, 3);
-		prints("no drops");
-		setCursor(36, 4);
-		prints("detected");
-	}
+            P4OUT ^= BIT7;              // toggle LED
+
+            ticMem[index] = tic;        // save measured time to ticMem buffer
+
+            // print to screen ms between drops (for debugging)
+            int2str(ticMem[index++], str);
+            setCursor(0, yCursor);
+            prints("      ");  // 6 blank to clear screen
+            setCursor(0, yCursor++);
+            prints(str);
+
+
+            // Display number of drops detected
+/*            char str[2];
+            int2strXX(peaks, str);
+            setCursor(72, 0);
+            prints(str);*/
+
+
+            if (index > MEMSIZE-1) {  // memsize - 1 (when memsize = 5)
+                index = 0;            // index wraparound
+                yCursor = 1;
+            }
+
+            if(!ticMem_isFull){
+                numDrops += 1;
+            }
+
+            if(index == MEMSIZE-1 && !ticMem_isFull){
+                ticMem_isFull = 1;
+            }
+            printf("%lf ", slope);
+            printf("%lu ", tic);
+            printf("%f\n", flowRate);
+            startTimer0_A5();
+        }
+
+        dropFLG = 0;
+
+    }else{
+        P4OUT &= ~BIT7;
+    }
+
+    // display desired flow rate
+    setCursor(0, 0);
+    prints("ref: ");
+    prints(refRate);
+    prints(" mL/h");
+
+    // display GTT factor
+    setCursor(42, 1);
+    prints("GTT:");
+    setCursor(72, 1);
+    prints(GTT_FACTOR_STR);
+
+/** Refreshing display timer everytime a drop is detected */
+/*    msec = tic;
+    sec = tic / 1000;
+    min = tic / 60000;
+
+    if (msec != oMsec) {  // if different
+        char str[2];
+        msec = msec % 100;
+        int2strXX(msec, str);
+        setCursor(72, 0);
+        prints(str);
+    }
+    oMsec = msec;
+
+    if (sec != oSec) {  // if different
+        char str[2];
+        int2strXX(sec%60, str);
+        setCursor(54, 0);
+        prints(str);
+    }
+    oSec = sec;
+
+    if (min != oMin) {
+        char str[2];
+        int2strXX(min, str);
+        setCursor(36, 0);
+        prints(str);
+    }
+    oMin = min;*/
+
+    // Calculation of flow rate & display
+    if (ticMem[0]) {  // not zero
+        // this might be being repeated too many times...
+        unsigned long int sum = 0, avgTime_ms = 0;
+
+        // Get total sum of time values that are currently in the ticMem array
+        for (i = 0; i <= numDrops; i++) {
+            sum += ticMem[i];
+        }
+
+        avgTime_ms = (float) sum / numDrops;  // yields average msec
+
+        flowRate = 3600000.0 / ((float) GTT_FACTOR * avgTime_ms);
+
+        // change the flowRate to string
+        char buf[80];
+        displayFlowRate(&flowRate, buf);
+        setCursor(36, 3);
+        prints(buf);
+        setCursor(60, 3);
+        prints(" mLh");
+
+    } else {
+        setCursor(36, 3);
+        prints("no drops");
+        setCursor(36, 4);
+        prints("detected");
+    }
 }
