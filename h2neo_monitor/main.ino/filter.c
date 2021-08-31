@@ -1,16 +1,19 @@
 #include "filter.h"
 
-double calcSlope(int initialPt, int finalPt, double timeBase) {
-    return (finalPtr - initialPt) / timeBase;
+float calcSlope(int initialPt, int finalPt, float timeBase) {
+    return (finalPt - initialPt) / timeBase;
 }
 
-void derivativeFilter(int *prevPtr, int *currPtr, int *slopePtr, int *peakFlagPtr, int *dropFlagPtr, int slopeThreshold) {
+void derivativeFilter(int *prevPtr, int *currPtr, bool *peakFlagPtr, bool *dropFlagPtr, int slopeThreshold, float timeBase) {
+    float slope = 0.0;
     if (*prevPtr != -1) {
-        *slopePtr = calcSlope(*prevPtr, *currPtr);
-        if (*slopePtr < slopeThreshold) {
+        slope = calcSlope(*prevPtr, *currPtr, timeBase);
+        if (slope < slopeThreshold) {
             *peakFlagPtr = 1;
-        } else if (*peakFlagPtr && (*slope > slopeThreshold) {
+        } else if (*peakFlagPtr && (slope > slopeThreshold)) {
             *dropFlagPtr = 1;
             *peakFlagPtr = 0;
         }
+    }
+    *prevPtr = *currPtr;
 }
