@@ -59,7 +59,7 @@ $ git commit -m 'some commit message'
 ``` $ git push --set-upstream origin branchName ```
 
 #### (if local and remote branch are connected) Push changes:
-``` $ git push -u origin nameOfBranch ```
+``` $ git push ```
 
 #### Create pull request on Github from branch into master:
 Ask other team members to review and merge code
