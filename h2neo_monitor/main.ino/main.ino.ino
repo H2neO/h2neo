@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include <TimerOne.h>
+//#include <TimerOne.h>
 
 #include "filter.h"
 #include "updateFlowRate.h"
@@ -60,6 +60,9 @@ bool peakFlag = 0;
 int ticMemFull = 0;
 unsigned long numDrops = 0;
 
+//signal input interrupt using timer1 
+const uint16_t t1_load = 0; //reset the timer at startup
+const uint16_t t1_comp = 12500; //time span to get 50ms
 void setup() {
   /****************
     * Function name: setup
@@ -68,15 +71,37 @@ void setup() {
     * Function description: N/A
     * Author(s): 
     *****************/
+    pinMode(A0,INPUT);
+    //interrupt code
+    TCCR1A = 0; //reset Timer1 Control Reg A
 
-    Serial.begin(9600);                   // Sets serial data transmission rate at 9600 bits/s (baud)
-    Serial1.begin(9600);
-    Serial1.setTimeout(1000);
+    // Set CTC mode
+    TCCR1B &= ~(1 << WGM13);
+    TCCR1B |= (1 << WGM12);
+
+    // Set to prescaler of 64
+    TCCR1B &= ~(1 << CS12);
+    TCCR1B |= (1 << CS11);
+    TCCR1B %= ~(1 << CS10);
+
+    //Reset Timer1 and set compare value
+    TCNT1 = t1_load;
+    OCR1A = t1_comp;
+
+    //Enable Timer1 compare interrupt
+    TIMSK1 = (1 << OCIE1A);
+
+    //Enable global interrupts
+    sei();
     
-    Timer1.initialize(100E+3);          // Set the timer period to 100E+3 uS (100mS)
+    Serial.begin(9600);                   // Sets serial data transmission rate at 9600 bits/s (baud)
+//    Serial1.begin(9600);
+//    Serial1.setTimeout(1000);
+    
+//    Timer1.initialize(100E+3);          // Set the timer period to 100E+3 uS (100mS)
 //    Timer1.attachInterrupt(timerISR);   // Attach the interrupt service routine (ISR)
-    Timer1.start();                     // Start the timer
-
+//    Timer1.start();                     // Start the timer
+    
 }
 
 // i created a change!
@@ -100,4 +125,8 @@ void loop() {
     // if flow rate has not changed, then do NOT update LCD and call function
 
     oldFlowRate = flowRate;
+}
+
+ISR(TIMER1_COMPA_vect){
+  Serial.println(analogRead(A0));
 }
