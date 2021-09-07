@@ -62,7 +62,8 @@ unsigned long numDrops = 0;
 
 //signal input interrupt using timer1 
 const uint16_t t1_load = 0; //reset the timer at startup
-const uint16_t t1_comp = 12500; //time span to get 50ms
+const uint16_t t1_comp = 50000; //time span to get 25ms
+
 void setup() {
   /****************
     * Function name: setup
@@ -79,7 +80,7 @@ void setup() {
     TCCR1B &= ~(1 << WGM13);
     TCCR1B |= (1 << WGM12);
 
-    // Set to prescaler of 64
+    // Set to prescaler of 8
     TCCR1B &= ~(1 << CS12);
     TCCR1B |= (1 << CS11);
     TCCR1B %= ~(1 << CS10);
@@ -94,39 +95,37 @@ void setup() {
     //Enable global interrupts
     sei();
     
-    Serial.begin(9600);                   // Sets serial data transmission rate at 9600 bits/s (baud)
-//    Serial1.begin(9600);
-//    Serial1.setTimeout(1000);
-    
-//    Timer1.initialize(100E+3);          // Set the timer period to 100E+3 uS (100mS)
-//    Timer1.attachInterrupt(timerISR);   // Attach the interrupt service routine (ISR)
-//    Timer1.start();                     // Start the timer
-    
+    Serial.begin(1200);                   // Sets serial data transmission rate at 9600 bits/s (baud)
 }
 
 // i created a change!
 void loop() {
     // put your main code here, to run repeatedly:
 //    currTime = millis();
-    delay(1000);
+//    delay(1000);
 //    
 //    prevTime = currTime;
-    
+
     // detect drop every time
 
     // calculate the slope and the void updateFlowRate(unsigned long *ticMemPtr, int numDrops, float *flowRatePtr)
-
+    noInterrupts();
     derivativeFilter(&prevADCValue, &currADCValue, &peakFlag, &dropFlag, slopeThreshold, timeBase);
-    if (numDrops != 0) {
+    if (dropFlag != 0) {
+        numDrops++;
         updateFlowRate(ticMemPtr, numDrops, &flowRate);
 //    flowRate = 0;
     }
-    Serial.println(flowRate);
+    Serial.println(numDrops);
+    interrupts();
+//    Serial.println(flowRate);
     // if flow rate has not changed, then do NOT update LCD and call function
 
     oldFlowRate = flowRate;
+//    Serial.println(flowRate);
 }
 
 ISR(TIMER1_COMPA_vect){
-  Serial.println(analogRead(A0));
+  currADCValue = analogRead(A0);
+//  Serial.println(currADCValue);
 }
