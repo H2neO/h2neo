@@ -1,3 +1,7 @@
+#ifdef __cplusplus
+ extern "C" {
+#endif
+
 #ifndef filter_H_
 #define filter_H_
 
@@ -5,8 +9,12 @@
 #include <stdbool.h>
 #include <Arduino.h>
 
-double calcSlope(int initialPt, int finalPt, double timeBase);
+float calcSlope(int initialPt, int finalPt, float timeBase);
 
-void derivativeFilter(int *prevPtr, int *currPtr, int slope, int *peakFlag, int *dropFlag);
+void derivativeFilter(int *prevPtr, int *currPtr, bool *peakFlagPtr, bool *dropFlagPtr, int slopeThreshold, float timeBase);
 
+#endif
+
+#ifdef __cplusplus
+}
 #endif
