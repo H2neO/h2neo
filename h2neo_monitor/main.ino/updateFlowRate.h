@@ -1,6 +1,3 @@
-#ifdef __cplusplus
- extern "C" {
-#endif
 
 #ifndef updateFlowRate_H_
 #define updateFlowRate_H_
@@ -13,8 +10,4 @@
 
 void updateFlowRate(unsigned long *ticMemPtr, unsigned long numDrops, float *flowRatePtr);
 
-#endif
-
-#ifdef __cplusplus
-}
 #endif

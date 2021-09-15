@@ -1,6 +1,6 @@
-#ifdef __cplusplus
- extern "C" {
-#endif
+//#ifdef __cplusplus
+// extern "C" {
+//#endif
 
 #ifndef filter_H_
 #define filter_H_
@@ -15,6 +15,6 @@ void derivativeFilter(int *prevPtr, int *currPtr, bool *peakFlagPtr, bool *dropF
 
 #endif
 
-#ifdef __cplusplus
-}
-#endif
+//#ifdef __cplusplus
+//}
+//#endif

@@ -52,7 +52,7 @@ float timeBase = 0.01;
 int prevADCValue = -1;
 volatile int currADCValue = -1;
                              
-int slopeThreshold = 5000;
+//int slopeThreshold = 5000;
 // set as volatile because value is being used and updated in different places (one of which is an interrupt)
 
 //float slope = 0;
@@ -62,7 +62,26 @@ unsigned long numDrops = 0;
 
 //signal input interrupt using timer1 
 const uint16_t t1_load = 0; //reset the timer at startup
-const uint16_t t1_comp = 50000; //time span to get 25ms
+const uint16_t t1_comp = 32000; //time span to get 2 ms
+
+// EVERYTHING BELOW IS FOR AVERAGING ALGORITHM
+
+float inSignal[MEMSIZE];
+float *inSignalPtr = &(inSignal[0]);
+
+float filteredIn[MEMSIZE];
+float *filteredInlPtr = &(filteredIn[0]);
+
+float avgFilter[MEMSIZE];
+float *avgFilterPtr = &(avgFilter[0]);
+
+float outSignal[MEMSIZE];
+float *outSignalPtr = &(outSignal[0]);
+int trigger = 0;
+int peaks = 0;
+unsigned int pos = 0;
+float threshold = 100;      // update threshold so baseline variability is not inducing error
+float influence = 0;
 
 void setup() {
   /****************
@@ -80,10 +99,10 @@ void setup() {
     TCCR1B &= ~(1 << WGM13);
     TCCR1B |= (1 << WGM12);
 
-    // Set to prescaler of 8
+    // Set to prescaler of 1
     TCCR1B &= ~(1 << CS12);
-    TCCR1B |= (1 << CS11);
-    TCCR1B %= ~(1 << CS10);
+    TCCR1B &= ~(1 << CS11);
+    TCCR1B |= (1 << CS10);
 
     //Reset Timer1 and set compare value
     TCNT1 = t1_load;
@@ -95,7 +114,7 @@ void setup() {
     //Enable global interrupts
     sei();
     
-    Serial.begin(1200);                   // Sets serial data transmission rate at 9600 bits/s (baud)
+    Serial.begin(9600);                   // Sets serial data transmission rate at 9600 bits/s (baud)
 }
 
 // i created a change!
@@ -107,25 +126,43 @@ void loop() {
 //    prevTime = currTime;
 
     // detect drop every time
+        noInterrupts();
 
-    // calculate the slope and the void updateFlowRate(unsigned long *ticMemPtr, int numDrops, float *flowRatePtr)
-    noInterrupts();
-    derivativeFilter(&prevADCValue, &currADCValue, &peakFlag, &dropFlag, slopeThreshold, timeBase);
-    if (dropFlag != 0) {
-        numDrops++;
-        updateFlowRate(ticMemPtr, numDrops, &flowRate);
-//    flowRate = 0;
-    }
-    Serial.println(numDrops);
+////    Serial.print("value? at   ");
+////        Serial.println(currADCValue);
+//    // calculate the slope and the void updateFlowRate(unsigned long *ticMemPtr, int numDrops, float *flowRatePtr)
+//    if (currADCValue < 100) {
+//        Serial.print("drop here? at   ");
+//        Serial.println(currADCValue);
+////        derivativeFilter(&prevADCValue, &currADCValue, &peakFlag, &dropFlag, slopeThreshold, timeBase);
+//        numDrops++;
+//        dropFlag = 1;
+//    }
+////    noInterrupts();
+////    derivativeFilter(&prevADCValue, &currADCValue, &peakFlag, &dropFlag, slopeThreshold, timeBase);
+//    if (dropFlag != 0) {
+//        numDrops++;
+//    }
+//    updateFlowRate(ticMemPtr, numDrops, &flowRate);
+//    dropFlag = 0;
+////        Serial.print("The flow rate is    "); Serial.println(flowRate);
+////    flowRate = 0;
+////    }
+////    Serial.println(numDrops);
+////    interrupts();
+////    Serial.println(flowRate);
+//    // if flow rate has not changed, then do NOT update LCD and call function
+//
+//    oldFlowRate = flowRate;
+////    Serial.println(flowRate);
+//    delay(25);
     interrupts();
-//    Serial.println(flowRate);
-    // if flow rate has not changed, then do NOT update LCD and call function
-
-    oldFlowRate = flowRate;
-//    Serial.println(flowRate);
 }
 
 ISR(TIMER1_COMPA_vect){
   currADCValue = analogRead(A0);
-//  Serial.println(currADCValue);
+//  int time1 = millis();
+//  Serial.print("The time is   ");
+//  Serial.println(time1);
+  Serial.println(currADCValue);
 }
