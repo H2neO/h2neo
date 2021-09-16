@@ -14,6 +14,10 @@ int currTime = 0;
 #define GTT_FACTOR_STR  "20"                            // ^ in string format... not sure if it'll work lol
 #define SIGNAL_LENGTH   1000                            // 2 * 20ms **Eric: Changed this to 1000ms to limit double drop counting (so max rate we can go to is around 350ml/hr)
 
+#define TRUE 1
+#define FALSE 0
+
+
 // tic - number of times the Timer ISR is entered after x clock cycles
 //          tic will be programmed to be 1ms long
 // sec - seconds (tic * clock cycles)
@@ -70,18 +74,19 @@ float inSignal[MEMSIZE];
 float *inSignalPtr = &(inSignal[0]);
 
 float filteredIn[MEMSIZE];
-float *filteredInlPtr = &(filteredIn[0]);
+float *filteredInPtr = &(filteredIn[0]);
 
 float avgFilter[MEMSIZE];
 float *avgFilterPtr = &(avgFilter[0]);
 
-float outSignal[MEMSIZE];
-float *outSignalPtr = &(outSignal[0]);
+int outSignal[MEMSIZE];
+int *outSignalPtr = &(outSignal[0]);
 int trigger = 0;
 int peaks = 0;
-unsigned int pos = 0;
+int dropIndex = 0;
 float threshold = 100;      // update threshold so baseline variability is not inducing error
 float influence = 0;
+int lag = 5;
 
 void setup() {
   /****************
@@ -128,34 +133,35 @@ void loop() {
     // detect drop every time
         noInterrupts();
 
-////    Serial.print("value? at   ");
-////        Serial.println(currADCValue);
-//    // calculate the slope and the void updateFlowRate(unsigned long *ticMemPtr, int numDrops, float *flowRatePtr)
-//    if (currADCValue < 100) {
-//        Serial.print("drop here? at   ");
-//        Serial.println(currADCValue);
-////        derivativeFilter(&prevADCValue, &currADCValue, &peakFlag, &dropFlag, slopeThreshold, timeBase);
-//        numDrops++;
-//        dropFlag = 1;
-//    }
-////    noInterrupts();
-////    derivativeFilter(&prevADCValue, &currADCValue, &peakFlag, &dropFlag, slopeThreshold, timeBase);
-//    if (dropFlag != 0) {
-//        numDrops++;
-//    }
-//    updateFlowRate(ticMemPtr, numDrops, &flowRate);
-//    dropFlag = 0;
-////        Serial.print("The flow rate is    "); Serial.println(flowRate);
-////    flowRate = 0;
-////    }
-////    Serial.println(numDrops);
-////    interrupts();
-////    Serial.println(flowRate);
-//    // if flow rate has not changed, then do NOT update LCD and call function
-//
-//    oldFlowRate = flowRate;
-////    Serial.println(flowRate);
-//    delay(25);
+
+
+
+   if(dropIndex < MEMSIZE){        // Before the array is filled...
+        inSignal[dropIndex] = currADCValue;   // store ADC value into array
+
+        if(dropIndex == lag){             // When lag value is reached, start peak detection
+            // Thresholding Init
+            memcpy(filteredIn, inSignal, sizeof(float)*MEMSIZE);  // Copy the values of inSignal to filteredIn
+            avgFilter[lag - 1] = calcMean(&(inSignal[0]), lag);               // Initial Mean
+            thresholding(dropIndex, inSignalPtr, outSignalPtr, filteredInPtr, avgFilterPtr, lag, threshold, influence, &trigger, &peaks, &dropFlag);
+        }else if (dropIndex > lag){
+            thresholding(dropIndex, inSignalPtr, outSignalPtr, filteredInPtr, avgFilterPtr, lag, threshold, influence, &trigger, &peaks, &dropFlag);
+        }
+
+        dropIndex++;
+    }else{ // When array is full, the new values are getting added to the end and the array is getting shifted, with the first value getting deleted.
+        memmove(&inSignal[0], &inSignal[1], sizeof(inSignal) - sizeof(*inSignal));  //Shift function (WORKS)
+        inSignal[dropIndex - 1] = currADCValue;
+        memmove(&filteredIn[0], &filteredIn[1], sizeof(filteredIn) - sizeof(*filteredIn));
+        memmove(&avgFilter[0], &avgFilter[1], sizeof(avgFilter) - sizeof(*avgFilter));
+        thresholding(dropIndex - 1, inSignalPtr, outSignalPtr, filteredInPtr, avgFilterPtr, lag, threshold, influence, &trigger, &peaks, &dropFlag);
+    }
+
+    if (dropFlag == TRUE) {
+        numDrops++;
+        updateFlowRate(ticMemPtr, numDrops, &flowRate);
+        dropFlag = FALSE;
+    }
     interrupts();
 }
 

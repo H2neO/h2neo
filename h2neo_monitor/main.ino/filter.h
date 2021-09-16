@@ -9,10 +9,17 @@
 #include <stdbool.h>
 #include <Arduino.h>
 
-float calcSlope(int initialPt, int finalPt, float timeBase);
+//float calcSlope(int initialPt, int finalPt, float timeBase);
+//
+//void derivativeFilter(int *prevPtr, int *currPtr, bool *peakFlagPtr, bool *dropFlagPtr, int slopeThreshold, float timeBase);
 
-void derivativeFilter(int *prevPtr, int *currPtr, bool *peakFlagPtr, bool *dropFlagPtr, int slopeThreshold, float timeBase);
 
+float calcMean(float *dataPtr, int len);
+
+void thresholding(int index, float *inSignalPtr, int *outSignalPtr, float *filteredInPtr, float *avgFilterPtr, int lag,
+                  float threshold, float influence, int *triggerPtr, int *peaksPtr, bool *dropFlagPtr);
+
+              
 #endif
 
 //#ifdef __cplusplus
