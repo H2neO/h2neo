@@ -39,6 +39,8 @@ void thresholding(int index, float *inSignalPtr, int *outSignalPtr, float *filte
                   float threshold, float influence, int *triggerPtr, int *peaksPtr, bool *dropFlagPtr) {
     
     if (fabsf(*(inSignalPtr + index) - *(avgFilterPtr + index - 1)) > threshold) {
+
+//    Serial.println(*(inSignalPtr + index) - *(avgFilterPtr + index - 1));  
         // If the different between input and average is greater than a threshold value, toggle
         if (*(inSignalPtr + index) < *(avgFilterPtr + index - 1)) {
            *(outSignalPtr + index) = -1;
@@ -46,9 +48,11 @@ void thresholding(int index, float *inSignalPtr, int *outSignalPtr, float *filte
         }
 
         *(filteredInPtr + index) = influence * *(inSignalPtr + index) +  (1 - influence) * *(filteredInPtr + index - 1);
-    }else {
+//        index++;
+    } else {
         *(outSignalPtr + index) = 0;
-        if((*(outSignalPtr + index)) && *triggerPtr){
+//        Serial.println(*triggerPtr);
+        if(*triggerPtr == 1){
             (*peaksPtr)++;
             *dropFlagPtr = 1; // dropFLG triggers when incrementing # of peaks
 //            numDrops += 1;       // may need to change, currently increases number of drops
@@ -58,6 +62,6 @@ void thresholding(int index, float *inSignalPtr, int *outSignalPtr, float *filte
 
         *(filteredInPtr + index) = *(inSignalPtr + index);
     }
-
+    
     *(avgFilterPtr + index) = calcMean(filteredInPtr + index - lag, lag);
 }

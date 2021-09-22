@@ -84,9 +84,12 @@ int *outSignalPtr = &(outSignal[0]);
 int trigger = 0;
 int peaks = 0;
 int dropIndex = 0;
-float threshold = 100;      // update threshold so baseline variability is not inducing error
+float threshold = 10;      // update threshold so baseline variability is not inducing error
 float influence = 0;
 int lag = 5;
+
+int prev = 0;
+int curr = 0;
 
 void setup() {
   /****************
@@ -125,10 +128,11 @@ void setup() {
 // i created a change!
 void loop() {
     // put your main code here, to run repeatedly:
-//    currTime = millis();
-//    delay(1000);
-//    
-//    prevTime = currTime;
+//    curr = millis();
+////    delay(1000);
+////  
+//   Serial.print("The time that the stuff took  ->  "); Serial.println(curr - prev);  
+    prevTime = currTime;
 
     // detect drop every time
         noInterrupts();
@@ -149,6 +153,7 @@ void loop() {
         }
 
         dropIndex++;
+        Serial.print("The index is   ->  "); Serial.println(dropIndex);
     }else{ // When array is full, the new values are getting added to the end and the array is getting shifted, with the first value getting deleted.
         memmove(&inSignal[0], &inSignal[1], sizeof(inSignal) - sizeof(*inSignal));  //Shift function (WORKS)
         inSignal[dropIndex - 1] = currADCValue;
@@ -159,10 +164,25 @@ void loop() {
 
     if (dropFlag == TRUE) {
         numDrops++;
-        updateFlowRate(ticMemPtr, numDrops, &flowRate);
+        curr = millis();
+        unsigned long timeIndex = (unsigned long) numDrops % 10;
+        ticMem[timeIndex] = curr - prev;
+        Serial.println(curr-prev);
+        updateFlowRate(ticMemPtr, dropIndex, &flowRate);
+        prev = curr;
         dropFlag = FALSE;
+        Serial.print("The flow rate is  ->  "); Serial.println(flowRate);
+//        Serial.println("I am here at some point");
+        delay(40);
     }
     interrupts();
+
+//   curr = millis();
+////    delay(1000);
+////  
+//   Serial.print("The time that the stuff took  ->  "); Serial.println(curr - prev);  
+
+   
 }
 
 ISR(TIMER1_COMPA_vect){
@@ -170,5 +190,5 @@ ISR(TIMER1_COMPA_vect){
 //  int time1 = millis();
 //  Serial.print("The time is   ");
 //  Serial.println(time1);
-  Serial.println(currADCValue);
+//  Serial.println(currADCValue);
 }
