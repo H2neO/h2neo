@@ -66,7 +66,7 @@ unsigned long numDrops = 0;
 
 //signal input interrupt using timer1 
 const uint16_t t1_load = 0; //reset the timer at startup
-const uint16_t t1_comp = 32000; //time span to get 2 ms
+const uint16_t t1_comp = 20000; //time span to get 2 ms
 
 // EVERYTHING BELOW IS FOR AVERAGING ALGORITHM
 
@@ -109,8 +109,8 @@ void setup() {
 
     // Set to prescaler of 1
     TCCR1B &= ~(1 << CS12);
-    TCCR1B &= ~(1 << CS11);
-    TCCR1B |= (1 << CS10);
+    TCCR1B |= (1 << CS11);
+    TCCR1B &= ~(1 << CS10);
 
     //Reset Timer1 and set compare value
     TCNT1 = t1_load;
@@ -153,7 +153,7 @@ void loop() {
         }
 
         dropIndex++;
-        Serial.print("The index is   ->  "); Serial.println(dropIndex);
+//        Serial.print("The index is   ->  "); Serial.println(dropIndex);
     }else{ // When array is full, the new values are getting added to the end and the array is getting shifted, with the first value getting deleted.
         memmove(&inSignal[0], &inSignal[1], sizeof(inSignal) - sizeof(*inSignal));  //Shift function (WORKS)
         inSignal[dropIndex - 1] = currADCValue;
