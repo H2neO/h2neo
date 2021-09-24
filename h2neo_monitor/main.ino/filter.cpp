@@ -23,13 +23,13 @@
 //}
 
 float calcMean(float *dataPtr, int len) {
-    float sum = 0.0;
+    double sum = 0.0;
     float mean = 0.0;
     int i;
     for (i = 0; i < len; i++) {
         sum += *(dataPtr + i); 
     }
-
+//    Serial.println(sum);
     mean = sum / len;
     return mean;
 }
@@ -37,9 +37,9 @@ float calcMean(float *dataPtr, int len) {
 // The actual drop detection calculations
 void thresholding(int index, float *inSignalPtr, int *outSignalPtr, float *filteredInPtr, float *avgFilterPtr, int lag,
                   float threshold, float influence, int *triggerPtr, int *peaksPtr, bool *dropFlagPtr) {
-//        Serial.println(*(inSignalPtr + index) - *(avgFilterPtr + index - 1));  
+//        Serial.println(*(avgFilterPtr + index - 1));  
 
-    if (fabsf(*(inSignalPtr + index) - *(avgFilterPtr + index - 1)) > threshold) {
+    if ((fabsf(*(inSignalPtr + index) - *(avgFilterPtr + index - 1)) > threshold) && (*dropFlagPtr == 0)) {
 
         // If the different between input and average is greater than a threshold value, toggle
 //        if (*(inSignalPtr + index) < *(avgFilterPtr + index - 1)) {
