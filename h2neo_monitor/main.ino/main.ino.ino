@@ -52,10 +52,17 @@ float oldFlowRate = 0.0;  // old value used to determine if rate should be print
 //char refRate[6];                                        // The desired rate but as a string
 
 // Eric's additions
+<<<<<<< HEAD
 float timeBase = 0.01;
 int prevADCValue = 0;
 volatile int currADCValue = 0;
                              
+=======
+//float timeBase = 0.01;
+float prevADCValue = -1;
+volatile float currADCValue = analogRead(A0);
+
+>>>>>>> a2f8316984d89d772c1ffff8f9ec6d4618fce36e
 //int slopeThreshold = 5000;
 // set as volatile because value is being used and updated in different places (one of which is an interrupt)
 
@@ -64,23 +71,31 @@ bool peakFlag = 0;
 int ticMemFull = 0;
 unsigned long numDrops = 0;
 
-//signal input interrupt using timer1 
+//signal input interrupt using timer1
 const uint16_t t1_load = 0; //reset the timer at startup
+<<<<<<< HEAD
 const uint16_t t1_comp = 10000; //time span to get 2 ms
+=======
+const uint16_t t1_comp = 32000; //time span to get 2 ms
+>>>>>>> a2f8316984d89d772c1ffff8f9ec6d4618fce36e
 
 // EVERYTHING BELOW IS FOR AVERAGING ALGORITHM
 
-float inSignal[MEMSIZE];
+float inSignal[MEMSIZE] = {currADCValue, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 float *inSignalPtr = &(inSignal[0]);
 
-float filteredIn[MEMSIZE];
+float filteredIn[MEMSIZE] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 float *filteredInPtr = &(filteredIn[0]);
 
-float avgFilter[MEMSIZE];
+float avgFilter[MEMSIZE] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 float *avgFilterPtr = &(avgFilter[0]);
 
+<<<<<<< HEAD
 int timeIndex = 0;
 int outSignal[MEMSIZE];
+=======
+int outSignal[MEMSIZE] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+>>>>>>> a2f8316984d89d772c1ffff8f9ec6d4618fce36e
 int *outSignalPtr = &(outSignal[0]);
 int trigger = 0;
 int peaks = 0;
@@ -94,40 +109,41 @@ int curr = 0;
 
 void setup() {
   /****************
-    * Function name: setup
-    * Function inputs: None
-    * Function outputs: None
-    * Function description: N/A
-    * Author(s): 
+      Function name: setup
+      Function inputs: None
+      Function outputs: None
+      Function description: N/A
+      Author(s):
     *****************/
-    pinMode(A0,INPUT);
-    //interrupt code
-    TCCR1A = 0; //reset Timer1 Control Reg A
+  pinMode(A0, INPUT);
+  //interrupt code
+  TCCR1A = 0; //reset Timer1 Control Reg A
 
-    // Set CTC mode
-    TCCR1B &= ~(1 << WGM13);
-    TCCR1B |= (1 << WGM12);
+  // Set CTC mode
+  TCCR1B &= ~(1 << WGM13);
+  TCCR1B |= (1 << WGM12);
 
-    // Set to prescaler of 1
-    TCCR1B &= ~(1 << CS12);
-    TCCR1B |= (1 << CS11);
-    TCCR1B &= ~(1 << CS10);
+  // Set to prescaler of 1
+  TCCR1B &= ~(1 << CS12);
+  TCCR1B &= ~(1 << CS11);
+  TCCR1B |= (1 << CS10);
 
-    //Reset Timer1 and set compare value
-    TCNT1 = t1_load;
-    OCR1A = t1_comp;
+  //Reset Timer1 and set compare value
+  TCNT1 = t1_load;
+  OCR1A = t1_comp;
 
-    //Enable Timer1 compare interrupt
-    TIMSK1 = (1 << OCIE1A);
+  //Enable Timer1 compare interrupt
+  TIMSK1 = (1 << OCIE1A);
 
-    //Enable global interrupts
-    sei();
-    
-    Serial.begin(9600);                   // Sets serial data transmission rate at 9600 bits/s (baud)
+  //Enable global interrupts
+  sei();
+
+  Serial.begin(9600);                   // Sets serial data transmission rate at 9600 bits/s (baud)
 }
 
 // i created a change!
 void loop() {
+<<<<<<< HEAD
     //curr = millis();
 ////    delay(1000);
 ////  
@@ -217,4 +233,76 @@ ISR(TIMER1_COMPA_vect){
 //        Serial.print(inSignal[9]);
 //    Serial.println("]");
     
+=======
+  // put your main code here, to run repeatedly:
+  //    curr = millis();
+  ////    delay(1000);
+  ////
+  //   Serial.print("The time that the stuff took  ->  "); Serial.println(curr - prev);
+  prevTime = currTime;
+
+  // detect drop every time
+  noInterrupts();
+
+//
+//    for (int i = 0; i < MEMSIZE; i++) {
+////        Serial.println(avgFilter[i]);
+//    }
+//Serial.println(currADCValue);
+  if (dropIndex < MEMSIZE) {      // Before the array is filled...
+    inSignal[dropIndex] = currADCValue;   // store ADC value into array
+    
+    if (dropIndex == lag) {           // When lag value is reached, start peak detection
+      // Thresholding Init
+      memcpy(filteredIn, inSignal, sizeof(float)*MEMSIZE);  // Copy the values of inSignal to filteredIn
+      avgFilter[lag - 1] = calcMean(&(inSignal[0]), lag);               // Initial Mean
+      for (int i = 0; i < MEMSIZE; i++) {
+        Serial.println(inSignal[i]);
+      }
+//      Serial.println(avgFilter[lag - 1]);
+      thresholding(dropIndex, inSignalPtr, outSignalPtr, filteredInPtr, avgFilterPtr, lag, threshold, influence, &trigger, &peaks, &dropFlag);
+    } else if (dropIndex > lag) {
+      thresholding(dropIndex, inSignalPtr, outSignalPtr, filteredInPtr, avgFilterPtr, lag, threshold, influence, &trigger, &peaks, &dropFlag);
+    }
+
+    dropIndex++;
+    Serial.print("The index is   ->  "); Serial.println(dropIndex);
+  } else { // When array is full, the new values are getting added to the end and the array is getting shifted, with the first value getting deleted.
+    memmove(&inSignal[0], &inSignal[1], sizeof(inSignal) - sizeof(*inSignal));  //Shift function (WORKS)
+    inSignal[dropIndex - 1] = currADCValue;
+    memmove(&filteredIn[0], &filteredIn[1], sizeof(filteredIn) - sizeof(*filteredIn));
+    memmove(&avgFilter[0], &avgFilter[1], sizeof(avgFilter) - sizeof(*avgFilter));
+    thresholding(dropIndex - 1, inSignalPtr, outSignalPtr, filteredInPtr, avgFilterPtr, lag, threshold, influence, &trigger, &peaks, &dropFlag);
+  }
+
+  if (dropFlag == TRUE) {
+    numDrops++;
+    curr = millis();
+    unsigned long timeIndex = (unsigned long) numDrops % MEMSIZE;
+    ticMem[timeIndex] = curr - prev;
+    Serial.println(curr - prev);
+    updateFlowRate(ticMemPtr, dropIndex, &flowRate);
+    prev = curr;
+    dropFlag = FALSE;
+    Serial.print("The flow rate is  ->  "); Serial.println(flowRate);
+    //        Serial.println("I am here at some point");
+    delay(40);
+  }
+  interrupts();
+
+  //   curr = millis();
+  ////    delay(1000);
+  ////
+  //   Serial.print("The time that the stuff took  ->  "); Serial.println(curr - prev);
+
+
+}
+
+ISR(TIMER1_COMPA_vect) {
+  currADCValue = analogRead(A0);
+  //  int time1 = millis();
+  //  Serial.print("The time is   ");
+  //  Serial.println(time1);
+//    Serial.println(currADCValue);
+>>>>>>> a2f8316984d89d772c1ffff8f9ec6d4618fce36e
 }
