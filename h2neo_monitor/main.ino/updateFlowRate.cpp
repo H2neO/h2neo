@@ -13,12 +13,6 @@ void updateFlowRate(unsigned long *ticMemPtr, int dropIndex, float *flowRatePtr)
 //        }
         sum += *(ticMemPtr + i);
     }
-
-    Serial.print("The sum is  "); Serial.println(sum);
-    Serial.print("The drops is  "); Serial.println(dropIndex);
     avgTimeMS =  (double) sum / dropIndex; // calculates the average drop time
-    Serial.print("The average time is   "); Serial.println(avgTimeMS);
-    *flowRatePtr = 3600000.0 / (GTT_FACTOR * avgTimeMS);
-
-//    Serial.print("The flow rate is    "); Serial.println(*flowRatePtr);
+    *flowRatePtr = 3600000.0 / ((double) GTT_FACTOR * avgTimeMS);
 }

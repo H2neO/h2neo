@@ -30,38 +30,35 @@ float calcMean(float *dataPtr, int len) {
         sum += *(dataPtr + i); 
     }
 
-    mean = sum / len;
+    mean = sum / len; 
     return mean;
 }
 
 // The actual drop detection calculations
 void thresholding(int index, float *inSignalPtr, int *outSignalPtr, float *filteredInPtr, float *avgFilterPtr, int lag,
                   float threshold, float influence, int *triggerPtr, int *peaksPtr, bool *dropFlagPtr) {
-//        Serial.println(*(inSignalPtr + index) - *(avgFilterPtr + index - 1));  
 
     if (fabsf(*(inSignalPtr + index) - *(avgFilterPtr + index - 1)) > threshold) {
 
         // If the different between input and average is greater than a threshold value, toggle
-//        if (*(inSignalPtr + index) < *(avgFilterPtr + index - 1)) {
+        if (*(inSignalPtr + index) < *(avgFilterPtr + index - 1)) {
            *(outSignalPtr + index) = -1;
            *triggerPtr = 1;
-//        }
+        
+          *(filteredInPtr + index) = influence * (*(inSignalPtr + index)) +  (1 - influence) * (*(filteredInPtr + index - 1));
+        }
 
-        *(filteredInPtr + index) = influence * *(inSignalPtr + index) +  (1 - influence) * *(filteredInPtr + index - 1);
-//        index++;
     } else {
         *(outSignalPtr + index) = 0;
-//        Serial.println(*triggerPtr);
         if(*triggerPtr == 1){
             (*peaksPtr)++;
             *dropFlagPtr = 1; // dropFLG triggers when incrementing # of peaks
-//            numDrops += 1;       // may need to change, currently increases number of drops
-            //printf("Drops Detected: %d\n", peaks);
         }
         *triggerPtr = 0;
 
         *(filteredInPtr + index) = *(inSignalPtr + index);
     }
-    
+        
     *(avgFilterPtr + index) = calcMean(filteredInPtr + index - lag, lag);
+     //Serial.println(*(avgFilterPtr + index));
 }

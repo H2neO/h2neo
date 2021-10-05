@@ -30,7 +30,7 @@ unsigned long tic = 0;                                  // (data type short can 
 bool dropFlag = 0;                                      // presence of a drop
 
 // save last 5 time interval values and average to find more accurate flow rate
-unsigned long ticMem[MEMSIZE] = {0, 0, 0, 0, 0};                      // global var auto initialized to 0
+unsigned long ticMem[MEMSIZE] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};                      // global var auto initialized to 0
 unsigned long *ticMemPtr = &(ticMem[0]);
 int index = 0;
 char str[6];                                            // used to convert each integer to string
@@ -53,8 +53,8 @@ float oldFlowRate = 0.0;  // old value used to determine if rate should be print
 
 // Eric's additions
 float timeBase = 0.01;
-int prevADCValue = -1;
-volatile int currADCValue = -1;
+int prevADCValue = 0;
+volatile int currADCValue = 0;
                              
 //int slopeThreshold = 5000;
 // set as volatile because value is being used and updated in different places (one of which is an interrupt)
@@ -66,7 +66,7 @@ unsigned long numDrops = 0;
 
 //signal input interrupt using timer1 
 const uint16_t t1_load = 0; //reset the timer at startup
-const uint16_t t1_comp = 20000; //time span to get 2 ms
+const uint16_t t1_comp = 10000; //time span to get 2 ms
 
 // EVERYTHING BELOW IS FOR AVERAGING ALGORITHM
 
@@ -79,14 +79,15 @@ float *filteredInPtr = &(filteredIn[0]);
 float avgFilter[MEMSIZE];
 float *avgFilterPtr = &(avgFilter[0]);
 
+int timeIndex = 0;
 int outSignal[MEMSIZE];
 int *outSignalPtr = &(outSignal[0]);
 int trigger = 0;
 int peaks = 0;
 int dropIndex = 0;
-float threshold = 10;      // update threshold so baseline variability is not inducing error
+float threshold = 13.0;      // update threshold so baseline variability is not inducing error
 float influence = 0;
-int lag = 5;
+int lag = 2;
 
 int prev = 0;
 int curr = 0;
@@ -127,62 +128,22 @@ void setup() {
 
 // i created a change!
 void loop() {
-    // put your main code here, to run repeatedly:
-//    curr = millis();
+    //curr = millis();
 ////    delay(1000);
 ////  
 //   Serial.print("The time that the stuff took  ->  "); Serial.println(curr - prev);  
-    prevTime = currTime;
+//    prevTime = currTime;
 
     // detect drop every time
-        noInterrupts();
+    //noInterrupts();
 
-
-
-
-   if(dropIndex < MEMSIZE){        // Before the array is filled...
-        inSignal[dropIndex] = currADCValue;   // store ADC value into array
-
-        if(dropIndex == lag){             // When lag value is reached, start peak detection
-            // Thresholding Init
-            memcpy(filteredIn, inSignal, sizeof(float)*MEMSIZE);  // Copy the values of inSignal to filteredIn
-            avgFilter[lag - 1] = calcMean(&(inSignal[0]), lag);               // Initial Mean
-            thresholding(dropIndex, inSignalPtr, outSignalPtr, filteredInPtr, avgFilterPtr, lag, threshold, influence, &trigger, &peaks, &dropFlag);
-        }else if (dropIndex > lag){
-            thresholding(dropIndex, inSignalPtr, outSignalPtr, filteredInPtr, avgFilterPtr, lag, threshold, influence, &trigger, &peaks, &dropFlag);
-        }
-
-        dropIndex++;
-//        Serial.print("The index is   ->  "); Serial.println(dropIndex);
-    }else{ // When array is full, the new values are getting added to the end and the array is getting shifted, with the first value getting deleted.
-        memmove(&inSignal[0], &inSignal[1], sizeof(inSignal) - sizeof(*inSignal));  //Shift function (WORKS)
-        inSignal[dropIndex - 1] = currADCValue;
-        memmove(&filteredIn[0], &filteredIn[1], sizeof(filteredIn) - sizeof(*filteredIn));
-        memmove(&avgFilter[0], &avgFilter[1], sizeof(avgFilter) - sizeof(*avgFilter));
-        thresholding(dropIndex - 1, inSignalPtr, outSignalPtr, filteredInPtr, avgFilterPtr, lag, threshold, influence, &trigger, &peaks, &dropFlag);
-    }
-
-    if (dropFlag == TRUE) {
-        numDrops++;
-        curr = millis();
-        unsigned long timeIndex = (unsigned long) numDrops % 10;
-        ticMem[timeIndex] = curr - prev;
-        Serial.println(curr-prev);
-        updateFlowRate(ticMemPtr, dropIndex, &flowRate);
-        prev = curr;
-        dropFlag = FALSE;
-        Serial.print("The flow rate is  ->  "); Serial.println(flowRate);
-//        Serial.println("I am here at some point");
-        delay(40);
-    }
-    interrupts();
+   
+    //interrupts();
 
 //   curr = millis();
 ////    delay(1000);
 ////  
-//   Serial.print("The time that the stuff took  ->  "); Serial.println(curr - prev);  
-
-   
+//   Serial.print("The time that the stuff took  ->  "); Serial.println(curr - prev);     
 }
 
 ISR(TIMER1_COMPA_vect){
@@ -191,4 +152,69 @@ ISR(TIMER1_COMPA_vect){
 //  Serial.print("The time is   ");
 //  Serial.println(time1);
 //  Serial.println(currADCValue);
+
+    if(dropIndex < MEMSIZE){        // Before the array is filled...
+        inSignal[dropIndex] = (float) currADCValue;   // store ADC value into array
+
+        if(dropIndex == lag){             // When lag value is reached, start peak detection
+            // Thresholding Init
+            memcpy(filteredIn, inSignal, sizeof(float)*MEMSIZE);  // Copy the values of inSignal to filteredIn
+            
+            avgFilter[lag - 1] = calcMean(inSignal, lag);               // Initial Mean
+            thresholding(dropIndex, inSignalPtr, outSignalPtr, filteredInPtr, avgFilterPtr, lag, threshold, influence, &trigger, &peaks, &dropFlag);
+        }else if (dropIndex > lag){
+            thresholding(dropIndex, inSignalPtr, outSignalPtr, filteredInPtr, avgFilterPtr, lag, threshold, influence, &trigger, &peaks, &dropFlag);
+        }
+
+        dropIndex++;
+    }else{ // When array is full, the new values are getting added to the end and the array is getting shifted, with the first value getting deleted.
+        memmove(&inSignal[0], &inSignal[1], sizeof(inSignal) - sizeof(*inSignal));  //Shift function (WORKS)
+        inSignal[dropIndex - 1] = currADCValue;
+        memmove(&filteredIn[0], &filteredIn[1], sizeof(filteredIn) - sizeof(*filteredIn));
+        memmove(&avgFilter[0], &avgFilter[1], sizeof(avgFilter) - sizeof(*avgFilter));
+        thresholding(dropIndex - 1, inSignalPtr, outSignalPtr, filteredInPtr, avgFilterPtr, lag, threshold, influence, &trigger, &peaks, &dropFlag);
+    }
+
+    curr = millis();
+
+    if (dropFlag == TRUE && (curr - prev) > 40) {
+
+        if (timeIndex > MEMSIZE-1) {  
+            timeIndex = 0;          
+        }
+        
+        ticMem[timeIndex] = curr - prev;
+        updateFlowRate(ticMemPtr, dropIndex, &flowRate);
+        
+        Serial.print(ticMem[timeIndex]); Serial.print(" "); Serial.println(flowRate);
+
+        timeIndex++;
+                
+        prev = curr;
+        dropFlag = FALSE;
+    }
+
+
+//    Serial.print("["); 
+//        Serial.print(inSignal[0]);
+//    Serial.print(", ");
+//        Serial.print(inSignal[1]);
+//    Serial.print(", ");
+//        Serial.print(inSignal[2]);
+//    Serial.print(", ");
+//        Serial.print(inSignal[3]);
+//    Serial.print(", ");
+//        Serial.print(inSignal[4]);
+//    Serial.print(", ");
+//        Serial.print(inSignal[5]);
+//    Serial.print(", ");
+//        Serial.print(inSignal[6]);
+//    Serial.print(", ");
+//        Serial.print(inSignal[7]);
+//    Serial.print(", ");
+//        Serial.print(inSignal[8]);
+//    Serial.print(", ");
+//        Serial.print(inSignal[9]);
+//    Serial.println("]");
+    
 }
