@@ -31,29 +31,29 @@ void swap(float *p, float *q){
 }
 
 float calcMedian(float *dataPtr, int len){
-  float tempDataPtr[len];
+  float tempData[len];
   float median;
   int i,j,temp;
 
-  memcpy(tempDataPtr, dataPtr, sizeof(float)*len);
+  memcpy(tempData, dataPtr, sizeof(float)*len);
   
   for(i = 0; i < len-1; i++){
     for(j = 0; j < len-i-1; j++){
-      if(tempDataPtr[j] > tempDataPtr[j+1]){
-        swap(&tempDataPtr[j], &tempDataPtr[j+1]);  
+      if(tempData[j] > tempData[j+1]){
+        swap(&tempData[j], &tempData[j+1]);  
       }  
     }  
   }
 
-  return tempDataPtr[len/2 - 1];
+  return tempData[len/2 - 1];
 }
 
 // The actual drop detection calculations
-void thresholding(int index, float *inSignalPtr, float *avgFilterPtr, float threshold, int *triggerPtr, bool *dropFlagPtr) {
+void thresholding(int index, float *inSignalPtr, float *medFilterPtr, float threshold, int *triggerPtr, bool *dropFlagPtr) {
 
-    if ((fabsf(*(inSignalPtr + index) - *(avgFilterPtr + index - 1)) > threshold) && (*dropFlagPtr == 0)) {
+    if ((fabsf(*(inSignalPtr + index) - *(medFilterPtr + index - 1)) > threshold) && (*dropFlagPtr == 0)) {
         // If the different between input and average is greater than a threshold value, toggle
-        if (*(inSignalPtr + index) < *(avgFilterPtr + index - 1)) {
+        if (*(inSignalPtr + index) < *(medFilterPtr + index - 1)) {
            *triggerPtr = 1;
         }
 
@@ -64,6 +64,6 @@ void thresholding(int index, float *inSignalPtr, float *avgFilterPtr, float thre
         *triggerPtr = 0;
     }
         
-    *(avgFilterPtr + index) = calcMedian(inSignalPtr, index+1);
-     Serial.print(*(inSignalPtr + index)); Serial.print(" "); /*Serial.print(*(filteredInPtr + index)); Serial.print(" ");*/ Serial.println(*(avgFilterPtr + index));
+    *(medFilterPtr + index) = calcMedian(inSignalPtr, index+1);
+     //Serial.print(*(inSignalPtr + index)); Serial.print(" "); /*Serial.print(*(filteredInPtr + index)); Serial.print(" ");*/ Serial.println(*(avgFilterPtr + index));
 }

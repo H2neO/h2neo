@@ -72,8 +72,8 @@ const uint16_t t1_comp = 10000; //time span to get 2 ms
 float inSignal[MEMSIZE] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 float *inSignalPtr = &(inSignal[0]);
 
-float avgFilter[MEMSIZE] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-float *avgFilterPtr = &(avgFilter[0]);
+float medFilter[MEMSIZE] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+float *medFilterPtr = &(medFilter[0]);
 
 int timeIndex = 0;
 int trigger = 0;
@@ -151,8 +151,8 @@ ISR(TIMER1_COMPA_vect){
     else{ // When array is full, the new values are getting added to the end and the array is getting shifted, with the first value getting deleted.
         memmove(&inSignal[0], &inSignal[1], sizeof(inSignal) - sizeof(*inSignal));  //Shift function (WORKS)
         inSignal[dropIndex - 1] = currADCValue;
-        memmove(&avgFilter[0], &avgFilter[1], sizeof(avgFilter) - sizeof(*avgFilter));
-        thresholding(dropIndex - 1, inSignalPtr, avgFilterPtr, threshold, &trigger, &dropFlag);
+        memmove(&medFilter[0], &medFilter[1], sizeof(medFilter) - sizeof(*medFilter));
+        thresholding(dropIndex - 1, inSignalPtr, medFilterPtr, threshold, &trigger, &dropFlag);
     }
     
     curr = millis();
@@ -166,7 +166,7 @@ ISR(TIMER1_COMPA_vect){
         ticMem[timeIndex] = curr - prev;
         updateFlowRate(ticMemPtr, dropIndex, &flowRate);
         
-        //Serial.print(ticMem[timeIndex]); Serial.print(" "); Serial.println(flowRate);
+        Serial.print(ticMem[timeIndex]); Serial.print(" "); Serial.println(flowRate);
 
         timeIndex++;
                 

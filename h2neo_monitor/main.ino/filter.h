@@ -14,10 +14,9 @@
 //void derivativeFilter(int *prevPtr, int *currPtr, bool *peakFlagPtr, bool *dropFlagPtr, int slopeThreshold, float timeBase);
 
 
-float calcMean(float *dataPtr, int len);
 float calcMedian(float *dataPtr, int len);
 
-void thresholding(int index, float *inSignalPtr, float *avgFilterPtr, float threshold, int *triggerPtr, bool *dropFlagPtr);
+void thresholding(int index, float *inSignalPtr, float *medFilterPtr, float threshold, int *triggerPtr, bool *dropFlagPtr);
 
               
 #endif
