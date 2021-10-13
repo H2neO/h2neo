@@ -22,45 +22,48 @@
 //    *prevPtr = *currPtr;
 //}
 
-float calcMean(float *dataPtr, int len) {
-    double sum = 0.0;
-    float mean = 0.0;
-    int i;
-    for (i = 0; i < len; i++) {
-        sum += *(dataPtr + i); 
-    }
+void swap(float *p, float *q){
+  float t;
+  
+  t = *p;
+  *p = *q;
+  *q = t;
+}
 
-    mean = sum / len; 
+float calcMedian(float *dataPtr, int len){
+  float tempDataPtr[len];
+  float median;
+  int i,j,temp;
 
-    return mean;
+  memcpy(tempDataPtr, dataPtr, sizeof(float)*len);
+  
+  for(i = 0; i < len-1; i++){
+    for(j = 0; j < len-i-1; j++){
+      if(tempDataPtr[j] > tempDataPtr[j+1]){
+        swap(&tempDataPtr[j], &tempDataPtr[j+1]);  
+      }  
+    }  
+  }
+
+  return tempDataPtr[len/2 - 1];
 }
 
 // The actual drop detection calculations
-void thresholding(int index, float *inSignalPtr, int *outSignalPtr, float *filteredInPtr, float *avgFilterPtr, int lag,
-                  float threshold, float influence, int *triggerPtr, int *peaksPtr, bool *dropFlagPtr) {
-//        Serial.println(*(avgFilterPtr + index - 1));  
+void thresholding(int index, float *inSignalPtr, float *avgFilterPtr, float threshold, int *triggerPtr, bool *dropFlagPtr) {
 
     if ((fabsf(*(inSignalPtr + index) - *(avgFilterPtr + index - 1)) > threshold) && (*dropFlagPtr == 0)) {
-
         // If the different between input and average is greater than a threshold value, toggle
         if (*(inSignalPtr + index) < *(avgFilterPtr + index - 1)) {
-           *(outSignalPtr + index) = -1;
            *triggerPtr = 1;
-        
-          *(filteredInPtr + index) = influence * (*(inSignalPtr + index)) +  (1 - influence) * (*(filteredInPtr + index - 1));
         }
 
     } else {
-        *(outSignalPtr + index) = 0;
         if(*triggerPtr == 1){
-            (*peaksPtr)++;
             *dropFlagPtr = 1; // dropFLG triggers when incrementing # of peaks
         }
         *triggerPtr = 0;
-
-        *(filteredInPtr + index) = *(inSignalPtr + index);
     }
         
-    *(avgFilterPtr + index) = calcMean(filteredInPtr + index - lag, lag);
-     //Serial.println(*(avgFilterPtr + index));
+    *(avgFilterPtr + index) = calcMedian(inSignalPtr, index+1);
+     Serial.print(*(inSignalPtr + index)); Serial.print(" "); /*Serial.print(*(filteredInPtr + index)); Serial.print(" ");*/ Serial.println(*(avgFilterPtr + index));
 }

@@ -72,21 +72,13 @@ const uint16_t t1_comp = 10000; //time span to get 2 ms
 float inSignal[MEMSIZE] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 float *inSignalPtr = &(inSignal[0]);
 
-float filteredIn[MEMSIZE] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-float *filteredInPtr = &(filteredIn[0]);
-
 float avgFilter[MEMSIZE] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 float *avgFilterPtr = &(avgFilter[0]);
 
 int timeIndex = 0;
-int outSignal[MEMSIZE] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-int *outSignalPtr = &(outSignal[0]);
 int trigger = 0;
-int peaks = 0;
 int dropIndex = 0;
 float threshold = 13.0;      // update threshold so baseline variability is not inducing error
-float influence = 0;
-int lag = 2;
 
 int prev = 0;
 int curr = 0;
@@ -154,26 +146,15 @@ ISR(TIMER1_COMPA_vect){
 
     if(dropIndex < MEMSIZE){        // Before the array is filled...
         inSignal[dropIndex] = (float) currADCValue;   // store ADC value into array
-
-        if(dropIndex == lag){             // When lag value is reached, start peak detection
-            // Thresholding Init
-            memcpy(filteredIn, inSignal, sizeof(float)*MEMSIZE);  // Copy the values of inSignal to filteredIn
-            
-            avgFilter[lag - 1] = calcMean(inSignal, lag);               // Initial Mean
-            thresholding(dropIndex, inSignalPtr, outSignalPtr, filteredInPtr, avgFilterPtr, lag, threshold, influence, &trigger, &peaks, &dropFlag);
-        }else if (dropIndex > lag){
-            thresholding(dropIndex, inSignalPtr, outSignalPtr, filteredInPtr, avgFilterPtr, lag, threshold, influence, &trigger, &peaks, &dropFlag);
-        }
-
         dropIndex++;
-    }else{ // When array is full, the new values are getting added to the end and the array is getting shifted, with the first value getting deleted.
+    }
+    else{ // When array is full, the new values are getting added to the end and the array is getting shifted, with the first value getting deleted.
         memmove(&inSignal[0], &inSignal[1], sizeof(inSignal) - sizeof(*inSignal));  //Shift function (WORKS)
         inSignal[dropIndex - 1] = currADCValue;
-        memmove(&filteredIn[0], &filteredIn[1], sizeof(filteredIn) - sizeof(*filteredIn));
         memmove(&avgFilter[0], &avgFilter[1], sizeof(avgFilter) - sizeof(*avgFilter));
-        thresholding(dropIndex - 1, inSignalPtr, outSignalPtr, filteredInPtr, avgFilterPtr, lag, threshold, influence, &trigger, &peaks, &dropFlag);
+        thresholding(dropIndex - 1, inSignalPtr, avgFilterPtr, threshold, &trigger, &dropFlag);
     }
-
+    
     curr = millis();
 
     if (dropFlag == TRUE && (curr - prev) > 40) {
@@ -185,7 +166,7 @@ ISR(TIMER1_COMPA_vect){
         ticMem[timeIndex] = curr - prev;
         updateFlowRate(ticMemPtr, dropIndex, &flowRate);
         
-        Serial.print(ticMem[timeIndex]); Serial.print(" "); Serial.println(flowRate);
+        //Serial.print(ticMem[timeIndex]); Serial.print(" "); Serial.println(flowRate);
 
         timeIndex++;
                 
@@ -194,25 +175,5 @@ ISR(TIMER1_COMPA_vect){
     }
 }
 
-//    Serial.print("["); 
-//        Serial.print(inSignal[0]);
-//    Serial.print(", ");
-//        Serial.print(inSignal[1]);
-//    Serial.print(", ");
-//        Serial.print(inSignal[2]);
-//    Serial.print(", ");
-//        Serial.print(inSignal[3]);
-//    Serial.print(", ");
-//        Serial.print(inSignal[4]);
-//    Serial.print(", ");
-//        Serial.print(inSignal[5]);
-//    Serial.print(", ");
-//        Serial.print(inSignal[6]);
-//    Serial.print(", ");
-//        Serial.print(inSignal[7]);
-//    Serial.print(", ");
-//        Serial.print(inSignal[8]);
-//    Serial.print(", ");
-//        Serial.print(inSignal[9]);
-//    Serial.println("]");
+
     
