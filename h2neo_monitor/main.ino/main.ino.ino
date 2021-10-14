@@ -80,8 +80,8 @@ int trigger = 0;
 int dropIndex = 0;
 float threshold = 13.0;      // update threshold so baseline variability is not inducing error
 
-int prev = 0;
-int curr = 0;
+unsigned long prev = 0;
+unsigned long curr = 0;
 
 void setup() {
   /****************
@@ -162,7 +162,7 @@ ISR(TIMER1_COMPA_vect){
         if (timeIndex > MEMSIZE-1) {  
             timeIndex = 0;          
         }
-        
+//        curr = millis();
         ticMem[timeIndex] = curr - prev;
         updateFlowRate(ticMemPtr, dropIndex, &flowRate);
         
