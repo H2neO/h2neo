@@ -75,6 +75,7 @@ float *inSignalPtr = &(inSignal[0]);
 float medFilter[MEMSIZE] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 float *medFilterPtr = &(medFilter[0]);
 
+int flowrateIndex = 0;
 int timeIndex = 0;
 int trigger = 0;
 int dropIndex = 0;
@@ -162,9 +163,13 @@ ISR(TIMER1_COMPA_vect){
         if (timeIndex > MEMSIZE-1) {  
             timeIndex = 0;          
         }
-//        curr = millis();
+
+        if(flowrateIndex < MEMSIZE){
+            flowrateIndex++;
+        }
+        
         ticMem[timeIndex] = curr - prev;
-        updateFlowRate(ticMemPtr, dropIndex, &flowRate);
+        updateFlowRate(ticMemPtr, flowrateIndex, &flowRate);
         
         Serial.print(ticMem[timeIndex]); Serial.print(" "); Serial.println(flowRate);
 
