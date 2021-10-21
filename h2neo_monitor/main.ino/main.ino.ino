@@ -133,16 +133,19 @@ ISR(TIMER1_COMPA_vect){
             timeIndex = 0;          
         }
 
-        if(dropIndex < MEMSIZE){
+        if(dropIndex < MEMSIZE+1){
             dropIndex++;
         }
-        
-        ticMem[timeIndex] = curr - prev;
-        updateFlowRate(ticMemPtr, dropIndex, &flowRate);
-        
-        Serial.print(ticMem[timeIndex]); Serial.print(" "); Serial.println(flowRate);
 
-        timeIndex++;
+        if(dropIndex > 1){
+            ticMem[timeIndex] = curr - prev;
+            updateFlowRate(ticMemPtr, dropIndex-1, &flowRate);
+            
+            Serial.print(ticMem[timeIndex]); Serial.print(" "); Serial.println(flowRate); 
+            timeIndex++;
+        }else{
+            Serial.println("First Drop Detected - Calibrating..."); 
+        }
                 
         prev = curr;
         dropFlag = FALSE;
