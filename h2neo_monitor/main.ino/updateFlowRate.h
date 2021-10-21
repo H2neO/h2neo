@@ -8,6 +8,6 @@
 
 #define GTT_FACTOR 20
 
-void updateFlowRate(unsigned long *ticMemPtr, int flowrateIndex, float *flowRatePtr);
+void updateFlowRate(unsigned long *ticMemPtr, int dropIndex, float *flowRatePtr);
 
 #endif
