@@ -1,6 +1,3 @@
-#ifdef __cplusplus
- extern "C" {
-#endif
 
 #ifndef updateFlowRate_H_
 #define updateFlowRate_H_
@@ -11,10 +8,6 @@
 
 #define GTT_FACTOR 20
 
-void updateFlowRate(unsigned long *ticMemPtr, unsigned long numDrops, float *flowRatePtr);
+void updateFlowRate(unsigned long *ticMemPtr, int dropIndex, float *flowRatePtr);
 
-#endif
-
-#ifdef __cplusplus
-}
 #endif
