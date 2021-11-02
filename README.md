@@ -1,9 +1,9 @@
 # h2neo
 h2neo: no more thirsty babies
 
-Last updated: August 7th, 2020
+Last updated: August 31st, 2021
 
-The **h2neo** project is at the University of Washington (from EIH capstone 2019-20), solving neonatal dehydration in low-resource settings. This repository contains the CCS workspace for the flow rate monitor prototype. The code is written for **MSP430F5529** LaunchPad. This development board was chosen because of its number of GPIO input pins and the convenience of prototyping. In the future, we will move the MCU with other relevant components to our own PCB. In the future, it is possible that we need to look into lower power MCUs that run at 1.8V.
+The **h2neo** project is at the University of Washington (from EIH capstone 2019-20), solving neonatal dehydration in low-resource settings. This repository contains the CCS and arduino workspace for the flow rate monitor prototype. The code is written for **MSP430F5529** LaunchPad. This development board was chosen because of its number of GPIO input pins and the convenience of prototyping. In the future, we will move the MCU with other relevant components to our own PCB. In the future, it is possible that we need to look into lower power MCUs that run at 1.8V.
 
 Each folder in this repo is a separate CCS project.
 
@@ -46,15 +46,23 @@ See [link](https://docs.github.com/en/github/creating-cloning-and-archiving-repo
 #### Keep your branch up to date
 ``` $ git status```
 This command tells you if your remote workspace is up to date with the online repository. If you had updates to make use:
-```$ git pull```
+``` $ git pull```
 
 #### Saving your work
 In order to save and push your commits:
 ```
 $ git add .  // add all changes (you can select the changes you want to make as well)
 $ git commit -m 'some commit message'
-$ git push -u origin nameOfBranch
+
 ```
+#### (if first time using branch) Connect local branch to remote branch, then push:
+``` $ git push --set-upstream origin branchName ```
+
+#### (if local and remote branch are connected) Push changes:
+``` $ git push ```
+
+#### Create pull request on Github from branch into master:
+Ask other team members to review and merge code
 
 #### Merge conflicts
 When saving your work into a shared repository, you might have two people trying to update the same branch at the same time. See [link](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/resolving-a-merge-conflict-on-github) above to resolve this issue. 
