@@ -1,3 +1,5 @@
+// H2NEO EMAIL REPO 
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -14,29 +16,11 @@
 #define TRUE 1
 #define FALSE 0
 
-unsigned long tic = 0;                                  // (data type short can only go up to 65,535 ms which is only ~1m5sec)
 bool dropFlag = 0;                                      // presence of a drop
 
 // save last 5 time interval values and average to find more accurate flow rate
 unsigned long ticMem[MEMSIZE] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};                      // global var auto initialized to 0
 unsigned long *ticMemPtr = &(ticMem[0]);
-
-float flowRate = 0.0; // mL/hr
-float oldFlowRate = 0.0;  // old value used to determine if rate should be printed again
-
-float timeBase = 0.01;
-int prevADCValue = 0;
-volatile int currADCValue = 0;
-
-bool peakFlag = 0;
-int ticMemFull = 0;
-unsigned long numDrops = 0;
-
-//signal input interrupt using timer1
-const uint16_t t1_load = 0; //reset the timer at startup
-const uint16_t t1_comp = 10000; //time span to get 2 ms
-
-// EVERYTHING BELOW IS FOR AVERAGING ALGORITHM
 
 float inSignal[MEMSIZE] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 float *inSignalPtr = &(inSignal[0]);
@@ -44,24 +28,26 @@ float *inSignalPtr = &(inSignal[0]);
 float medFilter[MEMSIZE] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 float *medFilterPtr = &(medFilter[0]);
 
+float flowRate = 0.0; // mL/hr
+float timeBase = 0.01;
+
+//signal input interrupt using timer1
+const uint16_t t1_load = 0; //reset the timer at startup
+const uint16_t t1_comp = 10000; //time span to get 5 ms
+
 int index = 0;
 int timeIndex = 0;
-int trigger = 0;
 int dropIndex = 0;
-float threshold = 13.0;      // update threshold so baseline variability is not inducing error
+int trigger = 0;
+float threshold = 13.0;      // This is a percentage value (20% decrease from baseline)
 
-unsigned long prev = 0;
-unsigned long curr = 0;
+volatile int currADCValue = 0;
+volatile unsigned long prev = 0;
+volatile unsigned long curr = 0;
 
 void setup() {
-  /****************
-      Function name: setup
-      Function inputs: None
-      Function outputs: None
-      Function description: N/A
-      Author(s):
-    *****************/
   pinMode(A0, INPUT);
+  
   //interrupt code
   TCCR1A = 0; //reset Timer1 Control Reg A
 
@@ -89,30 +75,11 @@ void setup() {
 
 // i created a change!
 void loop() {
-    //curr = millis();
-////    delay(1000);
-////  
-//   Serial.print("The time that the stuff took  ->  "); Serial.println(curr - prev);  
-//    prevTime = currTime;
 
-    // detect drop every time
-    //noInterrupts();
-
-   
-    //interrupts();
-
-//   curr = millis();
-////    delay(1000);
-////  
-//   Serial.print("The time that the stuff took  ->  "); Serial.println(curr - prev);     
 }
 
 ISR(TIMER1_COMPA_vect){
-  currADCValue = analogRead(A0);
-//  int time1 = millis();
-//  Serial.print("The time is   ");
-//  Serial.println(time1);
-//  Serial.println(currADCValue);
+    currADCValue = analogRead(A0);
 
     if(index < MEMSIZE){        // Before the array is filled...
         inSignal[index] = (float) currADCValue;   // store ADC value into array
