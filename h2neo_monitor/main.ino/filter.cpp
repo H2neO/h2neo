@@ -29,12 +29,8 @@ float calcMedian(float *dataPtr, int len){
 // The actual drop detection calculations
 void thresholding(int index, float *inSignalPtr, float *medFilterPtr, float threshold, int *triggerPtr, bool *dropFlagPtr) {
 
-    if ((fabsf(*(inSignalPtr + index) - *(medFilterPtr + index - 1)) > threshold) && (*dropFlagPtr == 0)) {
-        // If the different between input and average is greater than a threshold value, toggle
-        if (*(inSignalPtr + index) < *(medFilterPtr + index - 1)) {
+    if ((*(inSignalPtr + index) < *(medFilterPtr)*(1-threshold)) && (*dropFlagPtr == 0)) {
            *triggerPtr = 1;
-        }
-
     } else {
         if(*triggerPtr == 1){
             *dropFlagPtr = 1; // dropFLG triggers when incrementing # of peaks

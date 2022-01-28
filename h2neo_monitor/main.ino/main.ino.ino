@@ -1,5 +1,3 @@
-// H2NEO EMAIL REPO 
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -30,6 +28,7 @@ float *medFilterPtr = &(medFilter[0]);
 
 float flowRate = 0.0; // mL/hr
 float timeBase = 0.01;
+volatile int currADCValue = 0;
 
 //signal input interrupt using timer1
 const uint16_t t1_load = 0; //reset the timer at startup
@@ -39,11 +38,10 @@ int index = 0;
 int timeIndex = 0;
 int dropIndex = 0;
 int trigger = 0;
-float threshold = 13.0;      // This is a percentage value (20% decrease from baseline)
+float threshold = 0.2;      // This is a percentage value (20% decrease from baseline)
 
-volatile int currADCValue = 0;
-volatile unsigned long prev = 0;
-volatile unsigned long curr = 0;
+unsigned long prev = 0;
+unsigned long curr = 0;
 
 void setup() {
   pinMode(A0, INPUT);
@@ -55,7 +53,7 @@ void setup() {
   TCCR1B &= ~(1 << WGM13);
   TCCR1B |= (1 << WGM12);
 
-  // Set to prescaler of 1
+  // Set to prescaler of 8
   TCCR1B &= ~(1 << CS12);
   TCCR1B |= (1 << CS11);
   TCCR1B &= ~(1 << CS10);
@@ -73,29 +71,31 @@ void setup() {
   Serial.begin(9600);                   // Sets serial data transmission rate at 9600 bits/s (baud)
 }
 
-// i created a change!
 void loop() {
-
 }
 
 ISR(TIMER1_COMPA_vect){
     currADCValue = analogRead(A0);
-
-    if(index < MEMSIZE){        // Before the array is filled...
-        inSignal[index] = (float) currADCValue;   // store ADC value into array
-        index++;
-    }
-    else{ // When array is full, the new values are getting added to the end and the array is getting shifted, with the first value getting deleted.
-        memmove(&inSignal[0], &inSignal[1], sizeof(inSignal) - sizeof(*inSignal));  //Shift function (WORKS)
-        inSignal[index - 1] = currADCValue;
-        memmove(&medFilter[0], &medFilter[1], sizeof(medFilter) - sizeof(*medFilter));
-        thresholding(index - 1, inSignalPtr, medFilterPtr, threshold, &trigger, &dropFlag);
-    }
     
     curr = millis();
+    
+    if(!((curr - prev) < 40)){
+      if(index < MEMSIZE){        // Before the array is filled...
+          inSignal[index] = (float) currADCValue;   // store ADC value into array
+          index++;
+      }
+      else{ // When array is full, the new values are getting added to the end and the array is getting shifted, with the first value getting deleted.
+          memmove(&inSignal[0], &inSignal[1], sizeof(inSignal) - sizeof(*inSignal));  //Shift function 
+          inSignal[index - 1] = currADCValue;
+          
+          memmove(&medFilter[0], &medFilter[1], sizeof(medFilter) - sizeof(*medFilter));
+          thresholding(index - 1, inSignalPtr, medFilterPtr, threshold, &trigger, &dropFlag);
+      }
+    }
+    
+    //Serial.println(currADCValue);
 
-    if (dropFlag == TRUE && (curr - prev) > 40) {
-
+    if (dropFlag == TRUE) {
         if (timeIndex > MEMSIZE-1) {  
             timeIndex = 0;          
         }
