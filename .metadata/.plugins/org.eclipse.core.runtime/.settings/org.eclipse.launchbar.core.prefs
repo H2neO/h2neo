@@ -1,7 +1,0 @@
-LaunchTargetManager/org.eclipse.launchbar.core.launchTargetType.local,Local/arch=x86_64
-LaunchTargetManager/org.eclipse.launchbar.core.launchTargetType.local,Local/name=Local
-LaunchTargetManager/org.eclipse.launchbar.core.launchTargetType.local,Local/os=win32
-configDescList=org.eclipse.launchbar.core.descriptorType.default\:opticalSensor,org.eclipse.launchbar.core.descriptorType.default\:stopwatch,org.eclipse.launchbar.core.descriptorType.default\:userInteraction,org.eclipse.launchbar.core.descriptorType.default\:h2neo_monitor
-eclipse.preferences.version=1
-org.eclipse.launchbar.core.descriptorType.default\:h2neo_monitor/activeLaunchMode=debug
-org.eclipse.launchbar.core.descriptorType.default\:h2neo_monitor/activeLaunchTarget=org.eclipse.launchbar.core.launchTargetType.local\:Local
